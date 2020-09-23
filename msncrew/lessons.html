@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- -->
+    <!-- ADD YOUR TITLE HERE -->
+    <title> Lessons Learned </title>
+    <!-- -->
+    <!-- -->
+
+    <!-- Required styling -->
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/sidebar.css" />
+
+    <!-- required icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/admin/">
+    <link rel="apple-touch-icon" sizes="114x114" href="/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icon/favicon-16x16.png">
+    <link rel="manifest" href="/icon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/icon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- import jquery for AJAX requests -->
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="/js/common.js"></script>
+  </head>
+
+  <!-- MAIN CONTENT -->
+  <body>
+    <!-- placeholder for dynamically loaded sidebar-->
+    <div id="nav-placeholder" style="width:25%;"></div>
+
+    <!-- -->
+    <!-- ADD CONTENT HERE -->
+    <!-- TODO : Make this display a fighter units database record information -->
+    <div class="body-content">
+      <div> Lessons Learned </div>
+      <table id="lessonsLearnedTable" style='width:100%'>
+        <!--<tr><th> Lessons Learned </th></tr>-->
+      </table>
+    </div>
+    <!-- -->
+    <!-- -->
+  </body>
+
+  <script>
+    // dynamically load the sidebar navigation in each page
+    $(function(){
+      $("#nav-placeholder").load("/sidebar.html");
+    });
+
+    // TODO -- Replace this function to actually load lessons learned from the database?
+    function loadLessons(){
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const unit = urlParams.get('aspace')
+      console.log(unit);
+
+      var table = document.getElementById("lessonsLearnedTable")
+      var row = table.insertRow();
+      var cell = row.insertCell();
+      cell.innerHTML= "DateTime";
+      var cell = row.insertCell();
+      cell.innerHTML= "Lesson Learned";
+      var cell = row.insertCell();
+      cell.innerHTML = "Contributor";
+    }
+    loadLessons();
+  </script>
+</html>

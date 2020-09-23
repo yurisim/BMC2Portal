@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ATC Letters of Agreement</title>
+
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/sidebar.css" />
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icon/favicon-16x16.png">
+    <link rel="manifest" href="/icon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/icon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="/js/common.js"></script>
+  </head>
+
+  <body>
+    <div id="nav-placeholder" style="width:25%;"></div>
+
+    <div class="body-content">
+      <div>
+        <div class="searchDiv">
+          <input class="searchInput" type="text" id="searchText" value="Enter search text here" style="color: gray;" onblur="WaterMark(this, event);" onfocus="WaterMark(this, event);" />
+          <button class="searchButton" onclick="filterLOAs()">Search</button>
+        </div>
+      </div>
+      <div style="padding-top:5%">
+        <table id="loaTable">
+          <tr><th>LOA</th><th>ATC Agency</th></tr>
+        </table>
+      </div>
+    </div>
+  </body>
+  
+  <script>
+    // dynamically load the sidebar navigation in each page
+    $(function(){
+      $("#nav-placeholder").load("/sidebar.html");
+    });
+
+    // Filter wrapper to filter table based on search text
+    function filterLOAs(){
+      filterTable("loaTable", "searchText");
+    }
+
+    // Bind the searchText input box to perform a filter when the enter key is pressed
+    var input = document.getElementById("searchText");
+    input.addEventListener("keyup", function(event) {
+      if (event.keyCode === 13) {
+        event.preventDefault();
+        filterUnits();
+      }
+    }); 
+
+    //
+    // This function will create and load the list of LOAs from a database on the backend.
+    // TODO -- replace hard coded LOAs with a database of some sort
+    //
+    function createLOATable() {
+      var table = document.getElementById("loaTable")
+      
+      var row = table.insertRow();
+      var cell = row.insertCell();
+      cell.innerHTML= "text.pdf";
+      var cell = row.insertCell();
+      cell.innerHTML= "Denver ATCC";
+      
+      var row = table.insertRow();
+      var cell = row.insertCell();
+      cell.innerHTML= "text2.pdf";
+      var cell = row.insertCell();
+      cell.innerHTML= "Houston ATCC";
+        
+      var row = table.insertRow();
+      var cell = row.insertCell();
+      cell.innerHTML="text3.pdf";
+      var cell = row.insertCell();
+      cell.innerHTML="Jackson Center";
+    }
+    createLOATable();
+  </script>
+</html>
+  

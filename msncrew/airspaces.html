@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Airspace Directory</title>
+
+    <!-- Required styling -->
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/sidebar.css" />
+
+    <!-- required icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/admin/">
+    <link rel="apple-touch-icon" sizes="114x114" href="/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icon/favicon-16x16.png">
+    <link rel="manifest" href="/icon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/icon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- import jquery for AJAX requests -->
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="/js/common.js"></script>
+  </head>
+
+  <!-- MAIN CONTENT -->
+  <body>
+    <div id="nav-placeholder" style="width:25%;"></div>
+
+    <div class="body-content">
+      <div>
+        <div class="searchDiv">
+          <input class="searchInput" type="text" id="searchText" value="Enter search text here" style="color: gray;" onblur="WaterMark(this, event);" onfocus="WaterMark(this, event);" />
+          <button class="searchButton" onclick="filterUnits()">Search</button>
+        </div>
+      </div>
+      <div style="padding-top:5%">
+        <table id="aspaceTable">
+          <tr><th>Airspace</th><th>ATC Agency</th></tr>
+        </table>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    // dynamically load the sidebar navigation in each page
+    $(function(){
+      $("#nav-placeholder").load("/sidebar.html");
+    });
+
+    // Filter wrapper to filter table based on search text
+    function filterUnits(){
+      filterTable("aspaceTable", "searchText");
+    }
+
+    // Bind the searchText input box to perform a filter when the enter key is pressed
+    var input = document.getElementById("searchText");
+    input.addEventListener("keyup", function(event) {
+      if (event.keyCode === 13) {
+        event.preventDefault();
+        filterUnits();
+      }
+    }); 
+
+    //
+    // This function will create and load the list of fighter units from a database on the backend.
+    // TODO -- replace hard coded fighter units with a database of some sort
+    //
+    function createUnitTable() {
+      var table = document.getElementById("aspaceTable")
+      
+      var row = table.insertRow();
+      var cell = row.insertCell();
+      cell.innerHTML= "W151/155";
+      cell.innerHTML= "<a href='/msncrew/airspacepage.html?aspace=W151-W155'> W151/155 </a>";
+      var cell = row.insertCell();
+      cell.innerHTML= "Jacksonville Center";
+         
+      
+      var row = table.insertRow();
+      var cell = row.insertCell();
+      cell.innerHTML= "<a href='/msncrew/airspacepage.html?aspace=W133'> W133 </a>";
+      var cell = row.insertCell();
+      cell.innerHTML= "Giantkiller";
+         
+      var row = table.insertRow();
+      var cell = row.insertCell();
+      cell.innerHTML= "<a href='/msncrew/airspacepage.html?aspace=W170'> W170 </a>";
+      var cell = row.insertCell();
+      cell.innerHTML="Jacksonville Center";
+    }
+    createUnitTable();
+  </script>
+</html>
