@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <!-- -->
-    <!-- ADD YOUR TITLE HERE -->
+    <!-- CHANGE TITLE HERE -->
     <title> TEMPLATE </title>
-    <!-- -->
-    <!-- -->
 
     <!-- Required styling -->
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/sidebar.css" />
 
-    <!-- required icons -->
+    <!-- Required icons -->
     <link rel="apple-touch-icon" sizes="57x57" href="/icon/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="/icon/apple-icon-60x60.png">
     <link rel="apple-touch-icon" sizes="72x72" href="/icon/apple-icon-72x72.png">
@@ -30,20 +27,29 @@
     <meta name="msapplication-TileImage" content="/icon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
 
-    <!-- import jquery for AJAX requests -->
+    <!-- JAVASCRIPT INCLUDES -->
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="/js/backend.js"></script>
   </head>
 
-  <!-- MAIN CONTENT -->
+  <!----------------------------------------------------------------------->
+  <!--                         PAGE BODY                                 -->
+  <!----------------------------------------------------------------------->
   <body>
-    <!-- placeholder for dynamically loaded sidebar-->
+    <!-- NAVBAR is loaded by JQUERY -->
     <div id="nav-placeholder" style="width:25%;"></div>
 
-    <!-- -->
-    <!-- ADD CONTENT HERE -->
-    <div class="body-content">YOUR CONTENT HERE</div>
-    <!-- -->
-    <!-- -->
+    <!----------------------------------------------------------------------->
+    <!--                         PAGE CONTENT                              -->
+    <!----------------------------------------------------------------------->
+    <div class="body-content">
+      INSERT MAP OF CONUS E-3 ORBITS. <br/>
+      <br/>
+      <br/>
+      Since this is a BMC2 portal it might be beneficial to include toggle buttons <br/>
+      to view JSTARS/other TACC2/Iron Triad platforms CONUS orbits.<br/><br/><br/>
+    </div>
   </body>
 
   <script>
@@ -51,5 +57,11 @@
     $(function(){
       $("#nav-placeholder").load("/sidebar.html");
     });
+
+    //----------------------------------------------------------------------->
+    //--                         PAGE SCRIPTING                            -->
+    //----------------------------------------------------------------------->
+
+    // Add any desired javascript below.
   </script>
 </html>
