@@ -5,7 +5,9 @@ async function getData(){
     let data = response.json();
     return data;
 }
-function unitHelper(unitName){
+
+// Delete when database integrated
+function unitMock(unitName){
     return {
         name: unitName,
         DSN: "405-867-5309",
@@ -16,6 +18,34 @@ function unitHelper(unitName){
     }
 }
 
+// Delete when database integrated
+function agencyMock(agency){
+    return {
+        name: agency,
+        loaLoc: "<a href='#'>"+agency+"LOA.pdf</a>"
+    }
+}
+
+// Delete when database integrated
+function airspaceMock(aspaceName){
+    let atc =  (aspaceName === "W133" ? "Giantkiller": "Jacksonville Center");
+    let loaLoc = atc + " LOA.pdf";
+    return {
+        name: aspaceName,
+        atcAgency: atc,
+        loaLoc: "<a href='#'>" + loaLoc + "</a>", // SELECT ATCAGENCY, LOALOC WHERE NAME=aspacename
+        units: aspaceName + " FS,"+aspaceName+" FW",
+    }
+}
+
+//-----------------------------------------------------------------------------
+//
+// Backend API is the gateway to database data.
+//
+// For convenience, these calls have the associated pseudo-SQL
+//
+//-----------------------------------------------------------------------------
+
 // SELECT * FROM UNITS WHERE NAME=unitname
 async function getUnitInfo(unitName){
 
@@ -23,7 +53,7 @@ async function getUnitInfo(unitName){
     let data = await getData();
 
     // TODO - remove this and process data from server instead
-    return unitHelper(unitName);
+    return unitMock(unitName);
 }
 
 // SELECT UNITNAME (DISTINCT), AFLD FROM UNITS
@@ -33,23 +63,15 @@ async function getUnitList(){
     let data = await getData();
 
     // TODO - remove below and process data from server instead
-    let subarr = Array(10).fill().map((_,x) => unitHelper(x + " FS"));
+    let subarr = Array(10).fill().map((_,x) => unitMock(x + " FS"));
     let arr = subarr;
-    let subarr2 = Array(10).fill().map((_,x) => unitHelper(x + " FW"));
+    let subarr2 = Array(10).fill().map((_,x) => unitMock(x + " FW"));
     arr = arr.concat(subarr2);
-    arr.push(unitHelper("42 FS"));
+    arr.push(unitMock("42 FS"));
     console.log(subarr)
     console.log(arr);
     
     return arr;
-}
-
-// Helper function for mock data. When database is linked remove this.
-function getAgency(agency){
-    return {
-        name: agency,
-        loaLoc: "<a href='#'>"+agency+"LOA.pdf</a>"
-    }
 }
 
 // SELECT ATC, LOALOC FROM ATCAGENCIES
@@ -59,21 +81,15 @@ async function getLOAList(){
 
     // TODO - remove below and process data from server instead
     array = [];
-    array.push(getAgency("Jacksonville Center"));
-    array.push(getAgency("FACSFAC VACAPES"));
-    array.push(getAgency("Denver ARTCC"));
-    array.push(getAgency("Houston ARTCC"));
-    array.push(getAgency("Memphis Center"));
+    array.push(agencyMock("Jacksonville Center"));
+    array.push(agencyMock("FACSFAC VACAPES"));
+    array.push(agencyMock("Denver ARTCC"));
+    array.push(agencyMock("Houston ARTCC"));
+    array.push(agencyMock("Memphis Center"));
     return array;
 }
 
-function getAirspace(aspaceName){
-    let loaLoc = (aspaceName === "W133" ? "GiantkillerLOA.pdf": "JacksonvilleCenterLOA.pdf");
-    return {
-        name: aspaceName,
-        loaLoc: "<a href='#'>" + loaLoc + "</a>", // SELECT ATCAGENCY, LOALOC WHERE NAME=aspacename
-    }
-}
+
 
 // SELECT * FROM AIRSPACES
 async function getAirspaceList(){
@@ -82,8 +98,17 @@ async function getAirspaceList(){
 
     // TODO - remove below and process data from server instead
     array = [];
-    array.push(getAirspace("W122"));
-    array.push(getAirspace("W133"));
-    array.push(getAirspace("W170"));
+    array.push(airspaceMock("W122"));
+    array.push(airspaceMock("W133"));
+    array.push(airspaceMock("W170"));
     return array;
+}
+
+// SELECT * FROM AIRSPACES WHERE NAME = aspacename
+async function getAirspaceInfo(aspacename){
+    // TODO replace mock data with database query for a particular airspace
+    let data = await getData();
+
+    // TODO - remove below and process data from server instead
+    return airspaceMock(aspacename);
 }
