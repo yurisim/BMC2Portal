@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <!-- CHANGE TITLE HERE -->
     <title>ATC Letters of Agreement</title>
 
+    <!-- Required styling -->
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/sidebar.css" />
 
+    <!-- Required icons -->
     <link rel="apple-touch-icon" sizes="57x57" href="/icon/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="/icon/apple-icon-60x60.png">
     <link rel="apple-touch-icon" sizes="72x72" href="/icon/apple-icon-72x72.png">
@@ -24,13 +27,21 @@
     <meta name="msapplication-TileImage" content="/icon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
 
+    <!-- JAVASCRIPT INCLUDES -->
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     <script src="/js/common.js"></script>
+    <script src="/js/backend.js"></script>
   </head>
 
+  <!----------------------------------------------------------------------->
+  <!--                         PAGE BODY                                 -->
+  <!----------------------------------------------------------------------->
   <body>
     <div id="nav-placeholder" style="width:25%;"></div>
 
+    <!----------------------------------------------------------------------->
+    <!--                         PAGE CONTENT                              -->
+    <!----------------------------------------------------------------------->
     <div class="body-content">
       <div>
         <div class="searchDiv">
@@ -52,6 +63,10 @@
       $("#nav-placeholder").load("/sidebar.html");
     });
 
+    //----------------------------------------------------------------------->
+    //--                         PAGE SCRIPTING                            -->
+    //----------------------------------------------------------------------->
+
     // Filter wrapper to filter table based on search text
     function filterLOAs(){
       filterTable("loaTable", "searchText");
@@ -62,36 +77,28 @@
     input.addEventListener("keyup", function(event) {
       if (event.keyCode === 13) {
         event.preventDefault();
-        filterUnits();
+        filterLOAs();
       }
     }); 
 
-    //
-    // This function will create and load the list of LOAs from a database on the backend.
-    // TODO -- replace hard coded LOAs with a database of some sort
-    //
-    function createLOATable() {
+    // This function will create and load the list of LOAs from a database on the backend
+    async function createLOATable() {
       var table = document.getElementById("loaTable")
-      
-      var row = table.insertRow();
-      var cell = row.insertCell();
-      cell.innerHTML= "text.pdf";
-      var cell = row.insertCell();
-      cell.innerHTML= "Denver ATCC";
-      
-      var row = table.insertRow();
-      var cell = row.insertCell();
-      cell.innerHTML= "text2.pdf";
-      var cell = row.insertCell();
-      cell.innerHTML= "Houston ATCC";
-        
-      var row = table.insertRow();
-      var cell = row.insertCell();
-      cell.innerHTML="text3.pdf";
-      var cell = row.insertCell();
-      cell.innerHTML="Jackson Center";
+
+      var loaList = await getLOAList();
+
+      for ( x = 0; x < loaList.length; x++){
+        var row = table.insertRow();
+        var cell = row.insertCell();
+        cell.innerHTML = loaList[x].name;
+        var cell = row.insertCell();
+        cell.innerHTML = loaList[x].loaLoc;
+      }
     }
+
+    // Initialize the list of LOAs when the page loads
     createLOATable();
+
   </script>
 </html>
   

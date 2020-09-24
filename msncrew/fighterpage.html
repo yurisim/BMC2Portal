@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <!-- -->
-    <!-- ADD YOUR TITLE HERE -->
+    <!-- CHANGE TITLE HERE -->
     <title> Fighter Unit </title>
-    <!-- -->
-    <!-- -->
 
     <!-- Required styling -->
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/sidebar.css" />
 
-    <!-- required icons -->
+    <!-- Required icons -->
     <link rel="apple-touch-icon" sizes="57x57" href="/icon/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="/icon/apple-icon-60x60.png">
     <link rel="apple-touch-icon" sizes="72x72" href="/icon/apple-icon-72x72.png">
@@ -30,31 +27,31 @@
     <meta name="msapplication-TileImage" content="/icon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
 
-    <!-- import jquery for AJAX requests -->
+    <!-- JAVASCRIPT INCLUDES -->
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     <script src="/js/common.js"></script>
+    <script src="/js/backend.js"></script>
   </head>
 
-  <!-- MAIN CONTENT -->
+  <!----------------------------------------------------------------------->
+  <!--                         PAGE BODY                                 -->
+  <!----------------------------------------------------------------------->
   <body>
-    <!-- placeholder for dynamically loaded sidebar-->
+    <!-- NAVBAR is loaded by JQUERY -->
     <div id="nav-placeholder" style="width:25%;"></div>
 
-    <!-- -->
-    <!-- ADD CONTENT HERE -->
-    <!-- TODO : Make this display a fighter units database record information -->
+    <!----------------------------------------------------------------------->
+    <!--                         PAGE CONTENT                              -->
+    <!----------------------------------------------------------------------->
     <div class="body-content">
       <table class="searchTable">
-        <tr><th>Unit </th></tr>
-        <tr><td id="unitDesig"></td></tr>
-        <tr><td id="unitPhone"></td></tr>
-        <tr><td id="unitSpins"></td></tr>
-        <tr><td id="unitIFG"></td></tr>
-        <tr><td id="unitLogo"></td></tr>
+        <tr><th colspan="2" id="unitDesig"> </th></tr>
+        <tr><td>DSN: </td><td id="unitPhone"></td></tr>
+        <tr><td>SPINs:</td><td id="unitSpins"></td></tr>
+        <tr><td>IFG:</td><td id="unitIFG"></td></tr>
+        <tr><td colspan="2" id="unitLogo"></td></tr>
       </table>
     </div>
-    <!-- -->
-    <!-- -->
   </body>
 
   <script>
@@ -63,18 +60,27 @@
       $("#nav-placeholder").load("/sidebar.html");
     });
 
-    // TODO -- Replace this function to actually load fighter unit information from the database?
-    function loadUnit(){
+    //----------------------------------------------------------------------->
+    //--                         PAGE SCRIPTING                            -->
+    //----------------------------------------------------------------------->
+
+    // This function loads the list of fighter units via the backend API
+    async function loadUnits(){
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const unit = urlParams.get('unit')
-      console.log(unit);
-      document.getElementById("unitDesig").innerHTML = unit;
-      document.getElementById("unitPhone").innerHTML = "405-867-5309";
-      document.getElementById("unitSpins").innerHTML = "spins.pdf";
-      document.getElementById("unitIFG").innerHTML = "IFG.pdf";
-      document.getElementById("unitLogo").innerHTML = "logo.png";
+
+      let unitInfo = await getUnitInfo(unit);
+
+      document.getElementById("unitDesig").innerHTML = unitInfo.name;
+      document.getElementById("unitPhone").innerHTML = unitInfo.DSN;
+      document.getElementById("unitSpins").innerHTML = unitInfo.spinsLoc;
+      document.getElementById("unitIFG").innerHTML = unitInfo.ifgLoc;
+      document.getElementById("unitLogo").innerHTML = unitInfo.logo;
     }
-    loadUnit();
+
+    // Initialize the list of fighter units when the page loads
+    loadUnits();
+    
   </script>
 </html>

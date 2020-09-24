@@ -39,7 +39,7 @@
       <div>
         <div class="searchDiv">
           <input class="searchInput" type="text" id="searchText" value="Enter search text here" style="color: gray;" onblur="WaterMark(this, event);" onfocus="WaterMark(this, event);" />
-          <button class="searchButton" onclick="filterUnits()">Search</button>
+          <button class="searchButton" onclick="filterAirspaces()">Search</button>
         </div>
       </div>
       <div style="padding-top:5%">
@@ -57,7 +57,7 @@
     });
 
     // Filter wrapper to filter table based on search text
-    function filterUnits(){
+    function filterAirspaces(){
       filterTable("aspaceTable", "searchText");
     }
 
@@ -66,7 +66,7 @@
     input.addEventListener("keyup", function(event) {
       if (event.keyCode === 13) {
         event.preventDefault();
-        filterUnits();
+        filterAirspaces();
       }
     }); 
 
