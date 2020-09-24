@@ -45,7 +45,7 @@ function aLessonMock(tags){
         validator: 'Scotty Seidenberger',
         date: '09/23/2020',
         title: "ipsum lorem lesson learned",
-        tags: tags,
+        tags: tags.map(t=>t.toUpperCase()),
         content: "This is a valid lesson learned about " + tags +"."
     }
 }
@@ -138,11 +138,19 @@ async function getAirspaceInfo(aspacename){
     return airspaceMock(aspacename);
 }
 
-// SELECT * FROM LESSONS LEARNED
+// SELECT * FROM LESSONS_LEARNED
 async function getLessonsLearned(){
     // TODO replace mock data with database query for a particular airspace
     let data = await getData();
 
     // TODO - remove below and process data from server instead
     return lessonsMock();
+}
+
+// GET ALL TAGS FROM LESSONS_LEARNED AND SPLIT ","
+async function getAllTags(){
+    // TODO replace mock data with database query
+    let data = await getData();
+
+    return ["W122", "W1","W2","W3","W4","W5","W166","W177","W155","W151","RED FLAG"];
 }

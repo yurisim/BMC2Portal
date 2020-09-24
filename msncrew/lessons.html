@@ -7,6 +7,7 @@
     <!-- Required styling -->
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/sidebar.css" />
+    <link rel="stylesheet" href="/css/chips.css" />
 
     <!-- Required icons -->
     <link rel="apple-touch-icon" sizes="57x57" href="/icon/apple-icon-57x57.png">
@@ -51,10 +52,18 @@
     <!-- 3) Convert to 'macro chips'/'tiles' for each lesson learned       -->
     <!-- 4) Stylize display and make it look like the storyboard/prototype -->
     <!----------------------------------------------------------------------->
+
     <div id="content" class="body-content">
+      <div class="container">
+        <h1>Search by lessons learned with Tags: </h1>
+        <div class="chips-list" id="list"></div>
+        <input type="text" id="txt" placeholder="type and Enter ...">
+        <div id="autosuggest" class="dropdown">
+        </div>
+      </div>
+      <br/></br>
       <div> Lessons Learned </div><br/></br>
       <table id="lessonsLearnedTable" style='width:100%'>
-        <!--<tr><th> Lessons Learned </th></tr>-->
       </table>
     </div>
     <!-- -->
@@ -70,35 +79,43 @@
     //----------------------------------------------------------------------->
     //--                         PAGE SCRIPTING                            -->
     //----------------------------------------------------------------------->
-    async function loadLessons(){
-      const queryString = window.location.search;
-      const urlParams = new URLSearchParams(queryString);
-      const tags = urlParams.get('tags')
-      
-      console.log(tags);
 
-      let lessons = await getLessonsLearned();
+    let lessons;
+    let suggestedTags;
 
+    function filterSearch(){
+      filterLessons(items);
+    }
+
+    function filterLessons(tags){
+
+      var table = document.getElementById("lessonsLearnedTable")
+      table.innerHTML="";
+
+      let lessonDisplay = lessons;
       if (tags){
-        tagSplit = tags.split(",");
-
         function isSuper(arr1, arr2){
-          return arr2.every(function(val) { return arr1.indexOf(val) >= 0; });
+          return arr2.every(function(val) { return arr1.indexOf(val.toUpperCase()) >= 0; });
         }
-        
-        lessons = lessons.filter(lesson => isSuper(lesson.tags, tagSplit));
+    
+        lessonDisplay = lessonDisplay.filter(lesson => {
+          lesson.tags = lesson.tags.map(m => m.toUpperCase());
+          return isSuper(lesson.tags, tags)
+        });
       }
 
-      if (!lessons || (lessons && lessons.length===0)){
-        let elem = document.createTextNode("No lessons learned found with tags: " + tags);
-        document.getElementById("content").appendChild(elem);
+      var table =document.getElementById("lessonsLearnedTable");
+
+      if (!lessonDisplay || (lessonDisplay && lessonDisplay.length===0)){
+        var row = table.insertRow();
+        var cell = row.insertCell();
+        cell.innerHTML = "No tags found with tags: " + tags.join(",");
       }
 
-      lessons.forEach(lesson =>{
+      lessonDisplay.forEach(lesson =>{
         // TODO - build a DOM element for each lesson learned (macro 'chip') with 'micro chips' as tags
 
         // for now..... stupid table
-        var table = document.getElementById("lessonsLearnedTable")
         var row = table.insertRow();
         var cell = row.insertCell();
         cell.innerHTML= lesson.date;
@@ -109,7 +126,95 @@
       });
     }
 
+    async function loadLessons(){
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const tags = urlParams.get('tags')
+      
+      console.log(tags);
+
+      lessons = await getLessonsLearned();
+      suggestedTags = await getAllTags();
+
+      var tagSplit = [];
+      if (tags){
+        tagSplit = tags.split(",");
+      }
+
+      filterLessons(tagSplit);
+    }
+
     // Populate the lessons learned
     loadLessons();
+
+    
+    //----------------------------------------------------------------------->
+    //-- Chip handling. Move this to common.js to facilitate other chips?  -->
+    //--      Thinking of admin/maintenance on lessons learned             -->
+    //----------------------------------------------------------------------->
+    var txt = document.getElementById('txt');
+    var list = document.getElementById('list');
+    var items = [];
+
+    txt.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        let val = txt.value;
+        if (val !== '') {
+          if (items.indexOf(val) >= 0) {
+            // alert('Tag name is a duplicate');
+          } else {
+            addChip(val);
+          }
+        } else {
+        }
+      }
+    });
+
+    function addChip(val){
+      items.push(val);
+      render();
+      txt.value = '';
+      txt.focus();
+      filterLessons(items)
+      document.getElementById("autosuggest").style.display=""
+    }
+
+    txt.oninput = () => {
+      let dropdown = document.getElementById("autosuggest");
+      
+      var filteredTags = suggestedTags.filter((t) => t.indexOf(txt.value.toUpperCase()) !== -1);
+      var showTags = filteredTags.slice(0,5);
+
+      dropdown.style.display="grid";
+      dropdown.innerHTML="";
+      showTags.forEach((t)=>{
+        elem = document.createElement('button');
+        elem.onclick = ()=>addChip(t);
+        elem.innerHTML=t;
+        dropdown.appendChild(elem);
+      })
+
+      if (txt.value===""){
+        dropdown.style.display=""
+      }
+    }
+
+    function render() {
+      list.innerHTML = '';
+      items.map((item, index) => {
+        list.innerHTML += `<li><span>${item}</span><a href="javascript: remove(${index})">X</a></li>`;
+      });
+    }
+
+    function remove(i) {
+      items = items.filter(item => items.indexOf(item) != i);
+      filterLessons(items)
+      render();
+    }
+
+    window.onload = function() {
+      render();
+      txt.focus();
+    }
   </script>
 </html>
