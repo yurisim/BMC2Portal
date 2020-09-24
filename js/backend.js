@@ -38,6 +38,31 @@ function airspaceMock(aspaceName){
     }
 }
 
+// Delete when database integrated
+function aLessonMock(tags){
+    return {
+        contributor: 'John McCarthy',
+        validator: 'Scotty Seidenberger',
+        date: '09/23/2020',
+        title: "ipsum lorem lesson learned",
+        tags: tags,
+        content: "This is a valid lesson learned about " + tags +"."
+    }
+}
+
+// Delete when database integrated 
+function lessonsMock(){
+    let arr =[];
+
+    arr.push(aLessonMock(["W122"]));
+    arr.push(aLessonMock(["W122"]));
+    arr.push(aLessonMock(["W133"]));
+    arr.push(aLessonMock(["Red Flag"]));
+    arr.push(aLessonMock(["W122","Red Flag"]));
+
+    return arr;
+}
+
 //-----------------------------------------------------------------------------
 //
 // Backend API is the gateway to database data.
@@ -111,4 +136,13 @@ async function getAirspaceInfo(aspacename){
 
     // TODO - remove below and process data from server instead
     return airspaceMock(aspacename);
+}
+
+// SELECT * FROM LESSONS LEARNED
+async function getLessonsLearned(){
+    // TODO replace mock data with database query for a particular airspace
+    let data = await getData();
+
+    // TODO - remove below and process data from server instead
+    return lessonsMock();
 }
