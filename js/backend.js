@@ -26,7 +26,7 @@ async function getUnitInfo(unitName){
     return unitHelper(unitName);
 }
 
-// SELECT DISTINCT UNITNAME, AFLD FROM UNITS
+// SELECT UNITNAME (DISTINCT), AFLD FROM UNITS
 async function getUnitList(){
 
     // TODO replace this mock data with database query for unit's information
@@ -64,5 +64,26 @@ async function getLOAList(){
     array.push(getAgency("Denver ARTCC"));
     array.push(getAgency("Houston ARTCC"));
     array.push(getAgency("Memphis Center"));
+    return array;
+}
+
+function getAirspace(aspaceName){
+    let loaLoc = (aspaceName === "W133" ? "GiantkillerLOA.pdf": "JacksonvilleCenterLOA.pdf");
+    return {
+        name: aspaceName,
+        loaLoc: "<a href='#'>" + loaLoc + "</a>", // SELECT ATCAGENCY, LOALOC WHERE NAME=aspacename
+    }
+}
+
+// SELECT * FROM AIRSPACES
+async function getAirspaceList(){
+    // TODO replace mock data with a database query for airspaces
+    let data = await getData();
+
+    // TODO - remove below and process data from server instead
+    array = [];
+    array.push(getAirspace("W122"));
+    array.push(getAirspace("W133"));
+    array.push(getAirspace("W170"));
     return array;
 }

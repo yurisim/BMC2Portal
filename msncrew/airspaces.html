@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <!-- CHANGE TITLE HERE -->
     <title>Airspace Directory</title>
 
     <!-- Required styling -->
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/sidebar.css" />
 
-    <!-- required icons -->
+    <!-- Required icons -->
     <link rel="apple-touch-icon" sizes="57x57" href="/icon/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="/icon/apple-icon-60x60.png">
     <link rel="apple-touch-icon" sizes="72x72" href="/icon/apple-icon-72x72.png">
@@ -26,15 +27,22 @@
     <meta name="msapplication-TileImage" content="/icon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
 
-    <!-- import jquery for AJAX requests -->
+    <!-- JAVASCRIPT INCLUDES -->
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     <script src="/js/common.js"></script>
+    <script src="/js/backend.js"></script>
   </head>
-
-  <!-- MAIN CONTENT -->
+ 
+  <!----------------------------------------------------------------------->
+  <!--                         PAGE BODY                                 -->
+  <!----------------------------------------------------------------------->
   <body>
+    <!-- NAVBAR is loaded by JQUERY -->
     <div id="nav-placeholder" style="width:25%;"></div>
-
+ 
+    <!----------------------------------------------------------------------->
+    <!--                         PAGE CONTENT                              -->
+    <!----------------------------------------------------------------------->
     <div class="body-content">
       <div>
         <div class="searchDiv">
@@ -56,12 +64,16 @@
       $("#nav-placeholder").load("/sidebar.html");
     });
 
+    //----------------------------------------------------------------------->
+    //--                         PAGE SCRIPTING                            -->
+    //----------------------------------------------------------------------->
+
     // Filter wrapper to filter table based on search text
     function filterAirspaces(){
       filterTable("aspaceTable", "searchText");
     }
 
-    // Bind the searchText input box to perform a filter when the enter key is pressed
+    // Add a listener for enter keypress on the search input
     var input = document.getElementById("searchText");
     input.addEventListener("keyup", function(event) {
       if (event.keyCode === 13) {
@@ -70,33 +82,23 @@
       }
     }); 
 
-    //
-    // This function will create and load the list of fighter units from a database on the backend.
-    // TODO -- replace hard coded fighter units with a database of some sort
-    //
-    function createUnitTable() {
+    // This function will create and load the list of fighter units from a database on the backend
+    async function createAirspaceTable() {
       var table = document.getElementById("aspaceTable")
       
-      var row = table.insertRow();
-      var cell = row.insertCell();
-      cell.innerHTML= "W151/155";
-      cell.innerHTML= "<a href='/msncrew/airspacepage.html?aspace=W151-W155'> W151/155 </a>";
-      var cell = row.insertCell();
-      cell.innerHTML= "Jacksonville Center";
-         
-      
-      var row = table.insertRow();
-      var cell = row.insertCell();
-      cell.innerHTML= "<a href='/msncrew/airspacepage.html?aspace=W133'> W133 </a>";
-      var cell = row.insertCell();
-      cell.innerHTML= "Giantkiller";
-         
-      var row = table.insertRow();
-      var cell = row.insertCell();
-      cell.innerHTML= "<a href='/msncrew/airspacepage.html?aspace=W170'> W170 </a>";
-      var cell = row.insertCell();
-      cell.innerHTML="Jacksonville Center";
+      var airspaces = await getAirspaceList();
+
+      for (var x = 0; x < airspaces.length; x++){
+        var row = table.insertRow();
+        var cell = row.insertCell();
+        cell.innerHTML = "<a href='/msncrew/airspacepage.html?aspace="+airspaces[x].name+"'>" + airspaces[x].name +"</a>";
+        var cell = row.insertCell();
+        cell.innerHTML = airspaces[x].loaLoc;
+      }
     }
-    createUnitTable();
+
+    // Initialize the airspace list when the page loads
+    createAirspaceTable();
+
   </script>
 </html>
