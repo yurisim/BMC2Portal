@@ -1,0 +1,184 @@
+/*
+* Collapsable "spoiler" 
+*/
+
+/* Style the button that is used to open and close the collapsible content */
+.collapsible {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 10px;
+  width: 25%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  border-radius: 0px;
+}
+
+button {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 10px;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+button:hover {
+  background-color: black;
+  color: white;
+}
+
+button:disabled,
+button[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active,
+.collapsible:hover {
+  background-color: #ccc;
+}
+
+/* Style the collapsible content. Note: hidden by default */
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
+  border-radius: 0px 20px 20px 20px;
+}
+.collapsible:after {
+  content: "\02795"; /* Unicode character for "plus" sign (+) */
+  font-size: 13px;
+  color: white;
+  float: right;
+  margin-left: 5px;
+}
+
+.active:after {
+  content: "\2796"; /* Unicode character for "minus" sign (-) */
+}
+
+.overlay {
+  position:fixed;
+  display:none; 
+
+  /* color with alpha channel */
+  background-color: rgba(0, 0, 0, 0.3); /* 0.7 = 70% opacity */
+
+  /* stretch to screen edges */
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index:9;
+}
+
+#popup
+{
+  height:380px;
+  width:340px;
+  margin:0 auto;
+  position:relative;
+  z-index:10;
+  display:none;
+  border:5px solid #cccccc;
+  border-radius:10px;
+}
+[id*=message-box]{
+	width:50%;
+	height:75%;
+	text-align:center;
+  border:solid 1px #bac0c3;
+  color:black;
+	border-radius:5px;
+	position:fixed;
+  left:25%;
+  top:12.5%;
+  padding:10px;
+	z-index:1001;
+	display:none;
+	background:#fff;
+	animation: animationDropCenter 0.25s;
+}
+
+[id*=message-content]{
+	padding:15px;
+}
+
+@keyframes animationDropCenter {
+	0% {
+		top:0%;
+	}
+}
+
+[id*=transparent-bg]{
+	position: fixed; 
+	top: 0%; 
+	left: 0%; 
+	width: 100%; 
+	height: 100%; 
+	background:#000;
+	-moz-opacity: 0.50; 
+	opacity: .50; 
+	filter: alpha(opacity=50);
+	z-index: 1000; 
+	-webkit-animation: animateBackground 1s;
+	animation: animateBackground 1s ;
+}
+
+@keyframes animateBackground {
+	from {opacity: 0.2;}
+	to {opacity: 0.50;}
+}
+
+.closebtn {
+  position: absolute;
+  left: auto;
+  right: 0;
+  margin-right:5px;
+  width: auto;
+}
+
+.slider-color {
+    -webkit-appearance: none;
+    width: 25%;
+    height: 15px;
+    border-radius: 5px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: opacity .15s ease-in-out;
+    transition: opacity .15s ease-in-out;
+}
+
+.slidecontainer {
+  width: 100%;
+}
+
+.slider-color:hover {
+  opacity: 1;
+}
+
+.slider-color::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%; 
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+.slider-color::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #4CAF50;
+  cursor: pointer;
+}
