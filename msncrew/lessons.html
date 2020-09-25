@@ -130,8 +130,6 @@
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const tags = urlParams.get('tags')
-      
-      console.log(tags);
 
       lessons = await getLessonsLearned();
       suggestedTags = await getAllTags();
@@ -140,6 +138,11 @@
       if (tags){
         tagSplit = tags.split(",");
       }
+
+      tagSplit.forEach((itm) => {
+        items.push(itm.toUpperCase());
+      })
+      render();
 
       filterLessons(tagSplit);
     }
