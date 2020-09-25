@@ -93,8 +93,6 @@ async function getUnitList(){
     let subarr2 = Array(10).fill().map((_,x) => unitMock(x + " FW"));
     arr = arr.concat(subarr2);
     arr.push(unitMock("42 FS"));
-    console.log(subarr)
-    console.log(arr);
     
     return arr;
 }
