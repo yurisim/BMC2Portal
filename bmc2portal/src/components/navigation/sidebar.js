@@ -4,9 +4,11 @@ import NavMenuItem from "./navmenuitem.js";
 import "../../css/sidebar.css";
 
 let fdMenuItems = [
-  { text: "Company", link: "/" },
-  { text: "Careers", link: "/" },
-  { text: "Team", link: "/" },
+  { text: "First Link", link: "/" },
+  { text: "Second Link", link: "/" },
+  { text: "AR Tracks", link: "/common/artracks.html"},
+  { text: "E-3 Orbits", link: "/common/orbits.html"},
+  { text: "Debrief", link: "/common/debrief.html" },
 ];
 
 let mcMenuItems = [
@@ -31,7 +33,7 @@ class SideBar extends React.PureComponent {
       <div className="navbar">
         <NavMenuItem text="Flight Deck" menuitems={fdMenuItems} />
         <NavMenuItem text="Mission Crew" menuitems={mcMenuItems} />
-        <NavMenuItem text="Lessons Learned" link = "/msncrew/lessons.html" />
+        <NavMenuItem text="Lessons Learned" link = "/common/lessons.html" />
         <NavMenuItem text="Links & Resources" link = "/resources.html" />
         <NavMenuItem text="Contact" link = "/contact.html" />
       </div>
