@@ -1,2 +1,4 @@
 /bmc2portal/node_modules/*
 /bmc2portal/node_modules/
+/flask-server/static/*
+/flask-server/templates/*
