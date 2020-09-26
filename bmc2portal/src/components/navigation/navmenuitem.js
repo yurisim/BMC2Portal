@@ -1,6 +1,6 @@
 import React from 'react';
 
-import '../css/sidebar.css';
+import '../../css/sidebar.css';
 
 /**
  * This Component contains the logic for Navigation Pane menus and menu items.

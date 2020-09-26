@@ -1,7 +1,7 @@
 import React from "react";
 import NavMenuItem from "./navmenuitem.js";
 
-import "../css/sidebar.css";
+import "../../css/sidebar.css";
 
 let fdMenuItems = [
   { text: "Company", link: "/" },

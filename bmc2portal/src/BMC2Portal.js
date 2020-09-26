@@ -13,7 +13,7 @@ import "./css/chips.css";
 import './common.js';
 import './backend.js';
 
-import SideBar from "./components/sidebar.js";
+import SideBar from "./components/navigation/sidebar.js";
 import AirspaceList from "./components/missioncrew/airspacelist.js";
 import ResourceList from "./components/resourcelist.js";
 import Home from "./components/home.js";
