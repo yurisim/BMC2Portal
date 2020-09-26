@@ -1,7 +1,6 @@
 import React from 'react';
 
 import backend from '../utils/backend.js';
-import common from '../utils/common.js';
 
 /**
  * This Component contains information on a particular airspace.
@@ -21,11 +20,11 @@ class Airspace extends React.Component {
   }
   // Lifecycle function for after the Component has rendered
   componentDidMount(){
-    this.getAirspaces();
+    this.getAirspaceInfo();
   }
 
-  // Retrieve the airspace list from the backend, and process for display
-  async getAirspaces(){
+  // Retrieve the airspace information from the backend, and process for display
+  async getAirspaceInfo(){
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const aspace = urlParams.get('aspace')
@@ -45,11 +44,6 @@ class Airspace extends React.Component {
         units: elems,
         lessons: <a href={'/msncrew/lessons.html?tags=' + aspaceInfo.name}> Lessons Learned </a>
     })
-  }
-
-  // Filter the table based on search text
-  filterAirspaces(){
-    common.filterTable("aspaceTable", "searchText");
   }
 
   render(){

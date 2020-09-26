@@ -17,6 +17,7 @@ import SideBar from "./components/navigation/sidebar.js";
 import AirspaceList from "./components/missioncrew/airspacelist.js";
 import UnitList from "./components/missioncrew/unitlist.js";
 import Airspace from "./components/missioncrew/airspace.js";
+import Unit from "./components/missioncrew/unit.js";
 import ResourceList from "./components/resourcelist.js";
 import Home from "./components/home.js";
 
@@ -56,6 +57,7 @@ class BMC2Portal extends React.PureComponent {
             <Route path="/msncrew/airspacelist.html" component={AirspaceList} />
             <Route path="/msncrew/airspacepage.html" component={Airspace} />
             <Route path="/msncrew/unitlist.html" component={UnitList} />
+            <Route path="/msncrew/unitpage.html" component={Unit} />
             <Route path="/resources.html" component={ResourceList} />
           </Router>
         </div>
