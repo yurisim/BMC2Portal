@@ -10,8 +10,8 @@ let fdMenuItems = [
 ];
 
 let mcMenuItems = [
-  { text: "Airspaces", link: "/msncrew/airspaces.html" },
-  { text: "Fighter Units", link: "/msncrew/fighterunits.html" },
+  { text: "Airspaces", link: "/msncrew/airspacelist.html" },
+  { text: "Fighter Units", link: "/msncrew/unitlist.html" },
   { text: "LOAs", link: "/msncrew/loas.html" },
   { text: "AR Tracks", link: "/common/artracks.html" },
   { text: "E-3 Orbits", link: "/common/orbits.html" },
