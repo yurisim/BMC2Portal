@@ -1,26 +1,32 @@
 import React from 'react';
 
-import '../css/styles.css';
-import '../css/fonts.css';
 import '../css/sidebar.css';
-import '../css/spoiler.css';
-import '../css/chips.css';
 
-class NavMenuItem extends React.PureComponent {
+/**
+ * This Component contains the logic for Navigation Pane menus and menu items.
+ * 
+ * A NavMenuItem has props:
+ * - "text": the text of the top-level menu item
+ * - "link": (optional) which 'page' the top-level menu item takes you to
+ * - "menuitems": (optional) An array of submenuitems { text, link }
+ */
+class NavMenuItem extends React.Component {
+
+  navigate = () => {
+    if (this.props.link){
+      window.location.href = this.props.link;
+    }
+  }
 
   render(){
-    let navFunc = this.props.navFunc;
-    if (navFunc===undefined){
-        navFunc = ()=>{};
-    }
     this.elems = [];
     return (
       <div className="subnav">
-        <button className="subnavbtn" onClick={navFunc}>{this.props.title}</button>
+        <button className="subnavbtn" onClick={this.navigate}>{this.props.text}</button>
         {this.props.menuitems && 
             <div className="subnav-content">
                 {this.props.menuitems.forEach((itm) => {
-                    this.elems.push(<div key={itm.name}><a href={itm.link}>{itm.name}</a></div>)
+                    this.elems.push(<div key={itm.text}><a href={itm.link}>{itm.text}</a></div>)
                 })}
                 {this.elems}
             </div>

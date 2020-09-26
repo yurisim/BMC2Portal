@@ -1,51 +1,39 @@
 import React from "react";
 import NavMenuItem from "./navmenuitem.js";
 
-import "../css/styles.css";
-import "../css/fonts.css";
 import "../css/sidebar.css";
-import "../css/spoiler.css";
-import "../css/chips.css";
 
 let fdMenuItems = [
-  { name: "Company", link: "/" },
-  { name: "Careers", link: "/" },
-  { name: "Team", link: "/" },
+  { text: "Company", link: "/" },
+  { text: "Careers", link: "/" },
+  { text: "Team", link: "/" },
 ];
 
 let mcMenuItems = [
-  { name: "Airspaces", link: "/msncrew/airspaces.html" },
-  { name: "Fighter Units", link: "/msncrew/fighterunits.html" },
-  { name: "LOAs", link: "/msncrew/loas.html" },
-  { name: "AR Tracks", link: "/common/artracks.html" },
-  { name: "E-3 Orbits", link: "/common/orbits.html" },
-  { name: "Debrief", link: "/common/debrief.html" },
+  { text: "Airspaces", link: "/msncrew/airspaces.html" },
+  { text: "Fighter Units", link: "/msncrew/fighterunits.html" },
+  { text: "LOAs", link: "/msncrew/loas.html" },
+  { text: "AR Tracks", link: "/common/artracks.html" },
+  { text: "E-3 Orbits", link: "/common/orbits.html" },
+  { text: "Debrief", link: "/common/debrief.html" },
 ];
 
+/**
+ * This React Component provides the left hand navigation menu for the website.
+ * 
+ * To add a navigation item, add a <NavMenuItem> in the appropriate spot in this list.
+ * 
+ * See <NavMenuItem> for options.
+ */
 class SideBar extends React.PureComponent {
   render() {
     return (
       <div className="navbar">
-        <NavMenuItem title="Flight Deck" menuitems={fdMenuItems} />
-        <NavMenuItem title="Mission Crew" menuitems={mcMenuItems} />
-        <NavMenuItem
-          title="Lessons Learned"
-          navFunc={() => {
-            window.location.href = "/msncrew/lessons.html";
-          }}
-        />
-        <NavMenuItem
-          title="Links & Resources"
-          navFunc={() => {
-            window.location.href = "/resources.html";
-          }}
-        />
-        <NavMenuItem
-          title="Contact"
-          navFunc={() => {
-            window.location.href = "/contact.html";
-          }}
-        />
+        <NavMenuItem text="Flight Deck" menuitems={fdMenuItems} />
+        <NavMenuItem text="Mission Crew" menuitems={mcMenuItems} />
+        <NavMenuItem text="Lessons Learned" link = "/msncrew/lessons.html" />
+        <NavMenuItem text="Links & Resources" link = "/resources.html" />
+        <NavMenuItem text="Contact" link = "/contact.html" />
       </div>
     );
   }
