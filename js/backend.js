@@ -103,7 +103,7 @@ async function getLOAList(){
     let data = await getData();
 
     // TODO - remove below and process data from server instead
-    array = [];
+    let array = [];
     array.push(agencyMock("Jacksonville Center"));
     array.push(agencyMock("FACSFAC VACAPES"));
     array.push(agencyMock("Denver ARTCC"));
@@ -120,7 +120,7 @@ async function getAirspaceList(){
     let data = await getData();
 
     // TODO - remove below and process data from server instead
-    array = [];
+    let array = [];
     array.push(airspaceMock("W122"));
     array.push(airspaceMock("W133"));
     array.push(airspaceMock("W170"));
