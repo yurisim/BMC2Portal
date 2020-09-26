@@ -1,11 +1,11 @@
 import React from 'react';
 
-class DefaultContent extends React.PureComponent {
+class Home extends React.PureComponent {
 
   render(){
     return (
-      <div> Insert 552 ACW Logo </div>
+      <div style={{textAlign: "center"}}> INSERT 552 ACW LOGO </div>
     )}
 }
 
-export default DefaultContent
+export default Home

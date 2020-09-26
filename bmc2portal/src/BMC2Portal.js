@@ -10,8 +10,8 @@ import "./css/fonts.css";
 import "./css/spoiler.css";
 import "./css/chips.css";
 
-import './common.js';
-import './backend.js';
+import './components/utils/common.js';
+import './components/utils/backend.js';
 
 import SideBar from "./components/navigation/sidebar.js";
 import AirspaceList from "./components/missioncrew/airspacelist.js";

@@ -1,7 +1,7 @@
 import React from 'react';
 
-import backend from '../../backend.js';
-import common from '../../common.js';
+import backend from '../utils/backend.js';
+import common from '../utils/common.js';
 
 import SearchInput from '../utils/searchinput'
 

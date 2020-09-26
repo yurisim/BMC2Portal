@@ -1,6 +1,6 @@
 import React from 'react';
 
-import common from '../../common.js';
+import common from './common.js';
 
 /**
  * This Component renders a search input box.
@@ -8,7 +8,6 @@ import common from '../../common.js';
 class SearchInput extends React.Component {
 
   render(){
-
     let defaultText = this.props.defaultValue ? this.props.defaultValue : common.defaultText;
     return (
       <input 
