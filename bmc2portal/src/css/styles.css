@@ -108,7 +108,6 @@ button[disabled]{
 }
 
 .links {
-  display: none;
   border-style: dotted;
   border-color: #FDFFFC;
   border-width: .15em 0;
@@ -125,10 +124,6 @@ button[disabled]{
 
 .cur-tab {
   border-color: #FCCC0A
-}
-
-.cur-panel {
-  display: block;
 }
 
 nav ul li a {
