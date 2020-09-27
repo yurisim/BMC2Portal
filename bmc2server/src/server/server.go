@@ -100,7 +100,8 @@ func (s *Server) BuildAppLayer() {
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORS())
 
-	e.GET("/api/test", s.API.AirspacesGet)
+	e.GET("/api/airspacelist", s.API.AirspaceListGet)
+	e.GET("/api/airspace/:name", s.API.AirspaceGet)
 
 	if s.hasStatic == true {
 		e.Static("/", "../../bmc2portal/build")

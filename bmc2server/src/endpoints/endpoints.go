@@ -40,12 +40,18 @@ func Build() *EP {
 	}
 }
 
-//AirspacesGet returns a test string
-func (e *EP) AirspacesGet(ctx echo.Context) error {
-
+//AirspaceListGet returns data for all airspaces
+// SELECT * FROM AIRSPACELIST
+func (e *EP) AirspaceListGet(ctx echo.Context) error {
 	a := mock.GetAirspaceList()
-
 	return ctx.JSONPretty(http.StatusOK, a, " ")
+}
+
+//AirspaceGet returns information from a particular airspace
+// SELECT * FROM AIRSPACELIST WHERE NAME=NAME
+func (e *EP) AirspaceGet(ctx echo.Context) error {
+	log.Println(ctx.Param("name"))
+	return ctx.JSON(http.StatusOK, mock.GetAirspace(ctx.Param("name")))
 }
 
 // // RundownGet is used to get the current rundown list
