@@ -1,4 +1,4 @@
-package mock
+package server
 
 //Airspace Contains Airspace Information
 type Airspace struct {

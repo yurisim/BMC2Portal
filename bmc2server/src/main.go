@@ -1,7 +1,7 @@
 package main
 
 import (
-	"bmc2server/server"
+	server "bmc2server/server"
 )
 
 func main() {

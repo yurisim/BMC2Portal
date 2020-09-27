@@ -4,17 +4,14 @@ import (
 	"log"
 	"os"
 
-	endpoints "bmc2server/endpoints"
-
 	echo "github.com/labstack/echo/v4"
 	middleware "github.com/labstack/echo/v4/middleware"
-
 	"github.com/subosito/gotenv"
 )
 
 //A Server struct contains all the information necessary to create a server
 type Server struct {
-	API       *endpoints.EP
+	API       *EP
 	App       *echo.Echo
 	hasStatic bool
 }
@@ -88,7 +85,7 @@ func (s *Server) ConnectToDatabase() {
 
 //BuildAPI builds the endpoints as found below
 func (s *Server) BuildAPI() {
-	s.API = endpoints.Build()
+	s.API = BuildEP()
 	s.BuildAppLayer()
 }
 

@@ -1,12 +1,10 @@
-package endpoints
+package server
 
 import (
 	"crypto/tls"
 	"log"
 	"net/http"
 	"sync"
-
-	mock "bmc2server/mock"
 
 	echo "github.com/labstack/echo/v4"
 )
@@ -18,8 +16,8 @@ type EP struct {
 	client        *http.Client
 }
 
-// Build will return an initialized EP structure given the set parameters
-func Build() *EP {
+// BuildEP will return an initialized EP structure given the set parameters
+func BuildEP() *EP {
 	log.Println("Building endpoints...")
 	return &EP{
 		userNotifiers: &sync.Map{},
@@ -37,43 +35,43 @@ func Build() *EP {
 //AirspaceListGet returns data for all airspaces
 // SELECT * FROM AIRSPACELIST
 func (e *EP) AirspaceListGet(ctx echo.Context) error {
-	asList := mock.GetAirspaceList()
+	asList := GetAirspaceList()
 	return ctx.JSON(http.StatusOK, asList)
 }
 
 //AirspaceGet returns information from a particular airspace
 // SELECT * FROM AIRSPACELIST WHERE NAME=NAME
 func (e *EP) AirspaceGet(ctx echo.Context) error {
-	aspace := mock.GetAirspace(ctx.Param("name"))
+	aspace := GetAirspace(ctx.Param("name"))
 	return ctx.JSON(http.StatusOK, aspace)
 }
 
 //UnitListGet returns data for all units
 func (e *EP) UnitListGet(ctx echo.Context) error {
-	uList := mock.GetUnitList()
+	uList := GetUnitList()
 	return ctx.JSON(http.StatusOK, uList)
 }
 
 //UnitGet returns data for all units
 func (e *EP) UnitGet(ctx echo.Context) error {
-	unit := mock.GetUnit(ctx.Param("name"), "KTIK")
+	unit := GetUnit(ctx.Param("name"), "KTIK")
 	return ctx.JSON(http.StatusOK, unit)
 }
 
 //LOAsGet returns all of the ATCAgencies and their LOAs
 func (e *EP) LOAsGet(ctx echo.Context) error {
-	loas := mock.GetLOAList()
+	loas := GetLOAList()
 	return ctx.JSON(http.StatusOK, loas)
 }
 
 //LessonsLearnedGet returns all of the lessons learned
 func (e *EP) LessonsLearnedGet(ctx echo.Context) error {
-	lessons := mock.GetLessonsLearned()
+	lessons := GetLessonsLearned()
 	return ctx.JSON(http.StatusOK, lessons)
 }
 
 //AllTagsGet returns all existing database tags (LL)
 func (e *EP) AllTagsGet(ctx echo.Context) error {
-	tags := mock.GetAllTags()
+	tags := GetAllTags()
 	return ctx.JSON(http.StatusOK, tags)
 }

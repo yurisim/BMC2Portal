@@ -7,3 +7,4 @@ bmc2server/src/main.exe
 bmc2server/src/bmc2server.exe
 bmc2server/pkg/*
 bmc2server/src/.env.development.local
+.vscode/settings.json

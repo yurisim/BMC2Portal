@@ -35,8 +35,6 @@ TODO - Setup and configuration files for the database (under construction).
 
 ## Developers & Contributors Notes
 
-
-
 ## Frontend-Only Development
 
 - See [bmc2portal README](https://github.com/jemccarthy13/BMC2Portal/tree/master/bmc2portal).
