@@ -41,6 +41,16 @@ let serverBackend = {
     // SELECT * FROM ATCAGENCIES
     async getLOAList(){
         return get('/api/loas').then((data) => {return data});
+    },
+
+    // SELECT * FROM LESSONS LEARNED
+    async getLessonsLearned(){
+        return get('/api/lessonslearned').then((data) => {return data});
+    },
+
+    // SELECT DISTINCT TAGS FROM LESSONS LEARNED
+    async getAllTags(){
+        return get('/api/lessontags').then((data) => {return data});
     }
 }
 

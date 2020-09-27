@@ -65,3 +65,15 @@ func (e *EP) LOAsGet(ctx echo.Context) error {
 	loas := mock.GetLOAList()
 	return ctx.JSON(http.StatusOK, loas)
 }
+
+//LessonsLearnedGet returns all of the lessons learned
+func (e *EP) LessonsLearnedGet(ctx echo.Context) error {
+	lessons := mock.GetLessonsLearned()
+	return ctx.JSON(http.StatusOK, lessons)
+}
+
+//AllTagsGet returns all existing database tags (LL)
+func (e *EP) AllTagsGet(ctx echo.Context) error {
+	tags := mock.GetAllTags()
+	return ctx.JSON(http.StatusOK, tags)
+}

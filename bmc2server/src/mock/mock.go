@@ -18,9 +18,15 @@ type Unit struct {
 	Logo     string `json:"logo"`
 }
 
+//ATCAgency maps an agency to it's LOA
 type ATCAgency struct {
 	Name   string `json:"name"`
 	LOALoc string `json:"loaLoc"`
+}
+
+//Lesson stores lesson leanred information
+type Lesson struct {
+	Date string `json:"date"`
 }
 
 //GetAirspace Mocks an airspace
@@ -32,6 +38,7 @@ func GetAirspace(name string) Airspace {
 
 	loaLoc := atc + "LOA.pdf"
 
+	// TODO - replace this with a lookup - ATCAgency -> LOA Loc
 	aspace := &Airspace{
 		Name:      name,
 		AtcAgency: atc,
@@ -100,5 +107,28 @@ func GetLOAList() []ATCAgency {
 	a[2] = GetATCInfo("Denver ARTCC")
 	a[3] = GetATCInfo("Houston ARTCC")
 	a[4] = GetATCInfo("Memphis Center")
+	return a
+}
+
+//GetLessonsLearned mocks all of the lessons learned
+func GetLessonsLearned() []Lesson {
+	var a = make([]Lesson, 0)
+	return a
+}
+
+//GetAllTags mocks retrieving existing tags from the database
+func GetAllTags() []string {
+	var a = make([]string, 11)
+	a[0] = "W122"
+	a[1] = "W1"
+	a[2] = "W2"
+	a[3] = "W3"
+	a[4] = "W4"
+	a[5] = "W5"
+	a[6] = "W166"
+	a[7] = "W177"
+	a[8] = "W155"
+	a[9] = "W151"
+	a[10] = "RED FLAG"
 	return a
 }
