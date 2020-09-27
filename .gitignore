@@ -2,3 +2,5 @@
 /bmc2portal/node_modules/
 /flask-server/static/*
 /flask-server/templates/*
+bmc2server/src/.env
+bmc2server/src/main.exe
