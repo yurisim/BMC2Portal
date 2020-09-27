@@ -26,13 +26,6 @@ http/https.
 
 TODO - Setup and configuration files for the database (under construction).
 
-## flask-server
-
-Deprecated.
-
-@TODO - Remove this folder and provide instructions on serving the frontend.
-
-
 ## Developers & Contributors Notes
 
 ## Frontend-Only Development
