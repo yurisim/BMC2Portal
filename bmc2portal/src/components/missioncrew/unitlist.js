@@ -17,7 +17,13 @@ class UnitList extends React.Component {
 
   // Retrieve the airspace list from the backend, and process for display
   async getUnits(){
-    let units = await backend.getUnitList();
+    let units = [];
+
+    try {
+      units = await backend.getUnitList();
+    } catch {
+      this.setState({failed:true})
+    }
     let unitRows = [];
     units.forEach((unit) => {
       let name = unit.name;
@@ -47,10 +53,11 @@ class UnitList extends React.Component {
         <div style={{paddingTop:"5%"}}>
           <table id="unitTable">
             <tbody>
-            <tr><th>Airspace</th><th>ATC Agency</th></tr>
+            <tr><th>Unit</th><th>Airfeld</th></tr>
             {/** Conditionally, display "Loading..." or the data if we have it. */}
-            {this.state && this.state.unitRows}
+            {this.state && !this.state.failed && this.state.unitRows}
             {!this.state && <tr><td colSpan="2">Loading...</td></tr>}
+            {this.state && this.state.failed && <tr><td colSpan="2">Failed to retrieve data from server.</td></tr>}
             </tbody>
           </table>
         </div>

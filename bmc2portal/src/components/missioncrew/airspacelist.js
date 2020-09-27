@@ -25,6 +25,7 @@ class AirspaceList extends React.Component {
     }
     
     let aspaceRows = [];
+
     aspaces.forEach((aspace) => {
       let name = aspace.name;
 
@@ -55,9 +56,9 @@ class AirspaceList extends React.Component {
             <tbody>
             <tr><th>Airspace</th><th>ATC Agency</th></tr>
             {/** Conditionally, display "Loading..." or the data if we have it. */}
-            {this.state && this.state.aspaceRows && !this.state.failed}
             {!this.state && <tr><td colSpan="2">Loading...</td></tr>}
             {this.state && this.state.failed && <tr><td colSpan="2">Failed to fetch data from server.</td></tr>}
+            {this.state && !this.state.failed && this.state.aspaceRows}
             </tbody>
           </table>
         </div>

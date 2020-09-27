@@ -8,7 +8,6 @@ const defaultText = "type and enter tag...";
 
 class LessonsLearnedList extends React.Component {
 
-
     constructor(){
         super();
         this.state = {

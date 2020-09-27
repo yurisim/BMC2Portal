@@ -102,6 +102,8 @@ func (s *Server) BuildAppLayer() {
 
 	e.GET("/api/airspacelist", s.API.AirspaceListGet)
 	e.GET("/api/airspace/:name", s.API.AirspaceGet)
+	e.GET("/api/unitlist", s.API.UnitListGet)
+	e.GET("/api/unit/:name", s.API.UnitGet)
 
 	if s.hasStatic == true {
 		e.Static("/", "../../bmc2portal/build")
