@@ -17,7 +17,12 @@ class LOAList extends React.Component {
 
   // Retrieve the airspace list from the backend, and process for display
   async getLOAList(){
-    let loas = await backend.getLOAList();
+    let loas = [];
+    try {
+      loas = await backend.getLOAList();
+    } catch {
+      this.setState({failed:true});
+    }
     let loaRows = [];
     loas.forEach((loa) => {
       let name = loa.name;
@@ -49,7 +54,8 @@ class LOAList extends React.Component {
             <tbody>
             <tr><th>LOA</th><th>ATC Agency</th></tr>
             {/** Conditionally, display "Loading..." or the data if we have it. */}
-            {this.state && this.state.loaRows}
+            {this.state && !this.state.failed && this.state.loaRows}
+            {this.state && this.state.failed && <tr><td colSpan="2">Failed to retrieve data from server.</td></tr>}
             {!this.state && <tr><td colSpan="2">Loading...</td></tr>}
             </tbody>
           </table>

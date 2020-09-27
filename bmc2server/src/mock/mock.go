@@ -18,6 +18,11 @@ type Unit struct {
 	Logo     string `json:"logo"`
 }
 
+type ATCAgency struct {
+	Name   string `json:"name"`
+	LOALoc string `json:"loaLoc"`
+}
+
 //GetAirspace Mocks an airspace
 func GetAirspace(name string) Airspace {
 	atc := "Jacksonville Center"
@@ -74,5 +79,26 @@ func GetUnitList() []Unit {
 	a[8] = GetUnit("965 FS", "KTIK")
 	a[8] = GetUnit("69 FS", "KTIK")
 	a[9] = GetUnit("960 AACS", "KTIK")
+	return a
+}
+
+//GetATCInfo mocks info for a specific ATC agency
+func GetATCInfo(agency string) ATCAgency {
+	agent := &ATCAgency{
+		Name:   agency,
+		LOALoc: agency + "LOA.pdf",
+	}
+	return *agent
+}
+
+//GetLOAList mocks all of the LOAs
+func GetLOAList() []ATCAgency {
+	var a = make([]ATCAgency, 5)
+
+	a[0] = GetATCInfo("Jacksonville Center")
+	a[1] = GetATCInfo("FACSFAC VACAPES")
+	a[2] = GetATCInfo("Denver ARTCC")
+	a[3] = GetATCInfo("Houston ARTCC")
+	a[4] = GetATCInfo("Memphis Center")
 	return a
 }

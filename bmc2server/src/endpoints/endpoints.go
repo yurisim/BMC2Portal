@@ -59,3 +59,9 @@ func (e *EP) UnitGet(ctx echo.Context) error {
 	unit := mock.GetUnit(ctx.Param("name"), "KTIK")
 	return ctx.JSON(http.StatusOK, unit)
 }
+
+//LOAsGet returns all of the ATCAgencies and their LOAs
+func (e *EP) LOAsGet(ctx echo.Context) error {
+	loas := mock.GetLOAList()
+	return ctx.JSON(http.StatusOK, loas)
+}

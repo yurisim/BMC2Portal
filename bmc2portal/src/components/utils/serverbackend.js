@@ -36,6 +36,11 @@ let serverBackend = {
     // SELECT * FROM UNITS WHERE NAME = name
     async getUnitInfo(unitname){
         return get('/api/unit/'+unitname).then((data)=>{return data});
+    },
+
+    // SELECT * FROM ATCAGENCIES
+    async getLOAList(){
+        return get('/api/loas').then((data) => {return data});
     }
 }
 
