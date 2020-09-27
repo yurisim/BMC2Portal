@@ -51,6 +51,6 @@ the [bmc2server README](https://github.com/jemccarthy13/BMC2Portal/tree/master/b
 
 ## Requirements
 
-- Install [NPM/NodeJS] (https://www.npmjs.com/get-npm)
-- Install [Yarn] (https://classic.yarnpkg.com/en/docs/install/#windows-stable)
-- Install [GoLang] (https://golang.org/dl/)
+- Install [NPM/NodeJS](https://www.npmjs.com/get-npm)
+- Install [Yarn](https://classic.yarnpkg.com/en/docs/install/#windows-stable)
+- Install [GoLang](https://golang.org/dl/)
