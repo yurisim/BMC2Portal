@@ -1,7 +1,19 @@
 
 let backend = {};
 
-if (process.env.NODE_ENV === "development");
+let isProd = process.env.NODE_ENV === "production";
+
+isProd = false;
+
+if (isProd) {
+
+  backend = {
+      getAirspaceList(){
+          return [];
+      }
+  }
+
+} else {
   backend = {
     // remove these helper functions when database is integrated
     async getData(){
@@ -161,6 +173,7 @@ if (process.env.NODE_ENV === "development");
 
         return ["W122", "W1","W2","W3","W4","W5","W166","W177","W155","W151","RED FLAG"];
     }
+  }
 }
 
 export default backend;
