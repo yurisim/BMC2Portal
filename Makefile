@@ -13,12 +13,6 @@ frontend-dev:
 	@echo !!
 	${MAKE} -C ./bmc2portal bmc2portal_start_fedev
 
-_server-dev:
-	${MAKE} -C ./bmc2server/src bmc2server_start_smock
-
-_frontend-smock:
-	${MAKE} -C ./bmc2portal bmc2portal_start_smock
-
 server-mock:
 	@echo !!
 	@echo !! BULDING SERVER-MOCK 
@@ -30,4 +24,9 @@ server-mock:
 	@echo !!
 	${MAKE} -j2 _server-dev _frontend-smock
 
+_server-dev:
+	${MAKE} -C ./bmc2server/src bmc2server_start_smock
+
+_frontend-smock:
+	${MAKE} -C ./bmc2portal bmc2portal_start_smock
 
