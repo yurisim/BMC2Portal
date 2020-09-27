@@ -17,7 +17,13 @@ class AirspaceList extends React.Component {
 
   // Retrieve the airspace list from the backend, and process for display
   async getAirspaces(){
-    let aspaces = await backend.getAirspaceList();
+    let aspaces = []
+    try {
+      aspaces = await backend.getAirspaceList()
+    } catch {
+      this.setState({failed:true})
+    }
+    
     let aspaceRows = [];
     aspaces.forEach((aspace) => {
       let name = aspace.name;
@@ -49,8 +55,9 @@ class AirspaceList extends React.Component {
             <tbody>
             <tr><th>Airspace</th><th>ATC Agency</th></tr>
             {/** Conditionally, display "Loading..." or the data if we have it. */}
-            {this.state && this.state.aspaceRows}
+            {this.state && this.state.aspaceRows && !this.state.failed}
             {!this.state && <tr><td colSpan="2">Loading...</td></tr>}
+            {this.state && this.state.failed && <tr><td colSpan="2">Failed to fetch data from server.</td></tr>}
             </tbody>
           </table>
         </div>

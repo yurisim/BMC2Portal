@@ -30,8 +30,13 @@ if (isProd) {
 
   backend = {
       getAirspaceList(){
-          return get('/api/test').then((data)=>{return data});
-      }
+          return get('/api/airspacelist').then((data)=>{return data});
+      },
+
+    // SELECT * FROM AIRSPACES WHERE NAME = aspacename
+    async getAirspaceInfo(aspacename){
+        return get('/api/airspace/'+aspacename).then((data)=>{return data});
+    },
   }
 
 } else {
