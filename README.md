@@ -3,6 +3,13 @@ control in the continental United States.
 
 The project is divided into several sections.
 
+## Requirements
+
+- [NPM/NodeJS](https://www.npmjs.com/get-npm)
+- [Yarn](https://classic.yarnpkg.com/en/docs/install/#windows-stable)
+- [GoLang](https://golang.org/dl/)
+- [Make](https://opensource.com/article/18/8/what-how-makefile#:~:text=The%20make%20utility%20requires%20a,be%20installed%20using%20make%20install%20)
+
 ## bmc2portal
 
 This is the frontend website that a user will see. It is constructed using 
@@ -28,6 +35,8 @@ TODO - Setup and configuration files for the database (under construction).
 
 ## Developers & Contributors Notes
 
+
+
 ## Frontend-Only Development
 
 - See [bmc2portal README](https://github.com/jemccarthy13/BMC2Portal/tree/master/bmc2portal).
@@ -42,8 +51,3 @@ the [bmc2server README](https://github.com/jemccarthy13/BMC2Portal/tree/master/b
 5) Serve the frontend of the application by following the [bmc2portal README](https://github.com/jemccarthy13/BMC2Portal/tree/master/bmc2portal).
 6) Navigate to the frontend IP address / served URL.
 
-## Requirements
-
-- [NPM/NodeJS](https://www.npmjs.com/get-npm)
-- [Yarn](https://classic.yarnpkg.com/en/docs/install/#windows-stable)
-- [GoLang](https://golang.org/dl/)

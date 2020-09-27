@@ -1,4 +1,4 @@
-let baseURL = "http://localhost:8080"
+let baseURL=process.env.REACT_APP_SERVER_BASE_URL
 
 // FETCH GET for server API method implementation:
 async function get(url = '') {

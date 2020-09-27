@@ -2,14 +2,9 @@
 import serverBackend from './serverbackend'
 import mockBackend from './mockbackend'
 
-//console.log(process.env.SERVER_ADDR);
-
 let backend = mockBackend;
 
-// TODO - figure out how to determine production vs mock on frontend
-let isProd = true;
-
-if (isProd) {
+if (process.env.REACT_APP_SERVER_BASE_URL!=="FRONTEND") {
     backend = serverBackend;
 }
 
