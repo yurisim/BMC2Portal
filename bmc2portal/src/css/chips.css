@@ -38,7 +38,7 @@
     margin-right: 5px;
     margin-bottom: 5px;
 }
-.container .chips-list li a {
+.chip-remove {
     color: white;
     text-decoration: none;
     margin-left: 5px;
@@ -52,7 +52,7 @@
     align-items: center;
     justify-content: center;
 }
-.container .chips-list li a:hover {
+.chip-remove:hover {
     color: red;
 }
 
