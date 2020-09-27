@@ -4,6 +4,8 @@ import (
 	"log"
 	"os"
 
+	endpoints "bmc2server/endpoints"
+
 	echo "github.com/labstack/echo/v4"
 	middleware "github.com/labstack/echo/v4/middleware"
 
@@ -12,8 +14,9 @@ import (
 
 //A Server struct contains all the information necessary to create a server
 type Server struct {
-	//API *endpoints.EP
-	//e *echo
+	API       *endpoints.EP
+	App       *echo.Echo
+	hasStatic bool
 }
 
 //Build function establishes a connection to the database and starts the server service.
@@ -29,7 +32,7 @@ func Build() *Server {
 	//srv.ConnectToDatabase()
 
 	log.Println("Exposing API...")
-	// srv.BuildAPI()
+	srv.BuildAPI()
 
 	return srv
 }
@@ -80,121 +83,32 @@ func (s *Server) ConnectToDatabase() {
 	log.Println("TLSSkipVerify", dbTLSSkipVerify)
 	log.Println("TLSDBCipher", dbTLSDBCipher)
 
-	// dbConnection := pg.Connect(&pg.Options{
-	// 	User:     dbUser,
-	// 	Password: dbPwd,
-	// 	Addr:     dbURL,
-	// 	Database: dbName,
-	// })
-
-	// if dbTLS == "secure" || dbTLS == "secure-skip" {
-	// 	dbConnection = pg.Connect(&pg.Options{
-	// 		User:     dbUser,
-	// 		Password: dbPwd,
-	// 		Addr:     dbURL,
-	// 		Database: dbName,
-	// 		TLSConfig: &tls.Config{
-	// 			ServerName:               dbTLSServerName,
-	// 			InsecureSkipVerify:       dbTLSSkipVerify,
-	// 			PreferServerCipherSuites: dbTLSDBCipher,
-	// 		},
-	// 	})
-	// }
-
-	// s.DB = dbConnection
-
-	// if showSQL, err := strconv.ParseBool(os.Getenv("DEBUG_SHOW_SQL")); err == nil && showSQL {
-
-	// 	log.Println("!! Showing all SQL queries !!")
-
-	// 	//s.DB.AddQueryHook(AfterQuery(event *pg.QueryEvent) {
-	// 	//	query, err := event.FormattedQuery()
-	// 	//	if err != nil {
-	// 	//		panic(err)
-	// 	//	}
-
-	// 	//	log.Printf("%s %s", time.Since(event.StartTime), query)
-	// 	//})
-	// }
+	// do DB connection logic here
 }
 
 //BuildAPI builds the endpoints as found below
 func (s *Server) BuildAPI() {
-	// s.API = endpoints.Build(s.DB)
+	s.API = endpoints.Build()
+	s.BuildAppLayer()
 }
 
-//BuildIris maps endpoints to endpoint functions as found in the endpoint package
-func (s *Server) BuildIris() {
-	// app := iris.New()
+//BuildAppLayer maps endpoints to endpoint functions as found in the endpoint package
+func (s *Server) BuildAppLayer() {
+	e := echo.New()
 
-	// app.Use(recover.New())
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+	e.Use(middleware.CORS())
 
-	// if useProm, err := strconv.ParseBool(os.Getenv("EXPORT_PROMETHEUS")); err == nil && useProm {
-	// 	app.Use()
-	// 	app.Use(prometheusMiddleware.New("JSADT", 0.3, 1.2, 5.0).ServeHTTP)
-	// }
+	e.GET("/api/test", s.API.AirspacesGet)
 
-	// app.Use(s.BuildLoggerLayer())
+	if s.hasStatic == true {
+		e.Static("/", "../../bmc2portal/build")
+	}
 
-	// csrfSecret := os.Getenv("CSRF_SECRET")
+	s.App = e
 
-	// if csrfSecret != "" {
-	// 	app.Use(s.BuildCSRFLayer(csrfSecret))
-	// } else {
-	// 	log.Println("!! CSRF Protection Disabled !!")
-	// }
-
-	// *********************************** THIS KEEP
-
-	// webdir := os.Getenv("DEBUG_WEB_DIR")
-
-	// if webdir == "" {
-	// 	webdir = "/html"
-	// }
-
-	// if webdir != "" {
-	// 	log.Printf("!! Serving files from '%s' at '/' !!", webdir)
-	// 	app.HandleDir("/", webdir)
-	// }
-
-	// var v1 iris.Party
-
-	// if useCORS, err := strconv.ParseBool(os.Getenv("DEBUG_ALLOW_ALL_ORIGINS")); err == nil && useCORS {
-
-	// 	log.Println("!! CORS AllowedOrigins set to * !!")
-
-	// 	crs := cors.New(cors.Options{
-	// 		AllowedOrigins:   []string{"*"}, // allows everything, use that to change the hosts.
-	// 		AllowCredentials: true,
-	// 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "PATCH"},
-	// 	})
-
-	// 	v1 = app.Party("/v1", crs).AllowMethods(iris.MethodOptions)
-	// } else {
-	// 	v1 = app.Party("/v1").AllowMethods(iris.MethodOptions)
-	// }
-
-	// //These are API endpoints that do not require authentication tokens
-	// publicRoutes := v1.Party("/public")
-	// {
-	// 	publicRoutes.Get("/rundown", s.API.RundownGet)
-
-	// 	//?? Not used?
-	// 	//publicRoutes.Get("/metrics", iris.FromStd(promhttp.Handler()))
-	// }
-
-	// //protectedRoutes := v1.Party("/protected")
-	// //{
-	// //}
-
-	// //adminRoutes := protectedRoutes.Party("/admin")
-	// //{
-	// //}
-
-	// //userRoutes := protectedRoutes.Party("/user")
-	// //{
-	// //}
-	//s.App = app
+	log.Println("Built routes.")
 }
 
 //Run starts the server service
@@ -229,23 +143,12 @@ func (s *Server) Run() {
 
 	log.Println("Environment set. Starting service...")
 
-	e := echo.New()
-
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-
-	// Routes
-	// e.POST("/users", createUser)
-	// e.GET("/users/:id", getUser)
-	// e.PUT("/users/:id", updateUser)
-	// e.DELETE("/users/:id", deleteUser)
-
-	if serveStatic == "true" {
-		e.Static("/", "../../bmc2portal/build")
-	}
+	s.hasStatic = (serveStatic == "true")
 
 	// Start server
-	e.Logger.Fatal(e.Start(":8080"))
+	s.App.Logger.Fatal(s.App.Start(":8080"))
+
+	log.Println("!! SERVER STARTED !!")
 }
 
 // if serverSecure == "disable" {

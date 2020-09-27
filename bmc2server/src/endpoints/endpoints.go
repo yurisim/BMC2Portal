@@ -1,8 +1,14 @@
 package endpoints
 
 import (
+	"crypto/tls"
+	"log"
 	"net/http"
 	"sync"
+
+	mock "bmc2server/mock"
+
+	echo "github.com/labstack/echo/v4"
 	// "github.com/go-pg/pg"
 	// "github.com/kataras/iris"
 )
@@ -15,14 +21,32 @@ type EP struct {
 	client        *http.Client
 }
 
+// Unit Represents data from a Unit
+type Unit struct {
+	Name  string `json:"name"`
+	Phone string `json:"dsn"`
+	IFG   string `json:"ifgLoc"`
+	Spins string `json:"spinsLoc"`
+	Logo  string `json:"logo"`
+}
+
 // Build will return an initialized EP structure given the set parameters
-// func Build(DB *pg.DB) *EP {
-// 	return &EP{
-// 		userNotifiers: &sync.Map{},
-// 		db:            DB,
-// 		client:        &http.Client{Transport: &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}},
-// 	}
-// }
+func Build() *EP {
+	log.Println("Building endpoints...")
+	return &EP{
+		userNotifiers: &sync.Map{},
+		//db:            DB,
+		client: &http.Client{Transport: &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}},
+	}
+}
+
+//AirspacesGet returns a test string
+func (e *EP) AirspacesGet(ctx echo.Context) error {
+
+	a := mock.GetAirspaceList()
+
+	return ctx.JSONPretty(http.StatusOK, a, " ")
+}
 
 // // RundownGet is used to get the current rundown list
 // func (e *EP) RundownGet(ctx iris.Context) {
