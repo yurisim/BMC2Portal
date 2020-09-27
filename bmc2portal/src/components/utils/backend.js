@@ -1,5 +1,8 @@
 
-let backend = {
+let backend = {};
+
+if (process.env.NODE_ENV === "development");
+  backend = {
     // remove these helper functions when database is integrated
     async getData(){
         let response = await fetch("https://jsonplaceholder.typicode.com/users")
