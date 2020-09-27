@@ -2,7 +2,9 @@ This frontend UI was bootstrapped with [Create React App](https://github.com/fac
 
 ## Available Scripts
 
-In the 'bmc2portal' directory, you can run:
+Assuming you have installed npm and yarn, the following scripts are available.
+
+In the 'bmc2portal' directory run:
 
 ### `yarn start`
 

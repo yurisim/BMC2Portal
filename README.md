@@ -30,14 +30,14 @@ TODO - Setup and configuration files for the database (under construction).
 
 Deprecated.
 
-@TODO - Remove this folder and provide instructions.
+@TODO - Remove this folder and provide instructions on serving the frontend.
 
 
 ## Developers & Contributors Notes
 
 ## Frontend-Only Development
 
-See [bmc2portal README](https://github.com/jemccarthy13/BMC2Portal/tree/master/bmc2portal).
+- See [bmc2portal README](https://github.com/jemccarthy13/BMC2Portal/tree/master/bmc2portal).
 
 ## Integrated Development
 
@@ -51,6 +51,6 @@ the [bmc2server README](https://github.com/jemccarthy13/BMC2Portal/tree/master/b
 
 ## Requirements
 
-- [NPM/NodeJS] (https://www.npmjs.com/get-npm)
-- [Yarn] (https://classic.yarnpkg.com/en/docs/install/#windows-stable)
-- [GoLang] (https://golang.org/dl/)
+- Install [NPM/NodeJS] (https://www.npmjs.com/get-npm)
+- Install [Yarn] (https://classic.yarnpkg.com/en/docs/install/#windows-stable)
+- Install [GoLang] (https://golang.org/dl/)
