@@ -29,7 +29,18 @@ class Airspace extends React.Component {
     const urlParams = new URLSearchParams(queryString);
     const aspace = urlParams.get('aspace')
     
-    let aspaceInfo = await backend.getAirspaceInfo(aspace);
+    let aspaceInfo = {
+      name: "Failed to retrieve data from the server.",
+      atcAgency: "-",
+      loaLoc: "-",
+      units: "-",
+      lessons: "-",
+      logo: "undefined"
+    }
+    try{
+      aspaceInfo = await backend.getAirspaceInfo(aspace);
+    } catch {
+    }
 
     let unitSplit = aspaceInfo.units.split(",");
     let elems = [<span key="span0">Units:<br/></span>];
@@ -42,7 +53,8 @@ class Airspace extends React.Component {
         atcAgency: aspaceInfo.atcAgency,
         loaLoc: aspaceInfo.loaLoc,
         units: elems,
-        lessons: <a href={'/msncrew/lessons.html?tags=' + aspaceInfo.name}> Lessons Learned </a>
+        lessons: <a href={'/msncrew/lessons.html?tags=' + aspaceInfo.name}> Lessons Learned </a>,
+        logo: aspaceInfo.logo
     })
   }
 

@@ -42,6 +42,21 @@ class UnitList extends React.Component {
     common.filterTable("unitTable", "searchText");
   }
 
+  getUnitTableRows() {
+    let tableRows = <tr><td colSpan="2">Loading...</td></tr>
+
+    if (this.state){
+      if (this.state.failed){
+        tableRows = <tr><td colSpan="2">Failed to retrieve data from the server.</td></tr>
+      } else if (this.state.unitRows.length ===0){
+        tableRows = <tr><td colSpan="2">No units in the database.</td></tr>
+      } else {
+        tableRows = this.state.unitRows
+      }
+    }
+    return tableRows;
+  }
+
   render(){
     return (
       <div>
@@ -53,11 +68,9 @@ class UnitList extends React.Component {
         <div style={{paddingTop:"5%"}}>
           <table id="unitTable">
             <tbody>
-            <tr><th>Unit</th><th>Airfeld</th></tr>
-            {/** Conditionally, display "Loading..." or the data if we have it. */}
-            {this.state && !this.state.failed && this.state.unitRows}
-            {!this.state && <tr><td colSpan="2">Loading...</td></tr>}
-            {this.state && this.state.failed && <tr><td colSpan="2">Failed to retrieve data from server.</td></tr>}
+              <tr><th>Unit</th><th>Airfeld</th></tr>
+              {/** Conditionally, display "Loading..." or the data if we have it. */}
+              {this.getUnitTableRows()}
             </tbody>
           </table>
         </div>

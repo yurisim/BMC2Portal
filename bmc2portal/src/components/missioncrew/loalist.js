@@ -41,6 +41,20 @@ class LOAList extends React.Component {
     common.filterTable("loaTable", "searchText");
   }
 
+  getLOATableRows(){
+    let tableRows = <tr><td colSpan="2">Loading...</td></tr>
+    if (this.state){
+      if(this.state.failed){
+        tableRows = <tr><td colSpan="2">Failed to retrieve data from the server.</td></tr>
+      } else if (this.state.loaRows.length===0){
+        tableRows = <tr><td colSpan="2">No LOAs in database. </td></tr>
+      } else {
+        tableRows = this.state.loaRows
+      }
+    }
+    return tableRows;
+  }
+
   render(){
     return (
       <div>
@@ -52,11 +66,9 @@ class LOAList extends React.Component {
         <div style={{paddingTop:"5%"}}>
           <table id="loaTable">
             <tbody>
-            <tr><th>LOA</th><th>ATC Agency</th></tr>
+            <tr><th>ATC Agency</th><th>LOA</th></tr>
             {/** Conditionally, display "Loading..." or the data if we have it. */}
-            {this.state && !this.state.failed && this.state.loaRows}
-            {this.state && this.state.failed && <tr><td colSpan="2">Failed to retrieve data from server.</td></tr>}
-            {!this.state && <tr><td colSpan="2">Loading...</td></tr>}
+            {this.getLOATableRows()}
             </tbody>
           </table>
         </div>

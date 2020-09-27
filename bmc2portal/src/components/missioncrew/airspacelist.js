@@ -43,6 +43,21 @@ class AirspaceList extends React.Component {
     common.filterTable("aspaceTable", "searchText");
   }
 
+  getAirspaceTableRows(){
+    let tableRows =  <tr><td colSpan="2">Loading...</td></tr>;
+    if(this.state){
+      if (this.state.failed){
+        tableRows = <tr><td colSpan="2"> Failed to fetch data from server.</td></tr>
+      } else if (this.state.aspaceRows.length ===0 ){
+        tableRows = <tr><td colSpan="2">No airspaces in database. </td></tr>
+      } else {
+        tableRows = this.state.aspaceRows
+      }
+    }
+
+    return tableRows
+  }
+
   render(){
     return (
       <div>
@@ -56,9 +71,7 @@ class AirspaceList extends React.Component {
             <tbody>
             <tr><th>Airspace</th><th>ATC Agency</th></tr>
             {/** Conditionally, display "Loading..." or the data if we have it. */}
-            {!this.state && <tr><td colSpan="2">Loading...</td></tr>}
-            {this.state && this.state.failed && <tr><td colSpan="2">Failed to fetch data from server.</td></tr>}
-            {this.state && !this.state.failed && this.state.aspaceRows}
+            {this.getAirspaceTableRows()}
             </tbody>
           </table>
         </div>

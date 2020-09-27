@@ -46,8 +46,14 @@ class LessonsLearnedList extends React.Component {
         const urlParams = new URLSearchParams(queryString);
         const tags = urlParams.get('tags')
   
-        let lessons = await backend.getLessonsLearned();
-        let allTags = await backend.getAllTags();
+        let lessons = []
+        let allTags = []
+        try {
+            lessons = await backend.getLessonsLearned();
+            allTags = await backend.getAllTags();
+        } catch {
+            this.setState({failed:true})
+        }
         let items = [];
  
         let tagSplit = [];
@@ -124,6 +130,22 @@ class LessonsLearnedList extends React.Component {
         this.setState({ searchTags: sTags, displayLessons: newDisplay });
     }
 
+    getLessonsLearnedTableRows(){
+        let tableRows = <tr><td colSpan="2">Loading...</td></tr>
+        if (this.state){
+            if (this.state.failed){
+                tableRows = <tr><td colSpan="2">Failed to retrieve data from server.</td></tr>
+            } else if(this.state.displayLessons.length<=0){
+                tableRows = <tr><td colSpan="2">No data from server.</td></tr>
+            } else {
+                tableRows = this.state.displayLessons.map((lesson)=>{
+                    return <tr key={lesson.date+Math.random()}><td>{lesson.date}</td><td>{lesson.title}</td><td>{lesson.tags.join(",")}</td></tr>
+                })
+            } 
+        }
+        return tableRows;
+    }
+
     render() {
         let asTagElems = []
         return (
@@ -143,7 +165,6 @@ class LessonsLearnedList extends React.Component {
                     })
                   }
                   {asTagElems}
-                  
                 </div>
               }
             </div>
@@ -152,9 +173,7 @@ class LessonsLearnedList extends React.Component {
             <div style={{textAlign:"center"}}> Lessons Learned </div>
             <br/>
             <table id="lessonsLearnedTable" style={{width:"100%"}}><tbody>
-                {this.state.displayLessons.map((lesson)=>{
-                    return <tr key={lesson.date+Math.random()}><td>{lesson.date}</td><td>{lesson.title}</td><td>{lesson.tags.join(",")}</td></tr>
-                })}
+                {this.getLessonsLearnedTableRows()}
             </tbody></table>
           </div>
         )
