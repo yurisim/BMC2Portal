@@ -8,7 +8,7 @@ import SearchInput from '../utils/searchinput'
 /**
  * This Component contains a searchable/filterable table of the CONUS SUAs.
  */
-class UnitList extends React.Component {
+export default class UnitList extends React.Component {
 
   // Lifecycle function for after the Component has rendered
   componentDidMount(){
@@ -77,5 +77,3 @@ class UnitList extends React.Component {
       </div>
     )}
 }
-
-export default UnitList

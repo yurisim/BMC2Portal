@@ -5,7 +5,7 @@ import backend from '../utils/backend.js';
 /**
  * This Component contains information on a particular unit.
  */
-class Unit extends React.Component {
+export default class Unit extends React.Component {
 
   constructor(){
       super();
@@ -70,5 +70,3 @@ class Unit extends React.Component {
       </div>
     )}
 }
-
-export default Unit

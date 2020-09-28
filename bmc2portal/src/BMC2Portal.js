@@ -49,7 +49,8 @@ let browserHistory = createBrowserHistory();
  *               it isn't in the navigation pane but the AirspaceList component links to it
  * - Design/implement your Component
  */
-class BMC2Portal extends React.PureComponent {
+export default class BMC2Portal extends React.PureComponent {
+
   render(){
     return (
       <div className="app">
@@ -67,6 +68,8 @@ class BMC2Portal extends React.PureComponent {
             <Route path="/common/lessons.html" component={LessonsLearnedList}/>
             <Route path="/common/artracks.html" render={(props) => (<ImagePane {...props} imageSrc="UR IMG HURR" /> )}/>
             <Route path="/common/orbits.html" render={(props) => (<ImagePane {...props} imageSrc="UR IMG HURR" /> )}/>
+
+            {/**<Route path="/common/cesium.html" component={CesiumViewer}/>*/}
           </Router>
         </div>
         <header>
@@ -75,5 +78,3 @@ class BMC2Portal extends React.PureComponent {
       </div>
     )}
 }
-
-export default BMC2Portal;

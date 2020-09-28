@@ -1,11 +1,11 @@
 import React from 'react';
 
-class Home extends React.PureComponent {
+import ImagePane from './utils/imagepane'
+
+export default class Home extends React.PureComponent {
 
   render(){
     return (
-      <div style={{textAlign: "center"}}> INSERT 552 ACW LOGO </div>
+      <ImagePane imageSrc="INSERT 552 ACW LOGO" />
     )}
 }
-
-export default Home

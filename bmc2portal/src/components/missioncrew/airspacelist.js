@@ -8,7 +8,7 @@ import SearchInput from '../utils/searchinput'
 /**
  * This Component contains a searchable/filterable table of the CONUS SUAs.
  */
-class AirspaceList extends React.Component {
+export default class AirspaceList extends React.Component {
 
   // Lifecycle function for after the Component has rendered
   componentDidMount(){
@@ -78,5 +78,3 @@ class AirspaceList extends React.Component {
       </div>
     )}
 }
-
-export default AirspaceList

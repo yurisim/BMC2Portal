@@ -6,7 +6,7 @@ import '../../css/lesson.css'
 
 import Chips from './chips.js'
 
-class Lesson extends React.Component {
+export default class Lesson extends React.Component {
 
     render(){
         return (
@@ -30,8 +30,5 @@ class Lesson extends React.Component {
                     onClick={()=>{}} /></div>
             </td>
             </tr>)
-        //return <tr><td>{this.props.lesson.date}</td><td>{this.props.lesson.title}</td><td>{this.props.lesson.tags}</td></tr>
     }
 }
-
-export default Lesson

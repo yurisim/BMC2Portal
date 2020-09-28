@@ -5,7 +5,7 @@ import common from './common.js';
 /**
  * This Component renders a search input box.
  */
-class SearchInput extends React.Component {
+export default class SearchInput extends React.Component {
 
   render(){
     let defaultText = this.props.defaultValue ? this.props.defaultValue : common.defaultText;
@@ -25,5 +25,3 @@ class SearchInput extends React.Component {
       </div>
     )}
 }
-
-export default SearchInput

@@ -4,7 +4,7 @@ import '../../css/styles.css'
 import '../../css/chips.css'
 import '../../css/lesson.css'
 
-class Chips extends React.Component {
+export default class Chips extends React.Component {
 
     render(){
         let asTagElems=[]
@@ -32,5 +32,3 @@ class Chips extends React.Component {
         )
     }
 }
-
-export default Chips

@@ -10,7 +10,7 @@ import '../../css/sidebar.css';
  * - "link": (optional) which 'page' the top-level menu item takes you to
  * - "menuitems": (optional) An array of submenuitems { text, link }
  */
-class NavMenuItem extends React.Component {
+export default class NavMenuItem extends React.Component {
 
   navigate = () => {
     if (this.props.link){
@@ -34,5 +34,3 @@ class NavMenuItem extends React.Component {
       </div>
     )}
 }
-
-export default NavMenuItem

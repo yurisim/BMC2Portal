@@ -5,7 +5,7 @@ import backend from '../utils/backend.js';
 /**
  * This Component contains information on a particular airspace.
  */
-class Airspace extends React.Component {
+export default class Airspace extends React.Component {
 
   constructor(){
       super();
@@ -71,5 +71,3 @@ class Airspace extends React.Component {
       </div>
     )}
 }
-
-export default Airspace

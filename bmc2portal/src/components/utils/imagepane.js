@@ -3,7 +3,7 @@ import React from 'react';
 /**
  * This Component contains an image.
  */
-class ImagePane extends React.Component {
+export default class ImagePane extends React.Component {
 
   render(){
     return (
@@ -12,5 +12,3 @@ class ImagePane extends React.Component {
       </div>
     )}
 }
-
-export default ImagePane

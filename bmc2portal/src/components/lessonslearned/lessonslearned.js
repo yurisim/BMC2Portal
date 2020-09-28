@@ -11,7 +11,7 @@ import SearchInput from '../utils/searchinput'
 
 const defaultText = "type and enter tag...";
 
-class LessonsLearnedList extends React.Component {
+export default class LessonsLearnedList extends React.Component {
 
     constructor(){
         super();
@@ -200,5 +200,3 @@ class LessonsLearnedList extends React.Component {
         )
     }
 }
-
-export default LessonsLearnedList

@@ -9,6 +9,7 @@ let fdMenuItems = [
   { text: "AR Tracks", link: "/common/artracks.html"},
   { text: "E-3 Orbits", link: "/common/orbits.html"},
   { text: "Debrief", link: "/common/debrief.html" },
+  { text: "Map", link: "/common/cesium.html" },
 ];
 
 let mcMenuItems = [
@@ -18,6 +19,7 @@ let mcMenuItems = [
   { text: "AR Tracks", link: "/common/artracks.html" },
   { text: "E-3 Orbits", link: "/common/orbits.html" },
   { text: "Debrief", link: "/common/debrief.html" },
+  { text: "Map", link: "/common/cesium.html" },
 ];
 
 /**
@@ -27,7 +29,7 @@ let mcMenuItems = [
  * 
  * See <NavMenuItem> for options.
  */
-class SideBar extends React.PureComponent {
+export default class SideBar extends React.PureComponent {
   render() {
     return (
       <div className="navbar">
@@ -40,5 +42,3 @@ class SideBar extends React.PureComponent {
     );
   }
 }
-
-export default SideBar;
