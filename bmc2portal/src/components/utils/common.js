@@ -17,22 +17,30 @@ let common = {
     },
 
     // search the fighter unit directory and filter out non-matching text
-    filterTable(tableId, searchTextId ){
-        var input, filter, table, tr, td, td2, i;
+    filterTable(tableId, searchTextId, cells ){
+        if (cells === undefined || cells.length === 0){
+            return
+        }
+
+        var input, filter, table, tr, i;
         input = document.getElementById(searchTextId);
         filter = input.value.toUpperCase();
         table = document.getElementById(tableId);
         tr = table.getElementsByTagName("tr");
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
-            td2 = tr[i].getElementsByTagName("td")[1];
-            if (td && td2) {
-            if (td.innerHTML.toUpperCase().indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1 || filter===this.defaultText.toUpperCase()){
-                tr[i].style.display = "";
-            } else {
-                tr[i].style.display = "none";
+        for (var i = 1; i < tr.length; i++) {
+            let foundInRow = false;
+            for (var j =0; j < cells.length; j++){
+                let td = tr[i].getElementsByTagName("td")[j]
+                if (td){
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1 || filter === this.defaultText.toUpperCase()){
+                        tr[i].style.display="";
+                        foundInRow = true;
+                    }
+                }
             }
-            }       
+            if (!foundInRow) {
+                tr[i].style.display="none";
+            }   
         }
     }
 }

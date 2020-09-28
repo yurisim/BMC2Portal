@@ -38,7 +38,7 @@ class LOAList extends React.Component {
 
   // Filter the table based on search text
   filterLOAs(){
-    common.filterTable("loaTable", "searchText");
+    common.filterTable("loaTable", "searchText",[0,1]);
   }
 
   getLOATableRows(){

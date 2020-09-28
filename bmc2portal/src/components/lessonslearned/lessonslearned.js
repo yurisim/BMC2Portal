@@ -3,6 +3,11 @@ import React from 'react';
 import backend from '../utils/backend.js'
 import '../../css/styles.css'
 import '../../css/chips.css'
+import '../../css/lesson.css'
+
+import Lesson from './lesson'
+import Chips from './chips'
+import SearchInput from '../utils/searchinput'
 
 const defaultText = "type and enter tag...";
 
@@ -89,7 +94,12 @@ class LessonsLearnedList extends React.Component {
         if (e.key==="Backspace" && e.currentTarget.value===""){
             let sTags = this.state.searchTags
             sTags.splice(sTags.length-1,1);
-            this.setState({searchTags: sTags})
+            let newDisplay = this.filterLessons(this.state.allLessons, sTags);
+            this.setState({
+                searchTags: sTags,
+                displayLessons: newDisplay,
+                suggestedTags: []
+            })
         }
     }
 
@@ -112,7 +122,7 @@ class LessonsLearnedList extends React.Component {
         }
     }
 
-    addTag(tag){
+    addTag = (tag, tags) =>{
         return () => {
             let sTags = this.state.searchTags;
             sTags.push(tag);
@@ -122,7 +132,7 @@ class LessonsLearnedList extends React.Component {
         }
     }
 
-    removeTag(index){
+    removeTag = (index) =>{
         let sTags = this.state.searchTags;
         sTags.splice(index,1);
 
@@ -139,40 +149,51 @@ class LessonsLearnedList extends React.Component {
                 tableRows = <tr><td colSpan="2">No data from server.</td></tr>
             } else {
                 tableRows = this.state.displayLessons.map((lesson)=>{
-                    return <tr key={lesson.date+Math.random()}><td>{lesson.date}</td><td>{lesson.title}</td><td>{lesson.tags.join(",")}</td></tr>
+                    return <Lesson key={lesson.date+Math.random()} lesson={lesson}/>
                 })
             } 
         }
         return tableRows;
     }
 
+    filterLessonsLearned =() =>{
+        if (this.state){
+            let dLessons = this.state.allLessons.filter((lesson)=>{
+                let text = document.getElementById("searchText").value.toUpperCase();
+                return lesson.title.toUpperCase().indexOf(text) > -1 || lesson.content.toUpperCase().indexOf(text) > -1
+            })
+            this.setState({displayLessons: dLessons})
+        }
+    }
+
     render() {
-        let asTagElems = []
         return (
         <div>
-            <div className="container">
-              <h1>Search by lessons learned with Tags: </h1>
-              <div className="chips-list" id="list" >
-                {this.state.searchTags.map((item,index)=>{
-                    return <li key={item+"-"+index}><span>{item}</span><button className="chip-remove" onClick={()=>this.removeTag(index)}>X</button></li>
-                })}
-              </div>
-              <input type="text" id="txt" placeholder={defaultText} onInput={this.autoSuggest} onKeyDown={this.checkBack} onKeyPress={this.handleTagKeyPress}/>
-              { this.state.suggestedTags.length > 0 && 
-                <div id="autosuggest" className="dropdown" style={{display:"grid"}} >
-                  {this.state.suggestedTags.forEach((tag) => {
-                        asTagElems.push(<button onClick={this.addTag(tag)} key={tag+"-"+Math.random()}> {tag} </button>);
-                    })
-                  }
-                  {asTagElems}
-                </div>
-              }
+            <Chips 
+                isEdit={true}
+                hasRemove={true}
+                title="Search by lessons learned with Tags:"
+                tags={this.state.searchTags}
+                suggestedTags={this.state.suggestedTags}
+                defaultText={defaultText}
+                addTag={this.addTag}
+                autoSuggest={this.autoSuggest}
+                checkBack={this.checkBack}
+                handleTagKeyPress={this.handleTagKeyPress}
+                onRemoveClick={this.removeTag}
+            />
+            <br/>
+            <div className="searchDiv">
+                <SearchInput 
+                    searchFunc={this.filterLessonsLearned}
+                    label="Search Contents:"
+                />
             </div>
 
             <br/>
             <div style={{textAlign:"center"}}> Lessons Learned </div>
             <br/>
-            <table id="lessonsLearnedTable" style={{width:"100%"}}><tbody>
+            <table id="lessonsLearnedTable" className="lessonsTable" style={{width:"100%"}}><tbody>
                 {this.getLessonsLearnedTableRows()}
             </tbody></table>
           </div>

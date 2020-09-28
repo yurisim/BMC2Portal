@@ -40,7 +40,7 @@ class AirspaceList extends React.Component {
 
   // Filter the table based on search text
   filterAirspaces(){
-    common.filterTable("aspaceTable", "searchText");
+    common.filterTable("aspaceTable", "searchText",[0,1]);
   }
 
   getAirspaceTableRows(){

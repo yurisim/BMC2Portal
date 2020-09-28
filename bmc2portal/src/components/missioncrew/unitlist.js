@@ -39,7 +39,7 @@ class UnitList extends React.Component {
 
   // Filter the table based on search text
   filterUnits(){
-    common.filterTable("unitTable", "searchText");
+    common.filterTable("unitTable", "searchText",[0,1]);
   }
 
   getUnitTableRows() {

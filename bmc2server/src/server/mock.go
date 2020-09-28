@@ -1,5 +1,7 @@
 package server
 
+import "time"
+
 //Airspace Contains Airspace Information
 type Airspace struct {
 	Name      string `json:"name"`
@@ -35,12 +37,29 @@ type Lesson struct {
 }
 
 //GetLesson Mocks a lesson
-func GetLesson(tags []string) Lesson {
+func GetLesson(tags []string, contentuniq string) Lesson {
+	formatIdeal := "2006-01-02"
+	t, _ := time.Parse(formatIdeal, "2020-09-27")
+
+	content := "ipsem loreum titum " + contentuniq
+	if contentuniq == "fourth" {
+		content = content + "This is a really long  " +
+			"lesson learned hardcoded as an example. this should be removed during production " +
+			"QC. TODO - remove this and have a MOCKED/GOMOCKED return that includes a long " +
+			"lesson learned content. <br/><br/>" +
+			"Truthfully, this div could be several paragraphs long. Let's try it out. <br/><br/>" +
+			"This is a really long " +
+			"lesson learned hardcoded as an example. this should be removed during production " +
+			"QC. TODO - remove this and have a MOCKED/GOMOCKED return that includes a long " +
+			"lesson learned content."
+	}
 	lesson := &Lesson{
-		Date:    "09/27/2020",
-		Tags:    tags,
-		Title:   "ipsum lorem",
-		Content: "ipsem loreum titum",
+		Date:        t.Format(formatIdeal),
+		Tags:        tags,
+		Title:       "ipsum lorem",
+		Content:     content,
+		Contributor: "John McCarthy",
+		Validator:   "Scotty Seidenberger",
 	}
 	return *lesson
 }
@@ -129,11 +148,11 @@ func GetLOAList() []ATCAgency {
 //GetLessonsLearned mocks all of the lessons learned
 func GetLessonsLearned() []Lesson {
 	var a = make([]Lesson, 5)
-	a[0] = GetLesson([]string{"W122"})
-	a[1] = GetLesson([]string{"W122"})
-	a[2] = GetLesson([]string{"W133"})
-	a[3] = GetLesson([]string{"Red Flag"})
-	a[4] = GetLesson([]string{"W122", "Red Flag"})
+	a[0] = GetLesson([]string{"W122"}, "first")
+	a[1] = GetLesson([]string{"W122"}, "second")
+	a[2] = GetLesson([]string{"W133"}, "third")
+	a[3] = GetLesson([]string{"Red Flag"}, "fourth")
+	a[4] = GetLesson([]string{"W122", "Red Flag"}, "fifth")
 	return a
 }
 
