@@ -4,6 +4,14 @@
 # package-lock.json
 # yarn.lock
 
+# Cesium
+/public/Cesium/*
+/public/CesiumUnminified/*
+/public/Documentation/*
+/public/Documentation
+/public/CesiumUnminified
+/public/Cesium
+
 # dependencies
 /node_modules
 /.pnp
