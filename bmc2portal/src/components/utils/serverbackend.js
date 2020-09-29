@@ -17,6 +17,8 @@ async function get(url = '') {
     return response.json(); // parses JSON response into native JavaScript objects
 }
 
+// These are the actual endpoints used by the application to retrieve data
+// from the specified REACT_APP_SERVER_BASE_URL
 let serverBackend = {
     // SELECT * FROM AIRSPACELIST
     async getAirspaceList(){

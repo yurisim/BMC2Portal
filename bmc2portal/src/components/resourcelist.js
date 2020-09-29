@@ -6,8 +6,9 @@ import '../css/links.css';
 /**
  * This Component contains the rendering of the "Links & Resourcs" 'page'.
  */
-class ResourceList extends React.Component {
+export default class ResourceList extends React.Component {
 
+  // Set initial tabs
   constructor(){
     super();
     this.state = {
@@ -16,7 +17,8 @@ class ResourceList extends React.Component {
     }
   }
 
-  handleClick = (e) => {
+  // Handle a click on a top tab (menu item)
+  handleMenuClick = (e) => {
     e.preventDefault();
     var id = e.currentTarget.id
     this.setState({
@@ -29,6 +31,7 @@ class ResourceList extends React.Component {
     })
   }
 
+  // main render
   render(){
     this.elems = [];
     return (
@@ -36,9 +39,9 @@ class ResourceList extends React.Component {
         <div style={{display:"inline-flex", width:"95%"}}>
           <nav style={{width:"100%"}} className="tabs">
             <ul className="tabs-menu" style={{display:"inline-flex", width:"100%"}}>
-              <li id="adminTabLI" className={this.state.tabClasses[0]} onClick={this.handleClick}><a href="/#">Admin/Msn Planning</a></li>
-              <li id="tinkerTabLI" className={this.state.tabClasses[1]} onClick={this.handleClick}><a href="/#">Tinker AFB</a></li>
-              <li id="careerTabLI" className={this.state.tabClasses[2]} onClick={this.handleClick}><a href="/#">Air Force</a></li>
+              <li id="adminTabLI" className={this.state.tabClasses[0]} onClick={this.handleMenuClick}><a href="/#">Admin/Msn Planning</a></li>
+              <li id="tinkerTabLI" className={this.state.tabClasses[1]} onClick={this.handleMenuClick}><a href="/#">Tinker AFB</a></li>
+              <li id="careerTabLI" className={this.state.tabClasses[2]} onClick={this.handleMenuClick}><a href="/#">Air Force</a></li>
             </ul>
           </nav>
         </div>
@@ -73,5 +76,3 @@ class ResourceList extends React.Component {
       </div>
     )}
 }
-
-export default ResourceList

@@ -12,12 +12,14 @@ import '../../css/sidebar.css';
  */
 export default class NavMenuItem extends React.Component {
 
+  // If this menu item has a link, navigate to that link when it is clicked
   navigate = () => {
     if (this.props.link){
       window.location.href = this.props.link;
     }
   }
 
+  // main component render
   render(){
     this.elems = [];
     return (

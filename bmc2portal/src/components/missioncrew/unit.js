@@ -7,6 +7,7 @@ import backend from '../utils/backend.js';
  */
 export default class Unit extends React.Component {
 
+  // Initialize the state
   constructor(){
       super();
       this.state = {
@@ -47,6 +48,7 @@ export default class Unit extends React.Component {
     });
   }
 
+  // main component render
   render(){
     return (
       <div>

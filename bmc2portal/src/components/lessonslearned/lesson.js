@@ -1,11 +1,14 @@
 import React from 'react';
 
+import Chips from './chips.js'
+
 import '../../css/styles.css'
 import '../../css/chips.css'
 import '../../css/lesson.css'
 
-import Chips from './chips.js'
-
+/**
+ * A Component to render a lesson learned
+ */
 export default class Lesson extends React.Component {
 
     render(){

@@ -7,6 +7,7 @@ import backend from '../utils/backend.js';
  */
 export default class Airspace extends React.Component {
 
+  // Initialize the state
   constructor(){
       super();
       this.state = {
@@ -58,6 +59,7 @@ export default class Airspace extends React.Component {
     })
   }
 
+  // main Component render
   render(){
     return (
       <div>
