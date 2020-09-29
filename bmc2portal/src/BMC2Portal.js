@@ -3,14 +3,10 @@ import React from "react";
 import { Router, Route } from "react-router";
 import { createBrowserHistory } from "history";
 
-// import logo from './logo.svg';
 import "./css/body.css";
 import "./css/styles.css";
 import "./css/fonts.css";
-import "./css/spoiler.css";
 import "./css/chips.css";
-
-import './components/utils/common.js';
 
 import SideBar from "./components/navigation/sidebar.js";
 import AirspaceList from "./components/missioncrew/airspacelist.js";
@@ -21,6 +17,8 @@ import Unit from "./components/missioncrew/unit.js";
 import LessonsLearnedList from "./components/lessonslearned/lessonslearned.js";
 import ResourceList from "./components/resourcelist.js";
 import Home from "./components/home.js";
+
+import FileUploader from './components/fileupload/fileuploader.js'
 
 import ImagePane from "./components/utils/imagepane.js";
 
@@ -69,9 +67,9 @@ export default class BMC2Portal extends React.PureComponent {
             <Route path="/common/artracks.html" render={(props) => (<ImagePane {...props} imageSrc="UR IMG HURR" /> )}/>
             <Route path="/common/orbits.html" render={(props) => (<ImagePane {...props} imageSrc="UR IMG HURR" /> )}/>
 
-            {/**<Route path="/common/cesium.html" component={CesiumViewer}/>*/}
-          </Router>
+            </Router>
         </div>
+        <div id="snackbar"></div>
         <header>
           {/* <img src={logo} className="App-logo" alt="logo" /> */}
         </header>
