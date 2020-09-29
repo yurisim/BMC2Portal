@@ -1,8 +1,6 @@
 import React from 'react';
 
 import backend from '../utils/backend.js';
-import common from '../utils/common.js';
-
 import SearchInput from '../utils/searchinput'
 
 /**
@@ -10,7 +8,17 @@ import SearchInput from '../utils/searchinput'
  */
 export default class AirspaceList extends React.Component {
 
+  // Construct Component with empty state
+  constructor(){
+    super()
+    this.state = {
+      airspaces: [],
+      displayAirspaces: []
+    }
+  }
+
   // Lifecycle function for after the Component has rendered
+  // We load the airspaces after
   componentDidMount(){
     this.getAirspaces();
   }
@@ -23,41 +31,50 @@ export default class AirspaceList extends React.Component {
     } catch {
       this.setState({failed:true})
     }
-    
-    let aspaceRows = [];
-
-    aspaces.forEach((aspace) => {
-      let name = aspace.name;
-
-      let td1 = <td><a href={"/msncrew/airspacepage.html?aspace="+name}>{aspace.name}</a></td>;
-      let td2 = <td><a href={aspace.loaLoc}>{aspace.atcAgency}LOA.pdf</a></td>
-      aspaceRows.push(<tr key={aspace.name}>{td1}{td2}</tr>)
-    })
 
     // set state with new 'child' element for rendering
-    this.setState({aspaceRows: aspaceRows});
+    this.setState({airspaces: aspaces, displayAirspaces: aspaces});
   }
 
   // Filter the table based on search text
-  filterAirspaces(){
-    common.filterTable("aspaceTable", "searchText",[0,1]);
+  filterAirspaces = (value) => {
+    let searchVal = value.toUpperCase()
+    let newAspaces = this.state.airspaces.filter((aspace)=>{
+      return aspace.name.toUpperCase().indexOf(searchVal) > -1 || aspace.loaLoc.toUpperCase().indexOf(searchVal) > -1
+    })
+    this.setState({
+      displayAirspaces: newAspaces
+    })
+  }
+  
+  // Retrieve an element for a row that spans both columns
+  rowSpan(elem) {
+    return <tr><td colSpan="2">{elem}</td></tr>
   }
 
+  // Construct all of the airspace table rows for rendering
   getAirspaceTableRows(){
-    let tableRows =  <tr><td colSpan="2">Loading...</td></tr>;
+    // Default to "Loading...""
+    let tableRows = this.rowSpan("Loading...")
     if(this.state){
+      // check if server returned data, returned [], or succeeded
       if (this.state.failed){
-        tableRows = <tr><td colSpan="2"> Failed to fetch data from server.</td></tr>
-      } else if (this.state.aspaceRows.length ===0 ){
-        tableRows = <tr><td colSpan="2">No airspaces in database. </td></tr>
+        tableRows = this.rowSpan("Failed to fetch data from the server.")
+      } else if (this.state.displayAirspaces.length ===0 ){
+        tableRows = this.rowSpan("No airspaces in the database.")
       } else {
-        tableRows = this.state.aspaceRows
+        tableRows = this.state.displayAirspaces.map((aspace)=>{
+          return <tr key={aspace.name}>
+            <td><a href={"/msncrew/airspacepage.html?aspace="+aspace.name}>{aspace.name}</a></td>
+            <td><a href={aspace.loaLoc}>{aspace.atcAgency}LOA.pdf</a></td>
+          </tr>
+        })
       }
     }
-
     return tableRows
   }
 
+  // main Component render
   render(){
     return (
       <div>
@@ -70,7 +87,6 @@ export default class AirspaceList extends React.Component {
           <table id="aspaceTable">
             <tbody>
             <tr><th>Airspace</th><th>ATC Agency</th></tr>
-            {/** Conditionally, display "Loading..." or the data if we have it. */}
             {this.getAirspaceTableRows()}
             </tbody>
           </table>
