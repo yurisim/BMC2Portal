@@ -36,6 +36,7 @@ export default class SideBar extends React.PureComponent {
         <NavMenuItem text="Flight Deck" menuitems={fdMenuItems} />
         <NavMenuItem text="Mission Crew" menuitems={mcMenuItems} />
         <NavMenuItem text="Lessons Learned" link = "/common/lessons.html" />
+        <NavMenuItem text="FAA SUAs" link="/common/faamap.html"/>
         <NavMenuItem text="Links & Resources" link = "/resources.html" />
         <NavMenuItem text="Contact" link = "/contact.html" />
       </div>

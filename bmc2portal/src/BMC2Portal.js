@@ -21,6 +21,7 @@ import Home from "./components/home.js";
 import FileUploader from './components/fileupload/fileuploader.js'
 
 import ImagePane from "./components/utils/imagepane.js";
+import FaaMap from "./components/common/faamap";
 
 let browserHistory = createBrowserHistory();
 
@@ -62,11 +63,13 @@ export default class BMC2Portal extends React.PureComponent {
             <Route path="/msncrew/unitlist.html" component={UnitList} />
             <Route path="/msncrew/unitpage.html" component={Unit} />
             <Route path="/resources.html" component={ResourceList} />
-
+            
+            <Route path="/common/faamap.html" component={FaaMap} />
             <Route path="/common/lessons.html" component={LessonsLearnedList}/>
             <Route path="/common/artracks.html" render={(props) => (<ImagePane {...props} imageSrc="UR IMG HURR" /> )}/>
             <Route path="/common/orbits.html" render={(props) => (<ImagePane {...props} imageSrc="UR IMG HURR" /> )}/>
 
+            <Route path="/unused/unused/unused.html" component={FileUploader} />
             </Router>
         </div>
         <div id="snackbar"></div>
