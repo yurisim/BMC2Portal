@@ -81,7 +81,7 @@ export default class FileUploader extends React.Component {
                 accept={this.props.accept}
                 onDrop={this.onDrop}>
                 {({getRootProps, getInputProps, isDragActive, isDragReject, rejectedFiles}) => (
-                <div>
+                <div style={{width:"-webkit-fill-available"}}>
                     <div {...getRootProps()}>
                     <div className="files">
                     <input {...getInputProps()} />

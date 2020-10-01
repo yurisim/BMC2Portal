@@ -22,7 +22,7 @@ let mockBackend = {
     agencyMock(agency){
         return {
             name: agency,
-            loaLoc: agency+"LOA.pdf"
+            loas: [agency+"LOA.pdf"]
         }
     },
 

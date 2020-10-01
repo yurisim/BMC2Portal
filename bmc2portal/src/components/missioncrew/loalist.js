@@ -3,7 +3,7 @@ import React from 'react';
 import backend from '../utils/backend.js';
 
 import SearchInput from '../utils/searchinput'
-import FileUploader from '../fileupload/fileuploader'
+import LoaPdf from './loapdf.js';
 
 /**
  * This Component contains a searchable/filterable table of the CONUS ATC Agencies
@@ -44,7 +44,12 @@ export default class LOAList extends React.Component {
   filterLOAs = (value) => {
     value = value.toUpperCase();
     let newLOAs = this.state.loaList.filter((item) => {
-      return item.name.toUpperCase().indexOf(value) > -1 || item.loaLoc.toUpperCase().indexOf(value) > -1
+      var foundMatch = false;
+      for (var i = 0; i < item.loaLoc.length; i++){
+        if (!foundMatch && item.loaLoc[i].toUpperCase().indexOf(value) > -1)
+        foundMatch = true;
+      }
+      return item.name.toUpperCase().indexOf(value) > -1 || foundMatch
     })
     this.setState({
       displayLOAs: newLOAs
@@ -92,20 +97,9 @@ export default class LOAList extends React.Component {
                 {loa.name}
               </td>
               <td>
-                {this.isEdit(index) &&  // we're editing, so provide the button to close file uploader
-                  <div style={{float:"right"}}> {this.getButton("X", this.setEditIdx(-1))} </div>
-                }
-                <div>{loa.loaLoc}
-                  { this.isEdit(index) &&  // we're editing, so provide the file uploader
-                    <div style={{margin:"5%"}}>
-                      <FileUploader maxFileCount={1} accept="application/pdf,.pdf,.txt"/>
-                    </div>
-                  } 
-                  { !this.isEdit(index) && // we're not editing, so render the update button
-                    <div style={{float:"right"}}>
-                      {this.getButton("Update", this.setEditIdx(index))}
-                    </div>}
-                </div>
+                <LoaPdf
+                  loaLoc={loa.loaLoc}
+                />
               </td>
             </tr> )
         })

@@ -22,8 +22,6 @@ import LessonsLearnedList from "./components/lessonslearned/lessonslearned.js";
 import ResourceList from "./components/resourcelist.js";
 import Home from "./components/home.js";
 
-import FileUploader from './components/fileupload/fileuploader.js'
-
 import ImagePane from "./components/utils/imagepane.js";
 import FilePane from "./components/utils/filepane.js";
 import FaaMap from "./components/common/faamap";
@@ -69,6 +67,7 @@ export default class BMC2Portal extends React.PureComponent {
             <Route path="/msncrew/unitpage.html" component={Unit} />
             <Route path="/resources.html" component={ResourceList} />
             
+            <Route path="/loas" component={FilePane} />
             <Route path="/common/faamap.html" component={FaaMap} />
             <Route path="/common/lessons.html" component={LessonsLearnedList}/>
             <Route path="/common/artracks.html" render={(props) => (<ImagePane {...props} imageSrc="UR IMG HURR" /> )}/>

@@ -22,8 +22,8 @@ type Unit struct {
 
 //ATCAgency maps an agency to it's LOA
 type ATCAgency struct {
-	Name   string `json:"name"`
-	LOALoc string `json:"loaLoc"`
+	Name string   `json:"name"`
+	LOAs []string `json:"loaLoc"`
 }
 
 //Lesson stores lesson leanred information
@@ -124,11 +124,29 @@ func GetUnitList() []Unit {
 	return a
 }
 
+var m = make(map[string][]string)
+
 //GetATCInfo mocks info for a specific ATC agency
 func GetATCInfo(agency string) ATCAgency {
+
+	var pdfs [7]string
+	pdfs[0] = "Abuquerque ARTCC"
+	pdfs[1] = "Jacksonville ARTCC.pdf"
+	pdfs[2] = "FACSFAC Vacapes.pdf"
+	pdfs[3] = "Denver ARTCC.pdf"
+	pdfs[4] = "Houston ARTCC.pdf"
+	pdfs[5] = "Houston ARTCC LOA for W-228A-D.pdf"
+	pdfs[6] = "Memphis ARTCC.pdf"
+	m["Albuqurque ARTCC"] = pdfs[0:1]
+	m["Jacksonville ARTCC"] = pdfs[1:2]
+	m["FACSFAC Vacapes"] = pdfs[2:3]
+	m["Denver ARTCC"] = pdfs[3:4]
+	m["Houston ARTCC"] = pdfs[4:6]
+	m["Memphis ARTCC"] = pdfs[6:]
+
 	agent := &ATCAgency{
-		Name:   agency,
-		LOALoc: agency + "LOA.pdf",
+		Name: agency,
+		LOAs: m[agency],
 	}
 	return *agent
 }
@@ -137,11 +155,11 @@ func GetATCInfo(agency string) ATCAgency {
 func GetLOAList() []ATCAgency {
 	var a = make([]ATCAgency, 5)
 
-	a[0] = GetATCInfo("Jacksonville Center")
-	a[1] = GetATCInfo("FACSFAC VACAPES")
+	a[0] = GetATCInfo("Jacksonville ARTCC")
+	a[1] = GetATCInfo("FACSFAC Vacapes")
 	a[2] = GetATCInfo("Denver ARTCC")
 	a[3] = GetATCInfo("Houston ARTCC")
-	a[4] = GetATCInfo("Memphis Center")
+	a[4] = GetATCInfo("Memphis ARTCC")
 	return a
 }
 

@@ -2,6 +2,7 @@ package server
 
 import (
 	"log"
+	"net/http"
 	"os"
 
 	echo "github.com/labstack/echo/v4"
@@ -150,10 +151,20 @@ func (s *Server) Run() {
 
 	s.hasStatic = (serveStatic == "true")
 
+	// Start static server
+	go startServeStatic(s)
+
 	// Start server
-	s.App.Logger.Fatal(s.App.Start(":8080"))
+	s.App.Logger.Fatal(s.App.Start(serverURL))
+	log.Println("!! API SERVICE STARTED !!")
 
 	log.Println("!! SERVER STARTED !!")
+}
+
+func startServeStatic(s *Server) {
+	fs := http.FileServer(http.Dir("./docs"))
+	s.App.Logger.Fatal(http.ListenAndServe(":9000", fs))
+	log.Println("!! STATIC WEBSERVE STARTED !!")
 }
 
 // if serverSecure == "disable" {
