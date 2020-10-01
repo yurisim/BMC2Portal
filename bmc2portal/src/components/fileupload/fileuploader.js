@@ -6,6 +6,8 @@ import FileAccept from './fileaccept'
 
 import '../../css/fileuploader.css'
 
+import backend from '../utils/backend.js'
+
 /**
  * FileUploader provides a Component to render a File Dropzone.
  * 
@@ -36,6 +38,21 @@ export default class FileUploader extends React.Component {
             acceptedFiles: acceptedFiles,
             rejectedFiles: rejectedFiles
         })
+
+        this.uploadFiles();
+    }
+
+    // Actually perform the upload POST request
+    async uploadFiles(){
+        var formData = new FormData()
+        this.state.acceptedFiles.forEach((file)=>{
+            formData.append('file', file)
+        })
+        let result = await backend.postFiles(formData)
+
+        if (result.ok ){
+            this.setState({uploadedFiles:this.state.acceptedFiles})
+        }
     }
 
     style = {
@@ -74,10 +91,10 @@ export default class FileUploader extends React.Component {
                     </div>
                     </div>
                     {this.state && this.state.rejectedFiles && this.state.rejectedFiles.length > 0 && this.state.rejectedFiles.map(rejectedFile => (
-                        <FileReject rejectedFile={rejectedFile} />
+                        <FileReject key={rejectedFile.name} rejectedFile={rejectedFile} />
                     ))}
-                    {this.state && this.state.acceptedFiles && this.state.acceptedFiles.length > 0 && this.state.acceptedFiles.map(acceptedFile => (
-                        <FileAccept acceptedFile={acceptedFile} />
+                    {this.state && this.state.uploadedFiles && this.state.uploadedFiles.length > 0 && this.state.uploadedFiles.map(acceptedFile => (
+                        <FileAccept key={acceptedFile.name} acceptedFile={acceptedFile} />
                     ))}
                 </div>  
             )}

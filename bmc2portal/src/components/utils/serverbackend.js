@@ -17,9 +17,24 @@ async function get(url = '') {
     return response.json(); // parses JSON response into native JavaScript objects
 }
 
+// POST for formData with files
+async function _postFiles(formData, url = "/api/uploadLOA"){
+    const response = await fetch(baseURL+url, {
+        method: "POST",
+        body: formData,
+    });
+    return response; //response.json();
+}
+
 // These are the actual endpoints used by the application to retrieve data
 // from the specified REACT_APP_SERVER_BASE_URL
 let serverBackend = {
+
+    // UPLOAD file
+    async postFiles(formData){
+        return _postFiles(formData).then((data)=> {return data});
+    },
+
     // SELECT * FROM AIRSPACELIST
     async getAirspaceList(){
         return get('/api/airspacelist').then((data)=>{return data});

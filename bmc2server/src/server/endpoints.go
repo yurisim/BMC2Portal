@@ -2,8 +2,11 @@ package server
 
 import (
 	"crypto/tls"
+	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"os"
 	"sync"
 
 	echo "github.com/labstack/echo/v4"
@@ -74,4 +77,39 @@ func (e *EP) LessonsLearnedGet(ctx echo.Context) error {
 func (e *EP) AllTagsGet(ctx echo.Context) error {
 	tags := GetAllTags()
 	return ctx.JSON(http.StatusOK, tags)
+}
+
+//UploadLOA uploads an LOA to the server (TODO - store meta in mongo, store file on GridFS?)
+func (e *EP) UploadLOA(ctx echo.Context) error {
+	file, err := ctx.FormFile("file")
+
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	src, err := file.Open()
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	defer src.Close()
+
+	dir := "./LOAs"
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		os.Mkdir(dir, os.ModeDir)
+	}
+
+	dst, err := os.Create(dir + "/" + file.Filename)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	defer dst.Close()
+
+	if _, err = io.Copy(dst, src); err != nil {
+		fmt.Println(err)
+		return err
+	}
+	msg := "Uploaded " + file.Filename + " success."
+	return ctx.JSON(http.StatusOK, msg)
 }

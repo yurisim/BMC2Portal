@@ -105,6 +105,8 @@ func (s *Server) BuildAppLayer() {
 	e.GET("/api/lessonslearned", s.API.LessonsLearnedGet)
 	e.GET("/api/lessontags", s.API.AllTagsGet)
 
+	e.POST("/api/uploadLOA", s.API.UploadLOA)
+
 	if s.hasStatic == true {
 		e.Static("/", "../../bmc2portal/build")
 	}
