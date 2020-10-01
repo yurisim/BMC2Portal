@@ -59,6 +59,7 @@ export default class ResourceList extends React.Component {
           <nav id="tinkerTab" className="links green">
             <ul>
               <li><a href="#link1">Tinker AFB Home</a></li>
+              <li><a href="/common/basemap.html">Base Map</a></li>
               <li><a href="https://org2.eis.af.mil/sites/21232/SitePages/Home.aspx" target="_blank" rel="noopener noreferrer">552 ACW Sharepoint</a></li>
               <li><a href="#link4">Military OneSource</a></li>
               <li><a href="#link4">Tinker Services</a></li>

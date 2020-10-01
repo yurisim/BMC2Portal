@@ -8,7 +8,7 @@ export default class ImagePane extends React.Component {
   render(){
     return (
       <div style={{textAlign:"center"}}>
-        <div>{this.props.imageSrc}</div>
+        <img alt={this.props.imageSrc} src={this.props.imageSrc}></img>
       </div>
     )}
 }

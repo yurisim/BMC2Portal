@@ -8,6 +8,10 @@ import "./css/styles.css";
 import "./css/fonts.css";
 import "./css/chips.css";
 
+import baseMap from './resources/ktik_map.jpg'
+import awacsOrbit from './resources/AWACSOrbitMap.pdf'
+import triadOrbit from './resources/IronTriadOrbitMap.pdf'
+
 import SideBar from "./components/navigation/sidebar.js";
 import AirspaceList from "./components/missioncrew/airspacelist.js";
 import LOAList from "./components/missioncrew/loalist.js";
@@ -21,6 +25,7 @@ import Home from "./components/home.js";
 import FileUploader from './components/fileupload/fileuploader.js'
 
 import ImagePane from "./components/utils/imagepane.js";
+import FilePane from "./components/utils/filepane.js";
 import FaaMap from "./components/common/faamap";
 
 let browserHistory = createBrowserHistory();
@@ -67,9 +72,10 @@ export default class BMC2Portal extends React.PureComponent {
             <Route path="/common/faamap.html" component={FaaMap} />
             <Route path="/common/lessons.html" component={LessonsLearnedList}/>
             <Route path="/common/artracks.html" render={(props) => (<ImagePane {...props} imageSrc="UR IMG HURR" /> )}/>
-            <Route path="/common/orbits.html" render={(props) => (<ImagePane {...props} imageSrc="UR IMG HURR" /> )}/>
+            <Route path="/common/orbits.html" render={(props) => (<FilePane {...props} src={awacsOrbit} /> )}/>
+            <Route path="/common/triadorbits.html" render={(props) => (<FilePane {...props} src={triadOrbit} /> )}/>
 
-            <Route path="/unused/unused/unused.html" component={FileUploader} />
+            <Route path="/common/basemap.html" render={(props) => (<ImagePane {...props} imageSrc={baseMap} /> )}/>
             </Router>
         </div>
         <div id="snackbar"></div>
