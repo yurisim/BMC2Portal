@@ -2,6 +2,8 @@ import React from 'react';
 
 import backend from '../utils/backend.js';
 
+import LoaPdf from './loapdf'
+
 /**
  * This Component contains information on a particular airspace.
  */
@@ -54,18 +56,31 @@ export default class Airspace extends React.Component {
         atcAgency: aspaceInfo.atcAgency,
         loaLoc: aspaceInfo.loaLoc,
         units: elems,
-        lessons: <a href={'/msncrew/lessons.html?tags=' + aspaceInfo.name}> Lessons Learned </a>,
+        lessons: <a href={'/common/lessons.html?tags=' + aspaceInfo.name}> Lessons Learned </a>,
         logo: aspaceInfo.logo
     })
   }
 
   // main Component render
   render(){
+    console.log(this.state.loaLoc)
     return (
       <div>
         <table><tbody>
             <tr><th colSpan="2" id="aspace">{this.state.name}</th></tr>
-            <tr><td id="atc">{this.state.atcAgency}</td><td id="loaLoc">{this.state.loaLoc}</td></tr>
+            <tr><td id="atc">{this.state.atcAgency}</td>
+                {this.state.loaLoc!=="Loading..." && 
+                  <td key={this.state.name}>
+                    {this.state.loaLoc && 
+                     <LoaPdf
+                      update={false}
+                      loaLoc={this.state.loaLoc}
+                    />}
+                    {!this.state.loaLoc && 
+                    <div>No LOA associated with this airspace.</div>}
+                  </td>
+                }
+            </tr>
             <tr><td colSpan="2" id="units">{this.state.units}</td></tr>
             <tr><td colSpan="2" id="lessons">{this.state.lessons}</td></tr>
             <tr><td colSpan="2" height="400px" id="diagram"> {this.state.logo} </td></tr>

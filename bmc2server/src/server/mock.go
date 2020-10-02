@@ -1,13 +1,16 @@
 package server
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 //Airspace Contains Airspace Information
 type Airspace struct {
-	Name      string `json:"name"`
-	AtcAgency string `json:"atcAgency"`
-	LoaLoc    string `json:"loaLoc"`
-	Units     string `json:"units"`
+	Name      string   `json:"name"`
+	AtcAgency string   `json:"atcAgency"`
+	LoaLoc    []string `json:"loaLoc"`
+	Units     string   `json:"units"`
 }
 
 // Unit Represents data from a Unit
@@ -66,13 +69,18 @@ func GetLesson(tags []string, contentuniq string) Lesson {
 
 //GetAirspace Mocks an airspace
 func GetAirspace(name string) Airspace {
-	atc := "Jacksonville Center"
+	atc := "Jacksonville ARTCC"
 	if name == "W133" {
-		atc = "Giantkiller"
+		atc = "Memphis ARTCC"
+	} else if name == "Wiley East" {
+		atc = "UNKNOWN"
+	} else if name == "W155" {
+		atc = "Houston ARTCC"
 	}
 
-	loaLoc := atc + "LOA.pdf"
+	loaLoc := m[atc]
 
+	fmt.Println(loaLoc)
 	// TODO - replace this with a lookup - ATCAgency -> LOA Loc
 	aspace := &Airspace{
 		Name:      name,
@@ -85,12 +93,13 @@ func GetAirspace(name string) Airspace {
 
 //GetAirspaceList Mocks the airspace list
 func GetAirspaceList() []Airspace {
-	var a = make([]Airspace, 5)
+	var a = make([]Airspace, 6)
 	a[0] = GetAirspace("W122")
 	a[1] = GetAirspace("W133")
 	a[2] = GetAirspace("W470")
 	a[3] = GetAirspace("W155")
 	a[4] = GetAirspace("W151")
+	a[5] = GetAirspace("Wiley East")
 	return a
 }
 
@@ -126,9 +135,7 @@ func GetUnitList() []Unit {
 
 var m = make(map[string][]string)
 
-//GetATCInfo mocks info for a specific ATC agency
-func GetATCInfo(agency string) ATCAgency {
-
+func init() {
 	var pdfs [7]string
 	pdfs[0] = "Abuquerque ARTCC"
 	pdfs[1] = "Jacksonville ARTCC.pdf"
@@ -143,6 +150,10 @@ func GetATCInfo(agency string) ATCAgency {
 	m["Denver ARTCC"] = pdfs[3:4]
 	m["Houston ARTCC"] = pdfs[4:6]
 	m["Memphis ARTCC"] = pdfs[6:]
+}
+
+//GetATCInfo mocks info for a specific ATC agency
+func GetATCInfo(agency string) ATCAgency {
 
 	agent := &ATCAgency{
 		Name: agency,

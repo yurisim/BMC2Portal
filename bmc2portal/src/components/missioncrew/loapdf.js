@@ -4,9 +4,10 @@ import FileUploader from '../fileupload/fileuploader'
 
 export default class LoaPdf extends React.Component {
 
-    constructor(){
+    constructor(props){
         super()
         this.state={
+            update: props.update ? true : props.update,
             isEdit: undefined
         }
     }
@@ -42,7 +43,7 @@ export default class LoaPdf extends React.Component {
                     }
                     
                 </div>}
-                {!this.isEdit(loa) && // we're not editing, so render the update button
+                {!this.isEdit(loa) && this.state.update && // we're not editing, so render the update button
                     <div style={{float:"right"}}>
                         {this.getButton("Update", this.setEdit(loa))}
                     </div>}

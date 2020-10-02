@@ -3,6 +3,8 @@ import React from 'react';
 import backend from '../utils/backend.js';
 import SearchInput from '../utils/searchinput'
 
+import LoaPdf from './loapdf'
+
 /**
  * This Component contains a searchable/filterable table of the CONUS SUAs.
  */
@@ -66,7 +68,13 @@ export default class AirspaceList extends React.Component {
         tableRows = this.state.displayAirspaces.map((aspace)=>{
           return <tr key={aspace.name}>
             <td><a href={"/msncrew/airspacepage.html?aspace="+aspace.name}>{aspace.name}</a></td>
-            <td><a href={aspace.loaLoc}>{aspace.atcAgency}LOA.pdf</a></td>
+            <td>
+            {aspace.loaLoc && <LoaPdf 
+              update={false}
+              loaLoc={aspace.loaLoc}
+            />}
+            {!aspace.loaLoc && <div>No LOA for this airspace.</div>}
+            </td>
           </tr>
         })
       }
