@@ -17,9 +17,7 @@ export default class Chips extends React.Component {
     // binding to 'this' to allow enter key to clear when autosuggest option is clicked
     handleKeyPress = (e) =>{
         this.props.handleTagKeyPress(e)
-        console.log(e.charCode)
         if (e.charCode === 13) {
-            console.log("reset value")
             this.inputElem.value = ""
         }
     }
