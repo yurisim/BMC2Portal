@@ -166,7 +166,8 @@ export default class LessonsLearnedList extends React.Component {
             if (this.state.failed){
                 tableRows = this.rowSpan("Failed to retrieve data from the server.")
             } else if(this.state.displayLessons.length<=0){
-                tableRows = this.rowSpan("No lessons learned have been submitted.")
+                tableRows = this.rowSpan("No lessons learned with tags: " + 
+                    (this.state.searchTags.length > 0 ? this.state.searchTags : " no tags."))
             } else {
                 tableRows = this.state.displayLessons.map((lesson)=>{
                     return <Lesson key={lesson.date+Math.random()} lesson={lesson}/>
