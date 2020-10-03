@@ -42,7 +42,13 @@ export default class AirspaceList extends React.Component {
   filterAirspaces = (value) => {
     let searchVal = value.toUpperCase()
     let newAspaces = this.state.airspaces.filter((aspace)=>{
-      return aspace.name.toUpperCase().indexOf(searchVal) > -1 || aspace.loaLoc.toUpperCase().indexOf(searchVal) > -1
+      var foundMatch = false;
+      if (!aspace.loaLoc) return false
+      for (var i = 0; i < aspace.loaLoc.length; i++){
+        if (!foundMatch && aspace.loaLoc[i].toUpperCase().indexOf(searchVal) > -1)
+        foundMatch = true;  
+      }
+      return aspace.name.toUpperCase().indexOf(searchVal) > -1 || foundMatch
     })
     this.setState({
       displayAirspaces: newAspaces
