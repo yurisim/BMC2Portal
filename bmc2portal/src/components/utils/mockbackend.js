@@ -29,7 +29,7 @@ let mockBackend = {
     // Mock endpoing for getting airspace data
     airspaceMock(aspaceName){
         let atc =  (aspaceName === "W133" ? "Giantkiller": "Jacksonville Center");
-        let loaLoc = atc + " LOA.pdf";
+        let loaLoc = [atc + " LOA.pdf"];
         return {
             name: aspaceName,
             atcAgency: atc,

@@ -7,7 +7,7 @@ export default class LoaPdf extends React.Component {
     constructor(props){
         super()
         this.state={
-            update: props.update ? true : props.update,
+            update: props.update!==undefined ? props.update : true,
             isEdit: undefined
         }
     }

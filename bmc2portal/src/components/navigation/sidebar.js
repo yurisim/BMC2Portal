@@ -9,7 +9,6 @@ let fdMenuItems = [
   { text: "AR Tracks", link: "/common/artracks.html"},
   { text: "E-3 Orbits", link: "/common/orbits.html"},
   { text: "Debrief", link: "/common/debrief.html" },
-  { text: "Map", link: "/common/cesium.html" },
 ];
 
 let mcMenuItems = [
@@ -19,7 +18,6 @@ let mcMenuItems = [
   { text: "AR Tracks", link: "/common/artracks.html" },
   { text: "E-3 Orbits", link: "/common/orbits.html" },
   { text: "Debrief", link: "/common/debrief.html" },
-  { text: "Map", link: "/common/cesium.html" },
 ];
 
 /**
@@ -36,7 +34,7 @@ export default class SideBar extends React.PureComponent {
         <NavMenuItem text="Flight Deck" menuitems={fdMenuItems} />
         <NavMenuItem text="Mission Crew" menuitems={mcMenuItems} />
         <NavMenuItem text="Lessons Learned" link = "/common/lessons.html" />
-        <NavMenuItem text="FAA SUAs" link="/common/faamap.html"/>
+        <NavMenuItem text="FAA Map" link="/common/faamap.html"/>
         <NavMenuItem text="Links & Resources" link = "/resources.html" />
         <NavMenuItem text="Contact" link = "/contact.html" />
       </div>
