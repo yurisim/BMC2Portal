@@ -122,6 +122,7 @@ export default class LOAList extends React.Component {
             <tbody>
             <tr><th>ATC Agency</th><th>LOA</th></tr>
             {this.getLOATableRows()}
+            <tr><td><button>+</button></td><td></td></tr>
             </tbody>
           </table>
         </div>
