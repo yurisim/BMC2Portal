@@ -5,6 +5,7 @@ import backend from '../utils/backend.js'
 import Lesson from './lesson'
 import Chips from './chips'
 import SearchInput from '../utils/searchinput'
+import Form from './form'
 
 import '../../css/styles.css'
 import '../../css/chips.css'
@@ -21,11 +22,10 @@ export default class LessonsLearnedList extends React.Component {
     constructor(){
         super();
         this.state = {
-            searchTags: [],
             allTags: [],
+            searchTags: [],
             allLessons: [],
             displayLessons: [],
-            suggestedTags: []
         }
     }
 
@@ -90,69 +90,11 @@ export default class LessonsLearnedList extends React.Component {
         })
     }
 
-    // Suggest tags to the user from existing tags
-    autoSuggest = async (e) =>{
-        var numSuggestions = 5; // change this to allow users to see XX suggested tags
-        var showTags = [];
-        if (e.currentTarget.value !== "" || e.currentTarget.value === defaultText) {
-            showTags = this.state.allTags.filter((t) => t.indexOf(e.currentTarget.value.toUpperCase()) !== -1).slice(0, numSuggestions);
-        }
-        await this.setState ( {suggestedTags: showTags})
-    }
-  
-    // On search, check for a backspace key
-    // when the input is empty, this will start deleting existing search tags
-    checkBack = (e) =>{
-        if (e.key==="Backspace" && e.currentTarget.value===""){
-            let sTags = this.state.searchTags
-            sTags.splice(sTags.length-1,1);
-            let newDisplay = this.filterLessons(this.state.allLessons, sTags);
-            this.setState({
-                searchTags: sTags,
-                displayLessons: newDisplay,
-                suggestedTags: []
-            })
-        }
-    }
-
-    // Handle keypress on the tag input field -- specifically 
-    // re-filter and display tags based on new filter criteria
-    handleTagKeyPress = (e) => {
-        if (e.charCode === 13) {
-            let val = e.currentTarget.value;
-            if (val !== '') {
-                if (this.state.searchTags.indexOf(val.toUpperCase()) < 0){
-                    let tags = this.state.searchTags
-                    tags.push(val.toUpperCase());
-                    let newDisplay = this.filterLessons(this.state.allLessons, tags);
-                    this.setState({ 
-                        searchTags: tags, 
-                        displayLessons: newDisplay,
-                        suggestedTags: []
-                    });
-               }
-            }
-        }
-    }
-
-    // Add a tag to the user's list of search tags
-    addTag = (tag) =>{
-        return () => {
-            let sTags = this.state.searchTags;
-            sTags.push(tag);
-            let newDisplay = this.filterLessons(this.state.allLessons, sTags);
-            this.setState({ searchTags: sTags, displayLessons: newDisplay, suggestedTags: [] });         
-        }
-    }
-
-    // Remove a tag from the list of user's search tags
-    removeTag = (index) =>{
-        let sTags = this.state.searchTags;
-        sTags.splice(index,1);
-
-        let newDisplay = this.filterLessons(this.state.allLessons, this.state.searchTags);
-        this.setState({ searchTags: sTags, displayLessons: newDisplay });
-    }
+    // Chips will call this function to handle when chips change
+    setSearchTags = (tags) => {
+        let newDisplay = this.filterLessons(this.state.allLessons, tags);
+        this.setState({searchTags: tags, displayLessons:newDisplay})
+    } 
 
     // Return a row that spans the whole table
     rowSpan(elem) {
@@ -190,6 +132,10 @@ export default class LessonsLearnedList extends React.Component {
         }
     }
 
+    toggleEdit = () =>{
+        this.setState({isEdit:!this.state.isEdit})
+    }
+
     // main Component render
     render() {
         return (
@@ -198,14 +144,10 @@ export default class LessonsLearnedList extends React.Component {
                 isEdit={true}
                 hasRemove={true}
                 title="Search by lessons learned with Tags:"
+                setTags={this.setSearchTags}
                 tags={this.state.searchTags}
-                suggestedTags={this.state.suggestedTags}
+                allTags={this.state.allTags}
                 defaultText={defaultText}
-                addTag={this.addTag}
-                autoSuggest={this.autoSuggest}
-                checkBack={this.checkBack}
-                handleTagKeyPress={this.handleTagKeyPress}
-                onRemoveClick={this.removeTag}
             />
             <br/>
             <div className="searchDiv">
@@ -216,8 +158,16 @@ export default class LessonsLearnedList extends React.Component {
             </div>
 
             <br/>
-            <div style={{textAlign:"center"}}> Lessons Learned </div>
-            <br/>
+            <div style={{textAlign:"center"}}> Lessons Learned 
+            <button onClick={this.toggleEdit} style={{marginLeft:"2em", borderRadius:"10px", width:"auto"}}>
+                Add New
+            </button>
+            </div>
+            {this.state.isEdit &&
+                <Form
+                    onClose={this.toggleEdit}
+                />
+            }
             <table id="lessonsLearnedTable" className="lessonsTable" style={{width:"100%"}}><tbody>
                 {this.getLessonsLearnedTableRows()}
             </tbody></table>
