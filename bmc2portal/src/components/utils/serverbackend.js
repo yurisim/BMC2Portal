@@ -1,6 +1,6 @@
 let baseURL=process.env.REACT_APP_SERVER_BASE_URL
 
-// FETCH GET for server API method implementation:
+// FETCH GET for server API
 async function get(url = '') {
     // Default options are marked with *
     const response = await fetch(baseURL+url, {
@@ -17,6 +17,22 @@ async function get(url = '') {
     return response.json(); // parses JSON response into native JavaScript objects
 }
 
+// FETCH PUT for server API
+async function post(data, url = ''){
+    const response = await fetch(baseURL+url, {
+        method: "PUT", 
+        mode: "cors",
+        cache: "no-cache",
+        credentials: "same-origin",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        referrerPolicy: 'no-referrer',
+        body: JSON.stringify(data)
+    });
+    return response.json();
+}
+
 // POST for formData with files
 async function _postFiles(formData, url = "/api/uploadLOA"){
     const response = await fetch(baseURL+url, {
@@ -29,6 +45,16 @@ async function _postFiles(formData, url = "/api/uploadLOA"){
 // These are the actual endpoints used by the application to retrieve data
 // from the specified REACT_APP_SERVER_BASE_URL
 let serverBackend = {
+
+    // PUT a lesson learned to the server
+    async postLessonLearned(title, author, content){
+        var lesson = {
+            title: title,
+            author: author,
+            content: content,
+        }
+        return post(lesson, '/api/lessonslearned').then((data) => {return data});
+    },
 
     // UPLOAD file
     async postFiles(formData){

@@ -19,6 +19,13 @@ type EP struct {
 	client        *http.Client
 }
 
+// LessonLearned defines a LessonLearned
+type LessonLearned struct{
+	Author string `json:"author"`
+	Title string `json:"title"`
+	Content string `json:"content"`
+}
+
 // BuildEP will return an initialized EP structure given the set parameters
 func BuildEP() *EP {
 	log.Println("Building endpoints...")
@@ -34,6 +41,13 @@ func BuildEP() *EP {
 // TODO - Figure out how to provide .env toggle for mock on server or interact with DB.
 //
 //
+//LessonsLearnedPut stores a lesson learned in the database
+func (e *EP) LessonsLearnedPut(ctx echo.Context) error {
+	lesson := &LessonLearned{}
+	ctx.Bind(&lesson)
+	fmt.Println("Putting ", lesson, " into DB");
+	return ctx.JSON(http.StatusOK, "OK")
+}
 
 //AirspaceListGet returns data for all airspaces
 // SELECT * FROM AIRSPACELIST

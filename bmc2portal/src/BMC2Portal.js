@@ -5,6 +5,7 @@ import { createBrowserHistory } from "history";
 
 import "./css/body.css";
 import "./css/styles.css";
+import "./css/snackbar.css";
 import "./css/fonts.css";
 import "./css/chips.css";
 

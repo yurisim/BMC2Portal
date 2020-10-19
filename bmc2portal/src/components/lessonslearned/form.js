@@ -8,6 +8,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import Chips from './chips';
 
+import snackbar from '../utils/alert.js'
+import backend from '../utils/backend.js'
+
 export default class Form extends React.Component {
 
     constructor(props){
@@ -42,13 +45,18 @@ export default class Form extends React.Component {
         this.props.onClose()
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         var goodForm = e.currentTarget.form.reportValidity()
         e.preventDefault();
         if (goodForm) {
-            console.log("submit to server")
-            console.log(this.state.title, this.state.author, this.state.content)
-            this.handleClose()
+            console.log("submit to server", this.state.title, this.state.author, this.state.content)
+            var res = await backend.postLessonLearned(this.state.title, this.state.author, this.state.content)
+            if (res === "OK"){
+                snackbar.alert("Submitted!", 5000, "green")
+                this.handleClose()
+            } else{
+                snackbar.alert("Error submitting...", 5000, "red")
+            }
         }
     }
 
