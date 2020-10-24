@@ -10,3 +10,6 @@ bmc2server/src/.env.development.local
 .vscode/settings.json
 bmc2server/src/loas.index/index_meta.json
 bmc2server/src/loas.index/store
+
+ParrotSour/*
+ParrotSour
