@@ -9,6 +9,6 @@ export default class Home extends React.PureComponent {
 
   render(){
     return (
-      <ImagePane imageSrc="INSERT 552 ACW LOGO" />
+      <ImagePane imageSrc="./icon/552trans.png" />
     )}
 }
