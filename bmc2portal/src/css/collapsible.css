@@ -1,0 +1,120 @@
+/* Style the collapsible content. Note: hidden by default */
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
+  border-radius: 0px 20px 20px 20px;
+}
+
+.pscontainer {
+  display: block;
+  position: relative;
+  height: auto;
+  padding: 5px;
+}
+
+
+
+.container ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow: inherit;
+}
+
+ul li {
+  color: #aaaaaa;
+  display: inline-flex;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-bottom: 1px solid #333;
+}
+
+ul li input[type="radio"] {
+  position: absolute;
+  visibility: hidden;
+}
+
+ul li input[type="checkbox"] {
+  position: absolute;
+  visibility: hidden;
+}
+
+ul li label {
+  display: block;
+  position: relative;
+  font-weight: 300;
+  font-size: 1em;
+  padding: 15px 0px 5px 30px;
+  height: 30px;
+  z-index: 9;
+  cursor: pointer;
+  -webkit-transition: all 0.25s linear;
+}
+
+ul li:hover label {
+  color: #ffffff;
+}
+
+ul li .box {
+  display: block;
+  position: absolute;
+  border: 3px solid #aaaaaa;
+  border-radius: 0%;
+  height: 15px;
+  width: 15px;
+  top: 25%;
+  z-index: 5;
+  transition: border 0.25s linear;
+  -webkit-transition: border 0.25s linear;
+}
+
+ul li .check {
+  display: block;
+  position: absolute;
+  border: 3px solid #aaaaaa;
+  border-radius: 100%;
+  height: 15px;
+  width: 15px;
+  top: 25%;
+  z-index: 5;
+  transition: border 0.25s linear;
+  -webkit-transition: border 0.25s linear;
+}
+
+ul li:hover .check {
+  border: 3px solid #ffffff;
+}
+
+ul li .check::before {
+  display: block;
+  position: relative;
+  content: "";
+  border-radius: 100%;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: auto;
+  margin: auto;
+  transition: background 0.25s linear;
+  -webkit-transition: background 0.25s linear;
+}
+
+input[type="radio"]:checked ~ .check {
+  border: 3px solid #0dff92;
+}
+
+input[type="checkbox"]:checked ~ .box {
+  border: 3px solid #0dff92;
+  background-color: #0dff92;
+}
+
+input[type="radio"]:checked ~ .check::before {
+  background: #0dff92;
+}
+
+input[type="radio"]:checked ~ label {
+  color: #0dff92;
+}

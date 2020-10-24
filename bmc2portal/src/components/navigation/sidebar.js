@@ -12,6 +12,7 @@ let fdMenuItems = [
 ];
 
 let mcMenuItems = [
+  { text: "ParrotSour", link: "/msncrew/parrotsour.html" },
   { text: "Airspaces", link: "/msncrew/airspacelist.html" },
   { text: "Fighter Units", link: "/msncrew/unitlist.html" },
   { text: "LOAs", link: "/msncrew/loalist.html" },

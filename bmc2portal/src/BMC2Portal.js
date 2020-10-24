@@ -23,6 +23,8 @@ import LessonsLearnedList from "./components/lessonslearned/lessonslearned.js";
 import ResourceList from "./components/resourcelist.js";
 import Home from "./components/home.js";
 
+import ParrotSour from './components/parrotsour/parrotsour.js';
+
 import ImagePane from "./components/utils/imagepane.js";
 import FilePane from "./components/utils/filepane.js";
 import FaaMap from "./components/common/faamap";
@@ -66,6 +68,7 @@ export default class BMC2Portal extends React.PureComponent {
             <Route path="/msncrew/airspacepage.html" component={Airspace} />
             <Route path="/msncrew/unitlist.html" component={UnitList} />
             <Route path="/msncrew/unitpage.html" component={Unit} />
+            <Route path="/msncrew/parrotsour.html" component={ParrotSour} />
             <Route path="/resources.html" component={ResourceList} />
             
             <Route path="/loas" component={FilePane} />
