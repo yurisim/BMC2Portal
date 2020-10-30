@@ -81,8 +81,6 @@ export default class Form extends React.Component {
             onClose={this.handleClose}>
                 <form onSubmit={this.handleSubmit}>
                 <DialogContent>
-                    <DialogContentText>Hello World
-                    </DialogContentText>
                     <DialogContentText>
                         Date: {dateStr}
                     </DialogContentText>

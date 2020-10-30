@@ -94,7 +94,7 @@ export default class Chips extends React.Component {
     render(){
         let asTagElems=[]
         return (
-            <div className="container" style={this.props.style}>
+            <div className="chips-container" style={this.props.style}>
               {this.props.title && <h1>{this.props.title}</h1>}
               <div className="chips-list" id="list" >
                 {this.props.tags.map((item,index)=>{

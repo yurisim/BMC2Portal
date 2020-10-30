@@ -16,7 +16,7 @@
 
 
 
-.container ul {
+.pscontainer ul {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -117,4 +117,21 @@ input[type="radio"]:checked ~ .check::before {
 
 input[type="radio"]:checked ~ label {
   color: #0dff92;
+}
+
+.helpicon {
+  color:black;
+  background-color:#eee;
+  width:24px;
+  height:24px;
+  display:inline-block;
+  border-radius:100%;
+  font-size:18px;
+  margin-top:13px;
+  margin-left:10px;
+  text-align:center;
+  text-decoration:none;
+  -webkit-box-shadow: inset -1px -1px 1px 0px rgba(0,0,0,0.25);
+  -moz-box-shadow: inset -1px -1px 1px 0px rgba(0,0,0,0.25);
+  box-shadow: inset -1px -1px 1px 0px rgba(0,0,0,0.25);
 }

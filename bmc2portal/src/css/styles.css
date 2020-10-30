@@ -64,6 +64,7 @@ button {
   outline: none;
   font-size: 15px;
   width:95%;
+  border-radius:10px;
 }
 
 button:hover {
@@ -133,4 +134,27 @@ nav ul li a {
 
 a {
   color: lightblue;
+}
+
+.check-container {
+  display: block;
+  position: relative;
+  height: auto;
+  padding: 5px;
+}
+
+.check-container ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow: inherit;
+}
+
+.custom-sel-div {
+  border-radius:10px;
+  padding: 5px 10px 0px 10px;
+  background-color:#eee;
+  margin-right:10px;
+  margin-bottom:20px;
+  width:25%;
 }

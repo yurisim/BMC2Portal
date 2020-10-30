@@ -1,16 +1,4 @@
-
-/* main {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    right: 0px;
-    bottom: 0px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-} */
-.container {
+.chips-container {
     width: 75%;
     background: #f0f0f0;
     padding: 15px 15px 10px 15px;
@@ -18,18 +6,18 @@
     color:black;
     margin:auto;
 }
-.container h1 {
+.chips-container h1 {
     font-size: 18px;
     margin-top: 0px;
     margin-bottom: 20px;
 }
-.container .chips-list {
+.chips-container .chips-list {
     list-style: none;
     margin: 0px;
     padding: 0px;
     display: inline-block;
 }
-.container .chips-list li {
+.chips-container .chips-list li {
     display: inline-block;
     background: #555;
     color: white;
@@ -56,7 +44,7 @@
     color: red;
 }
 
-.container input {
+.chips-container input {
     color:black;
     border: 2px gray;
     border-style:solid;
@@ -65,7 +53,7 @@
     display: inline-block;
 }
 
-.container .dropdown {
+.chips-container .dropdown {
     position: absolute;
     border: 1px solid black;
     display: none;
