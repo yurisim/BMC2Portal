@@ -14,6 +14,7 @@ export default class ParrotSourIntercept extends React.Component {
         super()
         this.state = {
             showAlsaQT:false,
+            speedSliderValue: 50,
         }
     }
 
@@ -22,6 +23,10 @@ export default class ParrotSourIntercept extends React.Component {
     }
     handleAlsaQTClose = () =>{
         this.setState({showAlsaQT:false})
+    }
+
+    handleSliderChange = (evt) => {
+        this.setState({speedSliderValue: evt.currentTarget.value})
     }
 
     formatSelChange = (fmt) =>{
@@ -84,7 +89,13 @@ export default class ParrotSourIntercept extends React.Component {
 
                 <div style={{display:"flex"}}>
                     <div className="custom-sel-div">
-                        <Select disableUnderline style={{width:"100%",height:"100%"}} labelId="picSelLabel" id="pictureType" value="random">
+                        <Select 
+                            disableUnderline 
+                            style={{width:"100%",height:"100%"}} 
+                            labelId="picSelLabel" 
+                            id="pictureType" 
+                            value="random"
+                            onChange={this.showNewPic}>
                             <MenuItem value="random">Select Picture</MenuItem>
                             <MenuItem value="random">RANDOM</MenuItem>
                             <MenuItem value="azimuth">AZIMUTH</MenuItem>
@@ -103,17 +114,17 @@ export default class ParrotSourIntercept extends React.Component {
                     </div>
                     <button style={{height:"min-content", width:"25%",marginBottom:"20px"}} onClick={this.showNewPic}>New Pic</button>
                     
-                    <div class="check-container" style={{paddingTop:"0px",paddingBottom:"0px"}}>
+                    <div className="check-container" style={{paddingTop:"0px",paddingBottom:"0px"}}>
                         <ul style={{display:"inline-flex"}}>
                             <li>
-                            <input type="checkbox" id="measureMyself" onchange="showNewPic()" />
-                            <label style={{width:"max-content", paddingRight:"10px"}} for="measureMyself">I want to measure</label>
-                            <div class="box"></div>
+                            <input type="checkbox" id="measureMyself" onChange={this.showNewPic} />
+                            <label style={{width:"max-content", paddingRight:"10px"}} htmlFor="measureMyself">I want to measure</label>
+                            <div className="box"></div>
                             </li>
                             <li>
-                            <input type="checkbox" id="hardMode" onchange="showNewPic()"/>
-                            <label style={{paddingRight:"10px"}} for="hardMode"> Hard Mode</label>
-                            <div class='box'></div>
+                            <input type="checkbox" id="hardMode" onChange={this.showNewPic}/>
+                            <label style={{paddingRight:"10px"}} htmlFor="hardMode"> Hard Mode</label>
+                            <div className='box'></div>
                             </li>
                         </ul>
                     </div>
@@ -121,15 +132,22 @@ export default class ParrotSourIntercept extends React.Component {
                 </div>
 
                 <div style={{display:"inline"}}>
-                    <button id="fightsOn" style={{marginBottom:"20px",width:"100px", marginRight:"10px"}} onClick="fightsOn()" >
+                    <button id="fightsOn" style={{marginBottom:"20px",width:"100px", marginRight:"10px"}} onClick={this.fightsOn} >
                         Fights On
                     </button>
-                    <button id="pause" style={{marginBottom:"20px", width:"100px"}} onClick="pauseFightShowMeasurements()">
+                    <button id="pause" style={{marginBottom:"20px", width:"100px"}} onClick={this.pauseFightShowMeasurements}>
                         Pause
                     </button>
                     <div style={{display:"inline", marginLeft:"50px"}} className="slidecontainer">
-                        <label for="speedSlider"> Animation Speed: </label>
-                        <input type="range" min="1" max="100" value="50" class="slider-color" id="speedSlider" />
+                        <label htmlFor="speedSlider"> Animation Speed: </label>
+                        <input 
+                            type="range"
+                            min="1"
+                            max="100"
+                            value={this.state.speedSliderValue}
+                            className="slider-color"
+                            id="speedSlider"
+                            onChange={this.handleSliderChange} />
                     </div>
                     <br />
                 </div>
