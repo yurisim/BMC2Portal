@@ -1,33 +1,33 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 
 import { Router, Route } from "react-router";
 import { createBrowserHistory } from "history";
 
-import "./css/body.css";
-import "./css/styles.css";
 import "./css/snackbar.css";
+import "./css/styles.css";
+import "./css/body.css";
 import "./css/fonts.css";
-import "./css/chips.css";
 
 import baseMap from './resources/ktik_map.jpg'
 import awacsOrbit from './resources/AWACSOrbitMap.pdf'
 import triadOrbit from './resources/IronTriadOrbitMap.pdf'
 
-import SideBar from "./components/navigation/sidebar.js";
-import AirspaceList from "./components/missioncrew/airspacelist.js";
-import LOAList from "./components/missioncrew/loalist.js";
-import UnitList from "./components/missioncrew/unitlist.js";
-import Airspace from "./components/missioncrew/airspace.js";
-import Unit from "./components/missioncrew/unit.js";
-import LessonsLearnedList from "./components/lessonslearned/lessonslearned.js";
-import ResourceList from "./components/resourcelist.js";
-import Home from "./components/home.js";
+const AirspaceList = lazy(()=>import("./components/missioncrew/airspacelist.js"))
+const LOAList = lazy(()=>import("./components/missioncrew/loalist.js"))
+const UnitList = lazy(()=>import("./components/missioncrew/unitlist.js"))
+const Airspace = lazy(()=>import("./components/missioncrew/airspace.js"))
+const Unit = lazy(()=>import("./components/missioncrew/unit.js"))
+const LessonsLearnedList = lazy(()=>import("./components/lessonslearned/lessonslearned.js"))
+const ResourceList = lazy(()=>import("./components/resourcelist.js"))
 
-import ParrotSour from './components/parrotsour/parrotsour.js';
+const SideBar = lazy(()=> import("./components/navigation/sidebar.js"));
+const Home = lazy(()=> import("./components/home.js"))
 
-import ImagePane from "./components/utils/imagepane.js";
-import FilePane from "./components/utils/filepane.js";
-import FaaMap from "./components/common/faamap";
+const ParrotSour = lazy(()=>import("./components/parrotsour/parrotsour.js"))
+
+const ImagePane = lazy(()=>import("./components/utils/imagepane.js"))
+const FilePane = lazy(()=>import("./components/utils/filepane.js"))
+const FaaMap = lazy(()=>import("./components/common/faamap"))
 
 let browserHistory = createBrowserHistory();
 
@@ -59,9 +59,12 @@ export default class BMC2Portal extends React.PureComponent {
   render(){
     return (
       <div className="app">
-        <SideBar />
+        <Suspense fallback={<div>Loading...</div>} >
+          <SideBar />
+        </Suspense>
         <div className="body-content">
           <Router history={browserHistory}>
+            <Suspense fallback={<div>Loading...</div>} >
             <Route exact path="/" component={Home} />
             <Route path="/msncrew/loalist.html" component={LOAList} />
             <Route path="/msncrew/airspacelist.html" component={AirspaceList} />
@@ -79,7 +82,8 @@ export default class BMC2Portal extends React.PureComponent {
             <Route path="/common/triadorbits.html" render={(props) => (<FilePane {...props} src={triadOrbit} /> )}/>
 
             <Route path="/common/basemap.html" render={(props) => (<ImagePane {...props} imageSrc={baseMap} /> )}/>
-            </Router>
+            </Suspense>
+          </Router>
         </div>
         <div id="snackbar"></div>
         <header>
