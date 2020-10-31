@@ -1,20 +1,27 @@
-import {Dialog, DialogContent, MenuItem, Select} from '@material-ui/core'
+import {Dialog, MenuItem, Select} from '@material-ui/core'
 import React from 'react'
 
 import '../../css/collapsible.css'
 import '../../css/select.css'
 import '../../css/slider.css'
 import '../../css/parrotsour.css'
+import '../../css/toggle.css'
 
-import InterceptQT from './quicktips/interceptQT'
-import ParrotSourHeader from './parrotsourheader'
+import InterceptQT from './quicktips/interceptQT.js'
+import AlsaHelp from './quicktips/alsahelp.js'
+import ParrotSourHeader from './parrotsourheader.js'
+import ParrotSourControls from './parrotsourcontrols.js'
+import PictureCanvas from './canvas/picturecanvas.js'
+
+import VersionInfo from './versioninfo.js'
 
 export default class ParrotSourIntercept extends React.Component {
 
     constructor(){
         super()
         this.state = {
-            showAlsaQT:false,
+            showAlsaQT: false,
+            showAnswer: false,
             speedSliderValue: 50,
         }
     }
@@ -23,7 +30,7 @@ export default class ParrotSourIntercept extends React.Component {
         this.setState({showAlsaQT: !this.state.showAlsaQT})
     }
     handleAlsaQTClose = () =>{
-        this.setState({showAlsaQT:false})
+        this.setState({showAlsaQT: false})
     }
 
     handleSliderChange = (evt) => {
@@ -40,19 +47,23 @@ export default class ParrotSourIntercept extends React.Component {
         console.log("Draw new picture")
     }
 
+    revealPic = () => {
+        this.setState({showAnswer: !this.state.showAnswer})
+    }
+
+    modifyCanvas = () => {
+        console.log("reorient canvas")
+    }
+
     render(){
         return (
             <div>
-                <ParrotSourHeader
-                    comp={<InterceptQT/>}
-                />
+                <ParrotSourHeader comp={<InterceptQT/>} />
 
                 <Dialog
                     open={this.state.showAlsaQT}
                     onClose={this.handleAlsaQTClose} >
-                    <DialogContent>
-                        ALSA help text
-                    </DialogContent>
+                    <AlsaHelp />
                 </Dialog>
 
                 <hr />
@@ -132,26 +143,25 @@ export default class ParrotSourIntercept extends React.Component {
                 
                 </div>
 
-                <div style={{display:"inline"}}>
-                    <button id="fightsOn" style={{marginBottom:"20px",width:"100px", marginRight:"10px"}} onClick={this.fightsOn} >
-                        Fights On
-                    </button>
-                    <button id="pause" style={{marginBottom:"20px", width:"100px"}} onClick={this.pauseFightShowMeasurements}>
-                        Pause
-                    </button>
-                    <div style={{display:"inline", marginLeft:"50px"}} className="slidecontainer">
-                        <label htmlFor="speedSlider"> Animation Speed: </label>
-                        <input 
-                            type="range"
-                            min="1"
-                            max="100"
-                            value={this.state.speedSliderValue}
-                            className="slider-color"
-                            id="speedSlider"
-                            onChange={this.handleSliderChange} />
+                <ParrotSourControls 
+                    handleSliderChange={this.handleSliderChange}
+                    modifyCanvas={this.modifyCanvas}
+                    showNewPic={this.showNewPic}
+                />
+                
+                <br/>
+                
+                <button type="button" className={this.state.showAnswer ? "collapsible active":"collapsible"} onClick={this.revealPic}>Reveal Pic</button>
+                {this.state.showAnswer && 
+                    <div className="content" id="answerDiv" style={{color:"black", padding:"20px"}}>
+                        {this.state.answer}
                     </div>
-                    <br />
-                </div>
+                }  
+                <br/><br/><br/>
+
+                <PictureCanvas />
+
+                <VersionInfo/>
             </div>
         )
     }   
