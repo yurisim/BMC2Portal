@@ -45,12 +45,10 @@ export default class Chips extends React.Component {
 
     // Remove a tag from the list of user's entered tags
     removeTag = (index) =>{
-        return () => {
-            let sTags = this.state.searchTags;
-            sTags.splice(index,1);
-            this.setState({ searchTags: sTags });
-            this.props.setTags(this.state.searchTags)
-        }
+        let sTags = this.state.searchTags;
+        sTags.splice(index,1);
+        this.setState({ searchTags: sTags });
+        this.props.setTags(this.state.searchTags)
     }
 
     // binding to 'this' to allow enter key to clear when autosuggest option is clicked
