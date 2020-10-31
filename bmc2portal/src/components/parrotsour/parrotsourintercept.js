@@ -4,6 +4,7 @@ import React from 'react'
 import '../../css/collapsible.css'
 import '../../css/select.css'
 import '../../css/slider.css'
+import '../../css/parrotsour.css'
 
 import InterceptQT from './quicktips/interceptQT'
 import ParrotSourHeader from './parrotsourheader'

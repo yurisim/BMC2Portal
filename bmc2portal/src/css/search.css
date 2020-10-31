@@ -1,0 +1,11 @@
+.searchDiv {
+    width:75%;
+    margin:auto;
+    margin-top:5%;
+    text-align:center;
+}
+
+.searchInput {
+    width:60%; 
+    margin:auto;
+}

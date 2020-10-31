@@ -10,6 +10,7 @@ import Form from './form'
 import '../../css/styles.css'
 import '../../css/chips.css'
 import '../../css/lesson.css'
+import '../../css/search.css'
 
 const defaultText = "type and enter tag...";
 

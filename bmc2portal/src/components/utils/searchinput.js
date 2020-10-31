@@ -1,5 +1,7 @@
 import React from 'react';
 
+import '../../css/search.css'
+
 /**
  * This Component renders a search input box.
  */

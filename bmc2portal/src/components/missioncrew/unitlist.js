@@ -4,6 +4,8 @@ import backend from '../utils/backend.js';
 
 import SearchInput from '../utils/searchinput'
 
+import '../../css/search.css'
+
 /**
  * This Component contains a searchable/filterable table of the CONUS SUAs.
  */

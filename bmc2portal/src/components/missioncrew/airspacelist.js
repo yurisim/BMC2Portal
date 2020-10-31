@@ -5,6 +5,8 @@ import SearchInput from '../utils/searchinput'
 
 import LoaPdf from './loapdf'
 
+import '../../css/search.css'
+
 /**
  * This Component contains a searchable/filterable table of the CONUS SUAs.
  */

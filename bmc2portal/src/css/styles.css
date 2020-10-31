@@ -1,11 +1,7 @@
-.reg-li{
-  border-bottom:unset; 
-  color:black;
-}
-
-.dev{
-  display:none;
-}
+/**
+* Themes - the following css will stylize html tags IAW the BMC2Portal/ParrotSour 
+* styling and theme
+*/
 
 input {
    border-radius:10px;
@@ -16,23 +12,6 @@ input {
    height:30px;
    transition:height 1s;
    -webkit-transition:height 1s;
-}
-
-.searchDiv {
-  width:75%;
-  margin:auto;
-  margin-top:5%;
-  text-align:center;
-}
-.searchInput {
-  width:60%; 
-  margin:auto;
-}
-
-.searchButton {
-  width:30%;
-  border-radius:10px; 
-  margin:auto;
 }
 
 table {
@@ -79,54 +58,6 @@ button[disabled]{
   color: #666666;
 }
 
-#popup
-{
-  height:380px;
-  width:340px;
-  margin:0 auto;
-  position:relative;
-  z-index:10;
-  display:none;
-  border:5px solid #cccccc;
-  border-radius:10px;
-}
-
-[id*=message-box]{
-	width:50%;
-	height:75%;
-	text-align:center;
-  border:solid 1px #bac0c3;
-  color:black;
-	border-radius:5px;
-	position:fixed;
-  left:25%;
-  top:12.5%;
-  padding:10px;
-	z-index:1001;
-	display:none;
-	background:#fff;
-	animation: animationDropCenter 0.25s;
-}
-
-.links {
-  border-style: dotted;
-  border-color: #FDFFFC;
-  border-width: .15em 0;
-}
-
-.tabs a {
-  min-width: 6em;
-  font-weight: normal;
-}
-
-.tabs li {
-  display: inline-block;
-}
-
-.cur-tab {
-  border-color: #FCCC0A
-}
-
 nav ul li a {
   text-decoration: none;
   color: #FDFFFC;
@@ -136,25 +67,6 @@ a {
   color: lightblue;
 }
 
-.check-container {
-  display: block;
-  position: relative;
-  height: auto;
-  padding: 5px;
-}
-
-.check-container ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  overflow: inherit;
-}
-
-.custom-sel-div {
-  border-radius:10px;
-  padding: 5px 10px 0px 10px;
-  background-color:#eee;
-  margin-right:10px;
-  margin-bottom:20px;
-  width:25%;
-}
+/*
+* End Themes
+*/

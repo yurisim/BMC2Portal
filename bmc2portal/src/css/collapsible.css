@@ -14,8 +14,6 @@
   padding: 5px;
 }
 
-
-
 .pscontainer ul {
   list-style: none;
   margin: 0;
@@ -49,7 +47,6 @@ ul li label {
   font-size: 1em;
   padding: 15px 0px 5px 30px;
   height: 30px;
-  z-index: 9;
   cursor: pointer;
   -webkit-transition: all 0.25s linear;
 }
@@ -66,7 +63,6 @@ ul li .box {
   height: 15px;
   width: 15px;
   top: 25%;
-  z-index: 5;
   transition: border 0.25s linear;
   -webkit-transition: border 0.25s linear;
 }
@@ -79,7 +75,6 @@ ul li .check {
   height: 15px;
   width: 15px;
   top: 25%;
-  z-index: 5;
   transition: border 0.25s linear;
   -webkit-transition: border 0.25s linear;
 }

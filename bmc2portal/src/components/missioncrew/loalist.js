@@ -5,6 +5,8 @@ import backend from '../utils/backend.js';
 import SearchInput from '../utils/searchinput'
 import LoaPdf from './loapdf.js';
 
+import '../../css/search.css'
+
 /**
  * This Component contains a searchable/filterable table of the CONUS ATC Agencies
  * and their letters of agreement with the 552 ACW.
