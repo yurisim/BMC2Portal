@@ -14,7 +14,7 @@ export default class ParrotSourControls extends React.Component {
 
     handleSliderChange = (evt) => {
         this.setState({speedSliderValue: evt.currentTarget.value})
-        this.props.handleSliderChange(evt)
+        this.props.handleSliderChange(evt.currentTarget.value)
     }
 
     fightsOn = () => {
@@ -70,7 +70,7 @@ export default class ParrotSourControls extends React.Component {
                             Display first: 
                         </label>
                         <label className="switch">
-                            <input type="checkbox" id="cursordisp" defaultChecked onChange={this.props.showNewPic} />
+                            <input type="checkbox" id="cursordisp" defaultChecked onChange={this.props.braaChanged} />
                             <span className="slider round"><span className="on"> BRAA </span><span className="off"> BULL </span></span>
                         </label>
                         <button 
