@@ -11,7 +11,7 @@ import InterceptQT from './quicktips/interceptQT.js'
 import AlsaHelp from './quicktips/alsahelp.js'
 import ParrotSourHeader from './parrotsourheader.js'
 import ParrotSourControls from './parrotsourcontrols.js'
-import PictureCanvas from './canvas/picturecanvas.js'
+import PictureCanvas from './canvas/picturecanvas.tsx'
 
 import VersionInfo from './versioninfo.js'
 
@@ -22,6 +22,9 @@ export default class ParrotSourIntercept extends React.Component {
         this.state = {
             showAlsaQT: false,
             showAnswer: false,
+            showMeasurements: true,
+            isHardMode: false,
+            format:"alsa",
             speedSliderValue: 50,
             canvasConfig: {
                 height: 400,
@@ -30,6 +33,7 @@ export default class ParrotSourIntercept extends React.Component {
             },
             braaFirst: true,
             picType:"random",
+            answer: undefined
         }
     }
 
@@ -60,6 +64,18 @@ export default class ParrotSourIntercept extends React.Component {
 
     braaChanged = () =>{
         this.setState({braaFirst: !this.state.braaFirst})
+    }
+
+    toggleMeasurements = () => {
+        this.setState({showMeasurements: !this.state.showMeasurements})
+    }
+
+    toggleHardMode = () => {
+        this.setState({isHardMode: !this.state.isHardMode})
+    }
+
+    setAnswer = (answer) => {
+        this.setState({answer: answer})
     }
 
     modifyCanvas = () => {
@@ -157,12 +173,12 @@ export default class ParrotSourIntercept extends React.Component {
                     <div className="check-container" style={{paddingTop:"0px",paddingBottom:"0px"}}>
                         <ul style={{display:"inline-flex"}}>
                             <li>
-                            <input type="checkbox" id="measureMyself" onChange={this.showNewPic} />
+                            <input type="checkbox" id="measureMyself" onChange={this.toggleMeasurements} />
                             <label style={{width:"max-content", paddingRight:"10px"}} htmlFor="measureMyself">I want to measure</label>
                             <div className="box"></div>
                             </li>
                             <li>
-                            <input type="checkbox" id="hardMode" onChange={this.showNewPic}/>
+                            <input type="checkbox" id="hardMode" onChange={this.toggleHardMode}/>
                             <label style={{paddingRight:"10px"}} htmlFor="hardMode"> Hard Mode</label>
                             <div className='box'></div>
                             </li>
@@ -183,7 +199,7 @@ export default class ParrotSourIntercept extends React.Component {
                 <button type="button" className={this.state.showAnswer ? "collapsible active":"collapsible"} onClick={this.revealPic}>Reveal Pic</button>
                 {this.state.showAnswer && 
                     <div className="content" id="answerDiv" style={{color:"black", padding:"20px"}}>
-                        {this.state.answer}
+                        {this.state.answer ? this.state.answer : <div/>}
                     </div>
                 }  
                 <br/><br/><br/>
@@ -193,6 +209,10 @@ export default class ParrotSourIntercept extends React.Component {
                     width={this.state.canvasConfig.width}
                     braaFirst={this.state.braaFirst}
                     picType={this.state.picType}
+                    format={this.state.format}
+                    showMeasurements={this.state.showMeasurements}
+                    isHardMode={this.state.isHardMode}
+                    orientation={this.state.canvasConfig.orient}
                 />
 
                 <VersionInfo/>
