@@ -23,6 +23,12 @@ export default class ParrotSourIntercept extends React.Component {
             showAlsaQT: false,
             showAnswer: false,
             speedSliderValue: 50,
+            canvasConfig: {
+                height: 400,
+                width:800,
+                orient:"NS"
+            },
+            braaFirst: true,
         }
     }
 
@@ -33,8 +39,8 @@ export default class ParrotSourIntercept extends React.Component {
         this.setState({showAlsaQT: false})
     }
 
-    handleSliderChange = (evt) => {
-        this.setState({speedSliderValue: evt.currentTarget.value})
+    handleSliderChange = (value) => {
+        this.setState({speedSliderValue: value})
     }
 
     formatSelChange = (fmt) =>{
@@ -51,8 +57,25 @@ export default class ParrotSourIntercept extends React.Component {
         this.setState({showAnswer: !this.state.showAnswer})
     }
 
+    braaChanged = () =>{
+        this.setState({braaFirst: !this.state.braaFirst})
+    }
+
     modifyCanvas = () => {
         console.log("reorient canvas")
+        var newConfig = {
+            height:400,
+            width:800,
+            orient:"NS"
+        }
+        if (this.state.canvasConfig.orient==="NS"){
+            newConfig = {
+                height:800,
+                width:400,
+                orient:"EW"
+            }
+        }
+        this.setState({canvasConfig:newConfig})
     }
 
     render(){
@@ -147,6 +170,7 @@ export default class ParrotSourIntercept extends React.Component {
                     handleSliderChange={this.handleSliderChange}
                     modifyCanvas={this.modifyCanvas}
                     showNewPic={this.showNewPic}
+                    braaChanged={this.braaChanged}
                 />
                 
                 <br/>
@@ -159,7 +183,11 @@ export default class ParrotSourIntercept extends React.Component {
                 }  
                 <br/><br/><br/>
 
-                <PictureCanvas />
+                <PictureCanvas 
+                    height={this.state.canvasConfig.height}
+                    width={this.state.canvasConfig.width}
+                    braaFirst={this.state.braaFirst}
+                />
 
                 <VersionInfo/>
             </div>
