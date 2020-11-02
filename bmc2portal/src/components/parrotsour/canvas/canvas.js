@@ -3,7 +3,7 @@ import React, {useRef, useState, useEffect} from 'react'
 import { getBR } from '../utils/mathutilities.js'
 
 const Canvas = props => {
-    const { draw, height, width, braaFirst, ...rest } =  props
+    const { draw, height, width, braaFirst, bullseye, ...rest } =  props
 
     const canvasRef = useRef(null)
     const ctx = useRef(null)
@@ -87,7 +87,7 @@ const Canvas = props => {
         }
     }
 
-    function drawMouse(start, end, isDown, bullseye) {
+    function drawMouse(start, end, isDown) {
         if (isDown) {
           drawLine(start.x, start.y, end.x, end.y);
         }
@@ -119,7 +119,7 @@ const Canvas = props => {
     let canvasMouseMove = (e) =>{
         var mousePos = getMousePos(canvasRef.current, e)
         ctx.current.putImageData(img.current, 0, 0);
-        drawMouse(mouseStart, mousePos, mousePressed,{x:0,y:0})
+        drawMouse(mouseStart, mousePos, mousePressed)
     }
 
     let canvasMouseUp = (e) =>{
