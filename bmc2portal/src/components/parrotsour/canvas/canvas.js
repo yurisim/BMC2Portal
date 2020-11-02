@@ -63,6 +63,12 @@ const Canvas = props => {
         ctx.current.stroke();
     }
 
+    function clamp(pos) {
+        return {
+            x: Math.min(Math.max(pos.x, 0), canvasRef.current.width),
+            y: Math.min(Math.max(pos.y, 0), canvasRef.current.height)}
+    }
+
     function drawText(text, x, y, size, color) {
         size = size || 12;
         color = color || "black";
@@ -70,7 +76,9 @@ const Canvas = props => {
         ctx.current.lineWidth = 1;
         ctx.current.fillStyle = color;
         ctx.current.font = size + "px Arial";
-        ctx.current.fillText(text, x, y);
+        var pos = clamp({x,y})
+        
+        ctx.current.fillText(text, pos.x, pos.y);
     }
 
     function drawBR(startX, startY, bull, color, showMeasurements) {
@@ -86,6 +94,7 @@ const Canvas = props => {
 
         var startPoint = { x: start.x, y: start.y };
         var BRAA = getBR(end.x, end.y, startPoint);
+        if (end.y<20) end.y=20
         var bull = getBR(end.x, end.y, bullseye)
 
         if (props.braaFirst) {
