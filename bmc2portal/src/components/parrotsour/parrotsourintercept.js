@@ -29,6 +29,7 @@ export default class ParrotSourIntercept extends React.Component {
                 orient:"NS"
             },
             braaFirst: true,
+            picType:"random",
         }
     }
 
@@ -76,6 +77,10 @@ export default class ParrotSourIntercept extends React.Component {
             }
         }
         this.setState({canvasConfig:newConfig})
+    }
+
+    changePicType = (e) => {
+        this.setState({picType:e.target.value})
     }
 
     render(){
@@ -129,8 +134,8 @@ export default class ParrotSourIntercept extends React.Component {
                             style={{width:"100%",height:"100%"}} 
                             labelId="picSelLabel" 
                             id="pictureType" 
-                            value="random"
-                            onChange={this.showNewPic}>
+                            value={this.state.picType}
+                            onChange={this.changePicType}>
                             <MenuItem value="random">Select Picture</MenuItem>
                             <MenuItem value="random">RANDOM</MenuItem>
                             <MenuItem value="azimuth">AZIMUTH</MenuItem>
@@ -187,6 +192,7 @@ export default class ParrotSourIntercept extends React.Component {
                     height={this.state.canvasConfig.height}
                     width={this.state.canvasConfig.width}
                     braaFirst={this.state.braaFirst}
+                    picType={this.state.picType}
                 />
 
                 <VersionInfo/>

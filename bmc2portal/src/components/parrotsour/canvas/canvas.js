@@ -3,7 +3,7 @@ import React, {useRef, useState, useEffect} from 'react'
 import { getBR } from '../utils/mathutilities.js'
 
 const Canvas = props => {
-    const { draw, height, width, braaFirst, bullseye, ...rest } =  props
+    const { draw, height, width, braaFirst, bullseye, picType, ...rest } =  props
 
     const canvasRef = useRef(null)
     const ctx = useRef(null)
@@ -37,7 +37,7 @@ const Canvas = props => {
         return () =>{
             //window.cancelAnimationFrame(animationFrameId)
         }
-    }, [draw, height, width])
+    }, [draw, height, width, braaFirst, picType])
 
     let getImageData = () =>{
         return ctx.current.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height)

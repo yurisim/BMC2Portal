@@ -47,8 +47,39 @@ export default class PictureCanvas extends React.Component {
         return {x: centerPointX, y:centerPointY}
     }
 
+
+    drawNewPic = () => {
+        var answer = "";
+        var selectedType = this.props.picType //(document.getElementById('pictureType') && document.getElementById("pictureType").value) || "";
+      
+        console.log("new pic:", selectedType)
+        // answer = drawPicture(
+        //   cfg.format,
+        //   selectedType,
+        //   cfg.bullseye,
+        //   cfg.showMeasurements,
+        //   undefined,
+        //   cfg.hardMode,
+        //   (selectedType ==="leading edge" || selectedType ==="package"),
+        //   undefined, 
+        //   cfg.isEW
+        // );
+      
+        // var answerDiv = document.getElementById("answerDiv");
+        // if (answerDiv) {
+        //   answerDiv.innerHTML = answer.picture.pic;
+        //   answerDiv.style.display = "none"; 
+        // }
+      
+        //groups = answer.picture.groups;
+        //animateCanvas = answer.imageData;
+        //bluePos = answer.bluePos;
+    }
+
     draw = (context, frameCount, canvas) => {
         var bullseye = this.drawBullseye(canvas, context)
+
+        this.drawNewPic(bullseye)
         this.setState({bullseye})
     }
 
@@ -58,6 +89,7 @@ export default class PictureCanvas extends React.Component {
             height={this.props.height} 
             width={this.props.width} 
             braaFirst={this.props.braaFirst}
-            bullseye={this.state.bullseye} />
+            bullseye={this.state.bullseye}
+            picType={this.props.picType} />
     }
 }
