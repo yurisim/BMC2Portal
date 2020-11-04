@@ -226,13 +226,10 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         var drawFunc:DrawFunction = this.functions[type];
         if (drawFunc === undefined) drawFunc = this.drawAzimuth;
       
-        //var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-
         var answer = await drawFunc(canvas, context);
-      
+
         return {
           picture: answer,
-          //imageData: imageData
         };
     }
 
@@ -286,12 +283,14 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
     }
 
     render(){
+        console.log("render PCanvas")
         return <Canvas 
             draw={this.draw} 
             height={this.props.height} 
             width={this.props.width} 
             braaFirst={this.props.braaFirst}
             bullseye={this.state.bullseye}
-            picType={this.props.picType} />
+            picType={this.props.picType}
+            showMeasurements={this.props.showMeasurements} />
     }
 }

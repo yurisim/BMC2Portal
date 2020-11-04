@@ -50,7 +50,7 @@ export function getGroupOpenClose( fg: Group, sg: Group ){
     if (b2 <= b1 && b4 <= b3){
       return "OPENING";
     }
-      return "";
+    return "";
   }
 
 export function drawAltitudes(
@@ -196,35 +196,35 @@ export function drawArrow(
             var yMultip:number = canvas.width / (canvas.height / 2);
     
             if ((direction >= 0 && direction < 90) || direction === 360) {
-            offset = xMultip * x;
-            offsety = yMultip * x;
+              offset = xMultip * x;
+              offsety = yMultip * x;
             }
             if (direction >= 90 && direction < 121) {
-            offset = xMultip * x;
-            offsety = -xMultip * x;
+              offset = xMultip * x;
+              offsety = -xMultip * x;
             }
     
             if (direction >= 121 && direction < 240) {
-            offset = xMultip * x;
-            offsety = -x;
+              offset = xMultip * x;
+              offsety = -x;
             }
     
             if (direction >= 240 && direction < 330) {
-            offset = 0;
-            offsety = -xMultip * x;
+              offset = 0;
+              offsety = -xMultip * x;
             }
     
             if (direction >= 330 && direction < 360) {
-            offset = -x;
-            offsety = xMultip * x;
+              offset = -x;
+              offsety = xMultip * x;
             }
     
             if (direction === 90 || direction === 270) {
-            offset = 0;
+              offset = 0;
             }
     
             if (direction === 0 || direction === 180 || direction === 360) {
-            offsety = 0;
+              offsety = 0;
             }
     
             drawArrow(canvas, 1, startx - offset, starty - offsety, direction, orientation, color, type);
@@ -241,7 +241,7 @@ export function drawArrow(
     
         var deg: number = 360 - (direction - 90);
         if (direction < 90) {
-        deg = 90 - direction;
+          deg = 90 - direction;
         } 
         var rads:number = toRadians(deg);
     
@@ -254,11 +254,11 @@ export function drawArrow(
         var yOff: number = canvas.width / (canvas.width / 6);
         var xOff: number = canvas.width / (canvas.width / 4)
         if (direction <= 121 || direction >= 330) {
-        xOff = -canvas.width / (canvas.width / 4);
+          xOff = -canvas.width / (canvas.width / 4);
         } 
         if (direction > 300) {
-        xOff = canvas.width / (canvas.width / 8);
-        yOff = -canvas.width / (canvas.width / 4);
+          xOff = canvas.width / (canvas.width / 8);
+          yOff = -canvas.width / (canvas.width / 4);
         }
     
         c.lineTo(endx + xOff, endy - yOff);
