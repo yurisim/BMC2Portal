@@ -1,6 +1,6 @@
-import React, {useRef, useState, useEffect, Ref } from 'react'
+import React, {useRef, useState, useEffect } from 'react'
 
-import { getBR } from '../utils/mathutilities.js'
+import { getBR } from '../utils/mathutilities'
 import { BRAA, Bullseye } from './interfaces'
 import { drawText, drawLine } from './draw'
 
@@ -17,18 +17,18 @@ interface CanvasProps {
 function Canvas(props: CanvasProps) {
     const { draw, height, width, braaFirst, bullseye, picType, ...rest } =  props
 
-    const canvasRef = useRef(new HTMLCanvasElement())
-    let ctx: any = null
-    let img: any = null
+    const canvasRef: React.RefObject<HTMLCanvasElement>|null = useRef<HTMLCanvasElement>(null)
+    const ctx: any = useRef(null)
+    const img: any = useRef(null)
 
     const [mouseStart, setStart] = useState({x:0,y:0})
     const [mousePressed, setMousePressed] = useState(false)
     
     useEffect(()=>{
-        const canvas: HTMLCanvasElement = canvasRef.current
+        const canvas: HTMLCanvasElement|null = canvasRef.current
 
         if (canvas !== null){
-            ctx = canvas.getContext("2d")
+            ctx.current = canvas.getContext("2d")
 
             canvas.height = height;
             canvas.width = width;
@@ -38,15 +38,15 @@ function Canvas(props: CanvasProps) {
             let frameCount = 0
             // let animationFrameId
             
-            const render = () =>{
+            const render = async () =>{
                 frameCount++
-                draw(ctx, frameCount, canvas)
+                await draw(ctx.current, frameCount, canvas)
                 //animationFrameId = window.requestAnimationFrame(render)
             }
 
             render()
 
-            img = getImageData()
+            img.current = getImageData()
 
             return () =>{
                 //window.cancelAnimationFrame(animationFrameId)
@@ -55,27 +55,34 @@ function Canvas(props: CanvasProps) {
     }, [draw, height, width, braaFirst, picType])
 
     let getImageData = () =>{
-        if (ctx)
-            return ctx.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height)
+        if (ctx.current && canvasRef && canvasRef.current)
+            return ctx.current.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height)
     }
 
-    let getMousePos = (canvas: HTMLCanvasElement, evt: MouseEvent) => {
-        var rect = canvas.getBoundingClientRect();
-        return {
-            x: evt.clientX - rect.left,
-            y: evt.clientY - rect.top
-        };
+    let getMousePos = (canvas: HTMLCanvasElement|null, evt: MouseEvent): Bullseye=> {
+        if (canvas){
+            var rect = canvas.getBoundingClientRect();
+            return {
+                x: evt.clientX - rect.left,
+                y: evt.clientY - rect.top
+            };
+        } else {
+            return {
+                x: 0,
+                y: 0,
+            }
+        }
     }
 
     function drawBR(startX: number, startY: number, bull: BRAA, color: string, showMeasurements: boolean) {
-        if (showMeasurements) {
-          drawText(canvasRef.current, ctx, bull.bearing + "/" + bull.range, startX, startY, 11, color);
+        if (showMeasurements && canvasRef && canvasRef.current) {
+          drawText(canvasRef.current, ctx.current, bull.bearing + "/" + bull.range, startX, startY, 11, color);
         }
     }
 
     function drawMouse(start: Bullseye, end: Bullseye, isDown: boolean) {
         if (isDown) {
-          drawLine(ctx, start.x, start.y, end.x, end.y);
+          drawLine(ctx.current, start.x, start.y, end.x, end.y);
         }
 
         var startPoint = { x: start.x, y: start.y };
@@ -104,13 +111,13 @@ function Canvas(props: CanvasProps) {
 
     let canvasMouseMove = (e: any) =>{
         var mousePos = getMousePos(canvasRef.current, e)
-        ctx.putImageData(img, 0, 0);
+        ctx.current.putImageData(img.current, 0, 0);
         drawMouse(mouseStart, mousePos, mousePressed)
     }
 
     let canvasMouseUp = (e: any) =>{
         setMousePressed(false)
-        ctx.putImageData(img, 0, 0)
+        ctx.current.putImageData(img.current, 0, 0)
     }
 
     let canvasTouchStart = (e: any) => {
@@ -143,7 +150,7 @@ function Canvas(props: CanvasProps) {
         onTouchMove:canvasTouchMove,
         onTouchEnd:canvasTouchEnd,
     }
-    return <canvas {...moveProps} style={style} ref={canvasRef => (canvasRef = canvasRef as HTMLCanvasElement)} {...rest} />
+    return <canvas {...moveProps} style={style} ref={canvasRef} {...rest} />
 }
 
 export default Canvas

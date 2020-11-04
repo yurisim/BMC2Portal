@@ -79,7 +79,6 @@ export default class ParrotSourIntercept extends React.Component {
     }
 
     modifyCanvas = () => {
-        console.log("reorient canvas")
         var newConfig = {
             height:400,
             width:800,

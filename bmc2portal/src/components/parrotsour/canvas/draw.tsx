@@ -1,5 +1,4 @@
-import { isNullishCoalesce } from 'typescript';
-import { toRadians, randomNumber, getBR } from '../utils/mathutilities.js'
+import { toRadians, randomNumber, getBR } from '../utils/mathutilities'
 
 import { AltStack, BRAA, Braaseye, Bullseye, Group } from './interfaces'
 
@@ -196,7 +195,7 @@ export function drawArrow(
             var xMultip:number = canvas.width / (canvas.width / 3);
             var yMultip:number = canvas.width / (canvas.height / 2);
     
-            if ((direction >= 0 && direction < 90) || direction == 360) {
+            if ((direction >= 0 && direction < 90) || direction === 360) {
             offset = xMultip * x;
             offsety = yMultip * x;
             }
@@ -220,15 +219,15 @@ export function drawArrow(
             offsety = xMultip * x;
             }
     
-            if (direction == 90 || direction == 270) {
+            if (direction === 90 || direction === 270) {
             offset = 0;
             }
     
-            if (direction == 0 || direction == 180 || direction == 360) {
+            if (direction === 0 || direction === 180 || direction === 360) {
             offsety = 0;
             }
     
-            drawArrow(canvas, 1, startx - offset, starty - offsety, direction, color, type);
+            drawArrow(canvas, 1, startx - offset, starty - offsety, direction, orientation, color, type);
         }
         }
     
@@ -276,7 +275,7 @@ export function drawArrow(
         }
         var alts: number[] = [...Array(numContacts)].map(_=>randomNumber(low,hi));
     
-        var group: Group = {
+        group = {
             startX: startx,
             startY: starty,
             x: Math.floor(endx),

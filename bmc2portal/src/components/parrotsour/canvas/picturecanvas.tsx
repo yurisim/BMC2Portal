@@ -2,7 +2,7 @@ import React from 'react'
 
 import Canvas from './canvas'
 
-import {randomNumber, randomHeading, getBR, getAltStack, getTrackDir} from '../utils/mathutilities.js'
+import {randomNumber, randomHeading, getBR, getAltStack, getTrackDir} from '../utils/mathutilities'
 import { drawAltitudes, drawArrow, drawBraaseye, drawMeasurement, formatGroup, getGroupOpenClose } from './draw'
 import { Group, Bullseye, Braaseye, AltStack } from './interfaces'
 
@@ -19,7 +19,7 @@ type PicCanvasProps = {
 
 type PicCanvasState = {
     bullseye: Bullseye
-    bluePos: Bullseye
+    bluePos: Bullseye|undefined
 }
 
 type drawAnswer = {
@@ -30,9 +30,10 @@ type drawAnswer = {
 interface DrawFunction {
     (canvas: HTMLCanvasElement,
     context: CanvasRenderingContext2D,
-    bullseye: Bullseye,
-    bluePos: Bullseye, 
-    start: Bullseye): drawAnswer
+    //bullseye: Bullseye,
+    //bluePos: Bullseye, 
+    start?: Bullseye
+    ): drawAnswer
 }
 
 export default class PictureCanvas extends React.Component<PicCanvasProps, PicCanvasState> {
@@ -41,27 +42,8 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         super(props)
         this.state = {
             bullseye: {x:0, y:0},
-            bluePos: {x:0, y:0 }
+            bluePos: undefined,
         }
-    }
-
-    functions: { [key:string]: Function } = {
-        "azimuth": this.drawEmpty,
-        "ladder": this.drawEmpty,
-        "wall": this.drawEmpty,
-        "random": this.drawEmpty,
-        // "ladder" : drawLadder,
-        // "wall" : drawWall,
-        // "azimuth": drawAzimuth,
-        // "range": drawRange,
-        // "vic": drawVic,
-        // "champagne":drawChampagne,
-        // "cap": drawCapLocal,
-        // "threat": drawThreatLocal,
-        // "ea": drawEA,
-        // "pod": drawPOD,
-        // "leading edge": drawLeadEdge,
-        // "package": drawPackage,
     }
 
     getRandomPicType = (leadingEdge: boolean) => {
@@ -104,9 +86,12 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         return {x: centerPointX, y:centerPointY}
     }
 
-    drawEmpty(){}
-
-    drawAzimuth: DrawFunction = (canvas: HTMLCanvasElement, ctx:CanvasRenderingContext2D, bullseye: Bullseye, bluePos: Bullseye, start: Bullseye) => {
+    drawAzimuth: DrawFunction = (
+        canvas: HTMLCanvasElement,
+        ctx:CanvasRenderingContext2D,
+        //bullseye: Bullseye,
+        //bluePos: Bullseye,
+        start?: Bullseye) => {
         console.log("showMeasure:", this.props.showMeasurements)
         console.log("hardMode:", this.props.isHardMode)
         console.log("orient:", this.props.orientation)
@@ -122,10 +107,11 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         
         if (this.props.isHardMode) heading = randomHeading(this.props.format);
         
-        var sg:Group =  drawArrow( canvas, randomNumber(1, 4), startX + distance, startY, heading + randomNumber(-10,10), this.props.orientation);
-        
+        var sg:Group
         if (this.props.orientation==="NS") {
             sg = drawArrow( canvas, randomNumber(1, 4), startX, startY + distance, heading + randomNumber(-10,10), this.props.orientation);
+        } else {
+            sg = drawArrow( canvas, randomNumber(1, 4), startX + distance, startY, heading + randomNumber(-10,10), this.props.orientation);
         }
 
         distance = getBR( ng.x, ng.y, {x:sg.x, y:sg.y}).range * 4
@@ -136,7 +122,7 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         var offsetY:number = 0;
         var offsetX2:number = 0;
         var offsetY2:number = 0;
-        if (this.props.orientation){
+        if (this.props.orientation === "EW"){
             offsetX = -60;
             offsetY = 40;
             offsetX2 = 10;
@@ -146,8 +132,10 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         drawAltitudes(canvas, ctx, ng.x + 20 + offsetX, ng.y - 11 +offsetY, ng.z);
         drawAltitudes(canvas, ctx, sg.x + 20 + offsetX2, sg.y - 11 + offsetY2, sg.z);
         
-        var ngBraaseye: Braaseye = drawBraaseye(canvas, ctx, bluePos, ng, bullseye, this.props.showMeasurements, this.props.braaFirst, offsetX, offsetY);
-        var sgBraaseye: Braaseye = drawBraaseye(canvas, ctx, bluePos, sg, bullseye, this.props.showMeasurements, this.props.braaFirst, offsetX2, offsetY2);
+        if (!this.state.bluePos) { return { pic: "", groups: []} }
+
+        var ngBraaseye: Braaseye = drawBraaseye(canvas, ctx, this.state.bluePos, ng, this.state.bullseye, this.props.showMeasurements, this.props.braaFirst, offsetX, offsetY);
+        var sgBraaseye: Braaseye = drawBraaseye(canvas, ctx, this.state.bluePos, sg, this.state.bullseye, this.props.showMeasurements, this.props.braaFirst, offsetX2, offsetY2);
 
         var ngAlts: AltStack = getAltStack(ng.z, this.props.format);
         var sgAlts: AltStack = getAltStack(sg.z, this.props.format);
@@ -166,7 +154,9 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
 
         answer += getGroupOpenClose(ng, sg) + " ";
 
-        if (this.props.orientation==="NS" && (getBR(sg.x, ng.y, {x: ng.x, y: ng.y}).range > 5) || (this.props.orientation==="EW" && (getBR(ng.x, sg.y, {x:ng.x, y:ng.y}).range > 5))){
+        var getEchX = getBR(sg.x, ng.y, {x: ng.x, y: ng.y}).range
+        var getEchY = getBR(ng.x, sg.y, {x:ng.x, y:ng.y}).range
+        if ((this.props.orientation==="NS" && getEchX > 5) || (this.props.orientation==="EW" && getEchY > 5)){
             if (ngBraaseye.braa.range < sgBraaseye.braa.range) {
                 
             answer += " ECHELON " + getTrackDir(parseInt(getBR(sg.x, sg.y, {x:ng.x, y:ng.y}).bearing))+ ", "
@@ -182,13 +172,13 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         var anchorN = false;
         if (ngBraaseye.braa.range < sgBraaseye.braa.range) {
             anchorN = true;
-        } else if (ngBraaseye.braa.range == sgBraaseye.braa.range) {
+        } else if (ngBraaseye.braa.range === sgBraaseye.braa.range) {
             var altN:number = ng.z.sort((a:number,b:number) => { return b-a;})[0];
             var altS:number = sg.z.sort((a:number,b:number) => {return b-a;})[0];
             
             if (altN > altS) {
             anchorN = true;
-            } else if (altN == altS){
+            } else if (altN === altS){
             if (ng.numContacts >= sg.numContacts ){
                 anchorN = true;
             }
@@ -227,49 +217,63 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         };
     }
     
-    drawPicture = (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) => {
+    drawPicture = async (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) => {
         
         var isLeadEdge = (this.props.picType === "leading edge" || this.props.picType === "package")
 
         var type = (this.props.picType ==="random" ? this.getRandomPicType(isLeadEdge) : this.props.picType)
-       
-        if (this.state.bluePos === undefined){
-          var xPos = canvas.width-20
-          var yPos = randomNumber(canvas.height * 0.33, canvas.height *0.66)
-          var heading = 270
-          if (this.props.orientation === "NS"){
-            xPos = randomNumber(canvas.width * 0.33, canvas.width * 0.66);
-            yPos = 20;
-            heading = 180;
-          }
-          var bluePos = drawArrow(canvas, 4, xPos, yPos, heading, this.props.orientation, "blue");
-          this.setState({bluePos})
-        } 
-
-        var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
       
-        var drawFunc = this.functions[type];
+        var drawFunc:DrawFunction = this.functions[type];
         if (drawFunc === undefined) drawFunc = this.drawAzimuth;
       
-        var answer = drawFunc(canvas, context);
+        //var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+
+        var answer = await drawFunc(canvas, context);
       
         return {
           picture: answer,
-          imageData: imageData,
-          bluePos: this.state.bluePos
+          //imageData: imageData
         };
-      }
+    }
 
-    drawNewPic = (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) => {
-        var selectedType = this.props.picType 
-      
-        console.log("new pic:", selectedType)
+    functions: { [key:string]: DrawFunction } = {
+        "azimuth": this.drawAzimuth,
+        "ladder": this.drawAzimuth,
+        "wall": this.drawAzimuth,
+        "random": this.drawAzimuth,
+        // "ladder" : drawLadder,
+        // "wall" : drawWall,
+        // "azimuth": drawAzimuth,
+        // "range": drawRange,
+        // "vic": drawVic,
+        // "champagne":drawChampagne,
+        // "cap": drawCapLocal,
+        // "threat": drawThreatLocal,
+        // "ea": drawEA,
+        // "pod": drawPOD,
+        // "leading edge": drawLeadEdge,
+        // "package": drawPackage,
+    }
 
-        var answer = this.drawPicture(
-            canvas,
-            context
-        )
-      
+    draw = async (context: CanvasRenderingContext2D, frameCount: number, canvas: HTMLCanvasElement) => {
+        var bullseye = this.drawBullseye(canvas, context)
+
+        var xPos = canvas.width-20
+        var yPos = randomNumber(canvas.height * 0.33, canvas.height *0.66)
+        var heading = 270
+        if (this.props.orientation === "EW"){
+            xPos = randomNumber(canvas.width * 0.33, canvas.width * 0.66);
+            yPos = 20;
+            heading = 180;
+        }
+            
+        var bluePos = drawArrow(canvas, 4, xPos, yPos, heading, this.props.orientation, "blue");
+        await this.setState({bluePos, bullseye})
+        
+        var answer = await this.drawPicture(canvas, context)
+        console.log(answer)
+        
+        //this.setState({groups: answer.picture.groups})
         // var answerDiv = document.getElementById("answerDiv");
         // if (answerDiv) {
         //   answerDiv.innerHTML = answer.picture.pic;
@@ -279,12 +283,6 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         //groups = answer.picture.groups;
         //animateCanvas = answer.imageData;
         //bluePos = answer.bluePos;
-    }
-
-    draw = (context: CanvasRenderingContext2D, frameCount: number, canvas: HTMLCanvasElement) => {
-        var bullseye = this.drawBullseye(canvas, context)
-        this.setState({bullseye})
-        this.drawNewPic(canvas, context)
     }
 
     render(){

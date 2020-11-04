@@ -99,7 +99,7 @@ export function getAltStack(altitudes: number[], format: string): AltStack {
     answer = "STACK ";
     for (var y = 0; y < stacks.length; y++) {
       answer +=
-        (y == stacks.length - 1 && format !== "IPE" ? " AND " : "") +
+        (y === stacks.length - 1 && format !== "ipe" ? " AND " : "") +
         stacks[y][0].replace(/0$/, "k") +
         " ";
     }
