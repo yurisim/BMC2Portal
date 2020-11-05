@@ -2,7 +2,7 @@ import { toRadians, randomNumber, getBR } from '../utils/mathutilities'
 
 import { AltStack, BRAA, Braaseye, Bullseye, Group } from './interfaces'
 
-function formatAlt(alt: number){
+function formatAlt(alt: number): string{
     var altF = (alt*10).toString().substring(0,3);
     return altF.length < 3 ? "0" + altF : altF;
 }
@@ -14,7 +14,7 @@ export function formatGroup(
     numContacts: number,
     anchor:boolean,
     // rangeBack: number|null,
-    trackDir: string|undefined) {
+    trackDir: string|undefined): string {
     var answer = label + " GROUP ";
   
     // if (rangeBack !== null) {
@@ -37,7 +37,7 @@ export function formatGroup(
     return answer;
 }
 
-export function getGroupOpenClose( fg: Group, sg: Group ){  
+export function getGroupOpenClose( fg: Group, sg: Group ): string{  
     var b1 = getBR(fg.x, fg.y, {x:sg.x, y:sg.y}).range
     var b2 = getBR(fg.startX, fg.startY, {x:sg.x, y:sg.y}).range
   
@@ -58,7 +58,7 @@ export function drawAltitudes(
     ctx:CanvasRenderingContext2D,
     startX: number,
     startY: number,
-    alts: number[]) {
+    alts: number[]): void {
     var formattedAlts: string[] = alts.map((a:number) => {return formatAlt(a)})
     drawText(canvas, ctx, formattedAlts.join(","), startX, startY, 11, "#ff8c00");
 }
@@ -70,7 +70,7 @@ export function drawBR(
     startY: number,
     bull: BRAA,
     color: string,
-    showMeasurements: boolean) {
+    showMeasurements: boolean): void {
     if (showMeasurements) {
       drawText(canvas, ctx, bull.bearing + "/" + bull.range, startX, startY, 11, color);
     }
@@ -84,7 +84,7 @@ export function drawBraaseye(
     bullseye: Bullseye,
     showMeasurements: boolean,
     braaFirst: boolean,
-    offsetX: number = 0, offsetY = 0) {
+    offsetX: number = 0, offsetY = 0): Braaseye{
     
     var bulls: BRAA = getBR(redPos.x, redPos.y, bullseye);
     var braa: BRAA = getBR(redPos.x, redPos.y, bluePos);
@@ -111,7 +111,7 @@ export function drawMeasurement(
     endX: number,
     endY: number,
     distance: number,
-    showMeasurements:boolean) {
+    showMeasurements:boolean): void {
     if (showMeasurements) {
       drawLine(ctx, startX, startY, endX, endY);
       drawText(canvas, ctx, Math.floor(distance / 4).toString(), (startX + endX) / 2, (startY + endY) / 2 - 3);
@@ -124,7 +124,7 @@ export function drawLine (
     startY: number,
     endX: number,
     endY: number, 
-    color="black") {
+    color="black"): void {
     ctx.lineWidth = 1;
     ctx.strokeStyle = color;
     ctx.beginPath();
@@ -134,7 +134,7 @@ export function drawLine (
     ctx.stroke();
 }
 
-function clamp(canvas: HTMLCanvasElement, pos: Bullseye) {
+function clamp(canvas: HTMLCanvasElement, pos: Bullseye): Bullseye {
     if (pos === null){
         return {
             x:0, y:0
@@ -152,7 +152,7 @@ export function drawText(
     x: number,
     y: number,
     size = 12,
-    color = "black") {
+    color = "black"): void {
     ctx.lineWidth = 1;
     ctx.fillStyle = color;
     ctx.font = size + "px Arial";
@@ -169,7 +169,7 @@ export function drawArrow(
     direction: number,
     orientation: string,
     color = "red",
-    type="ftr" ) {
+    type="ftr" ): Group {
 
     var c = canvas.getContext("2d");
 
