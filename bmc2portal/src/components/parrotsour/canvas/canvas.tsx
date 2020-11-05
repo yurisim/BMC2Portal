@@ -2,7 +2,7 @@ import React, {useRef, useState, useEffect } from 'react'
 
 import { getBR } from '../utils/mathutilities'
 import { BRAA, Bullseye } from './interfaces'
-import { drawText, drawLine } from './draw'
+import { drawText, drawLine } from './draw/drawutils'
 
 interface CanvasProps {
     draw: Function,

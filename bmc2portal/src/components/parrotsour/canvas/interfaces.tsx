@@ -1,3 +1,4 @@
+import { PicCanvasProps, PicCanvasState } from "./picturecanvas"
 
 export type Bullseye = {
     x: number,
@@ -19,7 +20,14 @@ export type AltStack = {
     fillIns: string,
 }
 
-export interface Group {
+export type RedAir = {
+    altitudes: AltStack,
+    braaseye: Braaseye,
+    trackDir?: string,
+    label?: string,
+}
+
+export type Group = {
     startX: number,
     startY: number,
     x: number,
@@ -29,5 +37,19 @@ export interface Group {
     z: number[],
     numContacts: number,
     type: string,
-    label?: string
+    label?: string;
+}
+
+export type drawAnswer = {
+    pic: string,
+    groups: any[]
+}
+
+export interface DrawFunction {
+    (canvas: HTMLCanvasElement,
+    context: CanvasRenderingContext2D,
+    props: PicCanvasProps,
+    state: PicCanvasState,
+    start?: Bullseye
+    ): drawAnswer
 }

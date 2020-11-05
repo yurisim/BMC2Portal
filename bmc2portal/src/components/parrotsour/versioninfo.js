@@ -13,7 +13,7 @@ export default class VersionInfo extends React.Component {
                 Developed by John McCarthy <br />
                 Version: 3.0.1 --
                 <a style={this.vStyle} href="changelog.html"> Change Log </a> <br />
-                31 Oct 2020 <br />
+                04 Nov 2020 <br />
             </div>
         )
     }

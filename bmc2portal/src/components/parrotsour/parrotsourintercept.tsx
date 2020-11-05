@@ -52,7 +52,7 @@ export default class ParrotSourIntercept extends React.Component<PSIProps, PSISt
             canvasConfig: {
                 height: 400,
                 width:800,
-                orient:"NS"
+                orient:"EW"
             },
             braaFirst: true,
             picType:"random",
@@ -104,14 +104,14 @@ export default class ParrotSourIntercept extends React.Component<PSIProps, PSISt
 
     modifyCanvas = () => {
         var newConfig = {
-            height:400,
-            width:800,
+            height:800,
+            width:400,
             orient:"NS"
         }
         if (this.state.canvasConfig.orient==="NS"){
             newConfig = {
-                height:800,
-                width:400,
+                height:400,
+                width:800,
                 orient:"EW"
             }
         }
