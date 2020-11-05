@@ -15,11 +15,13 @@ type PicCanvasProps = {
     format:string,
     showMeasurements:boolean,
     isHardMode: boolean,
+    setAnswer: Function,
+    newPic: boolean,
 }
 
 type PicCanvasState = {
     bullseye: Bullseye
-    bluePos: Bullseye|undefined
+    bluePos: Bullseye|undefined,
 }
 
 type drawAnswer = {
@@ -42,7 +44,7 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         super(props)
         this.state = {
             bullseye: {x:0, y:0},
-            bluePos: undefined,
+            bluePos: undefined
         }
     }
 
@@ -268,22 +270,14 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         await this.setState({bluePos, bullseye})
         
         var answer = await this.drawPicture(canvas, context)
-        console.log(answer)
-        
-        //this.setState({groups: answer.picture.groups})
-        // var answerDiv = document.getElementById("answerDiv");
-        // if (answerDiv) {
-        //   answerDiv.innerHTML = answer.picture.pic;
-        //   answerDiv.style.display = "none"; 
-        // }
+
+        this.props.setAnswer(answer.picture.pic)
       
         //groups = answer.picture.groups;
         //animateCanvas = answer.imageData;
-        //bluePos = answer.bluePos;
     }
 
     render(){
-        console.log("render PCanvas")
         return <Canvas 
             draw={this.draw} 
             height={this.props.height} 
@@ -291,6 +285,9 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
             braaFirst={this.props.braaFirst}
             bullseye={this.state.bullseye}
             picType={this.props.picType}
-            showMeasurements={this.props.showMeasurements} />
+            showMeasurements={this.props.showMeasurements}
+            isHardMode={this.props.isHardMode}
+            newPic={this.props.newPic}
+        />
     }
 }

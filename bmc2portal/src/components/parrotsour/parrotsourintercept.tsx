@@ -11,14 +11,37 @@ import InterceptQT from './quicktips/interceptQT.js'
 import AlsaHelp from './quicktips/alsahelp.js'
 import ParrotSourHeader from './parrotsourheader.js'
 import ParrotSourControls from './parrotsourcontrols.js'
-import PictureCanvas from './canvas/picturecanvas.tsx'
+import PictureCanvas from './canvas/picturecanvas'
 
 import VersionInfo from './versioninfo.js'
 
-export default class ParrotSourIntercept extends React.Component {
+interface PSIProps{
 
-    constructor(){
-        super()
+}
+
+interface CanvasConfig {
+    height: number,
+    width: number,
+    orient: string
+}
+
+interface PSIState {
+    showAlsaQT: boolean,
+    showAnswer: boolean,
+    showMeasurements: boolean,
+    isHardMode: boolean,
+    format: string,
+    speedSliderValue: number,
+    canvasConfig: CanvasConfig,
+    braaFirst: boolean,
+    picType: string,
+    answer: string,
+    newPic: boolean
+}
+export default class ParrotSourIntercept extends React.Component<PSIProps, PSIState> {
+
+    constructor(props:any){
+        super(props)
         this.state = {
             showAlsaQT: false,
             showAnswer: false,
@@ -33,7 +56,8 @@ export default class ParrotSourIntercept extends React.Component {
             },
             braaFirst: true,
             picType:"random",
-            answer: undefined
+            answer: "",
+            newPic: false,
         }
     }
 
@@ -44,18 +68,18 @@ export default class ParrotSourIntercept extends React.Component {
         this.setState({showAlsaQT: false})
     }
 
-    handleSliderChange = (value) => {
+    handleSliderChange = (value: number) => {
         this.setState({speedSliderValue: value})
     }
 
-    formatSelChange = (fmt) =>{
+    formatSelChange = (fmt: string) =>{
         return () => {
             this.setState({format: fmt})
         }
     }
 
     showNewPic = () =>{
-        console.log("Draw new picture")
+        this.setState({newPic:!this.state.newPic})
     }
 
     revealPic = () => {
@@ -74,7 +98,7 @@ export default class ParrotSourIntercept extends React.Component {
         this.setState({isHardMode: !this.state.isHardMode})
     }
 
-    setAnswer = (answer) => {
+    setAnswer = (answer: string) => {
         this.setState({answer: answer})
     }
 
@@ -94,7 +118,7 @@ export default class ParrotSourIntercept extends React.Component {
         this.setState({canvasConfig:newConfig})
     }
 
-    changePicType = (e) => {
+    changePicType = (e: any) => {
         this.setState({picType:e.target.value})
     }
 
@@ -212,6 +236,8 @@ export default class ParrotSourIntercept extends React.Component {
                     showMeasurements={this.state.showMeasurements}
                     isHardMode={this.state.isHardMode}
                     orientation={this.state.canvasConfig.orient}
+                    setAnswer={this.setAnswer}
+                    newPic={this.state.newPic}
                 />
 
                 <VersionInfo/>

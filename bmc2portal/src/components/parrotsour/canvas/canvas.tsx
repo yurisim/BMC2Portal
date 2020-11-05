@@ -11,12 +11,14 @@ interface CanvasProps {
     braaFirst: boolean,
     bullseye: Bullseye,
     picType: string,
-    showMeasurements: boolean
+    showMeasurements: boolean,
+    isHardMode: boolean,
+    newPic: boolean
 }
 
 // TODO - remove :any as descriptors
 function Canvas(props: CanvasProps) {
-    const { draw, height, width, braaFirst, bullseye, picType, showMeasurements, ...rest } =  props
+    const { draw, height, width, braaFirst, bullseye, picType, showMeasurements, isHardMode, newPic, ...rest } =  props
 
     const canvasRef: React.RefObject<HTMLCanvasElement>|null = useRef<HTMLCanvasElement>(null)
     const ctx: any = useRef(null)
@@ -53,7 +55,7 @@ function Canvas(props: CanvasProps) {
                 //window.cancelAnimationFrame(animationFrameId)
             }
         }
-    }, [draw, height, width, braaFirst, picType, showMeasurements])
+    }, [draw, height, width, braaFirst, picType, showMeasurements, newPic, isHardMode])
 
     let getImageData = () =>{
         if (ctx.current && canvasRef && canvasRef.current)
