@@ -13,3 +13,5 @@ bmc2server/src/loas.index/store
 
 /ParrotSour/*
 /ParrotSour
+
+bmc2portal/debug.log
