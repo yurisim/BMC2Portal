@@ -104,7 +104,7 @@ export function getAltStack(altitudes: number[], format: string): AltStack {
         " ";
     }
 
-    if (altitudes.length > 2) {
+    if (altitudes.length > 2 && !(altitudes.length === stacks.length && stacks.length ===3)) {
       switch (stacks.length) {
         case 2:
           answer2 += stacks[0].length + " HIGH ";
