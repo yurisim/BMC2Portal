@@ -751,3 +751,71 @@ export const drawVic:DrawFunction =  (
   };
 }
 
+export const drawLeadEdge:DrawFunction = (
+  canvas: HTMLCanvasElement,
+  context: CanvasRenderingContext2D,
+  props: PicCanvasProps,
+  state: PicCanvasState,
+  start?: Bullseye|undefined ) => {
+
+  if (!state.bluePos) { return { pic: "", groups: []} }
+
+  // var startX1: number = randomNumber(canvas.width * 0.5, canvas.width * 0.6);
+  // var startY1: number = randomNumber(canvas.height *0.42, canvas.height * 0.5);
+  // var start1 = { x: props.orientation==="NS" ? undefined : startX1, y: props.orientation==="NS" ? startY1 : undefined};
+  console.log("draw1")
+  return state.reDraw(canvas, context, true).then((answer1: any) => {
+
+    console.log("draw2")
+
+    // var startX2 = randomNumber(canvas.width * 0.15, canvas.width * 0.25);
+    // var startY2 = randomNumber(canvas.height * 0.25, canvas.height * 0.29);
+    // var start2 = { x: props.orientation ==="NS" ? undefined : startX2, y: props.orientation==="NS" ? startY2 : undefined};
+    return state.reDraw(canvas, context, true).then((answer2:any) => { 
+      console.log("draw3")
+
+      if (!state.bluePos) { return { pic: "", groups: []} }
+      console.log(answer1)
+      var groups1 = answer1.picture.groups;
+      var groups2 = answer2.picture.groups;
+
+      if (props.orientation==="NS"){
+        var tmp = groups1;
+        groups1 = groups2;
+        groups2 = tmp;
+        answer1= answer2;
+      }
+      var closestFollow = (props.orientation==="NS" ? Math.min : Math.max).apply(Math, groups2.map(function(o:Group) { return props.orientation==="NS" ? o.y : o.x;})); 
+      var closestLead = (props.orientation==="NS" ? Math.max : Math.min).apply(Math, groups1.map(function(o:Group) { return props.orientation==="NS" ? o.y : o.x;}));
+
+      var rngBack;
+      
+      if (props.orientation==="EW") {
+        rngBack = getBR(groups1[0].startX, closestFollow, { x: groups1[0].startX, y: closestLead });
+      } else {
+        rngBack = getBR(closestFollow, groups1[0].startY, {
+          x: closestLead,
+          y: groups1[0].startY
+        });
+      }
+
+      if (Math.abs(closestLead - closestFollow) <= 20 || rngBack.range >= 40){
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        drawBullseye(canvas, context);
+        drawArrow(canvas, props.orientation, 4, state.bluePos.x, state.bluePos.y, (props.orientation==="NS" ? 180 : 270), "blue");
+        return drawLeadEdge(canvas, context, props, state, start);
+      }
+
+      return  {
+        pic:
+          (groups1.length +groups2.length) +
+          " GROUPS, LEADING EDGE " +
+          answer1.picture.pic +
+          " FOLLOW ON " + (props.format ==="ipe" ? " GROUPS " : "") +
+          (rngBack.range > 40 ? " 40 " : rngBack.range) +
+          (props.format==="ipe" ? " MILES" : ""),
+        groups: groups1.concat(groups2)
+      };
+    })
+  })
+}

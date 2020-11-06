@@ -5,7 +5,7 @@ import Canvas from './canvas'
 import {randomNumber } from '../utils/mathutilities'
 import { drawArrow } from './draw/drawutils'
 import { Bullseye, DrawFunction } from './interfaces'
-import { drawAzimuth, drawBullseye, drawChampagne, drawLadder, drawRange, drawVic, drawWall } from './draw/picturedraw'
+import { drawAzimuth, drawBullseye, drawChampagne, drawLadder, drawLeadEdge, drawRange, drawVic, drawWall } from './draw/picturedraw'
 
 export type PicCanvasProps = {
     height: number,
@@ -23,6 +23,7 @@ export type PicCanvasProps = {
 export type PicCanvasState = {
     bullseye: Bullseye
     bluePos: Bullseye|undefined,
+    reDraw: Function,
 }
 
 export default class PictureCanvas extends React.Component<PicCanvasProps, PicCanvasState> {
@@ -31,7 +32,8 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         super(props)
         this.state = {
             bullseye: {x:0, y:0},
-            bluePos: undefined
+            bluePos: undefined,
+            reDraw: this.drawPicture,
         }
     }
 
@@ -41,11 +43,11 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         return types[numType];
     }
     
-    drawPicture = async (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) => {
+    drawPicture = async (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, forced?: boolean) => {
         
         var isLeadEdge = (this.props.picType === "leading edge" || this.props.picType === "package")
 
-        var type = (this.props.picType ==="random" ? this.getRandomPicType(isLeadEdge) : this.props.picType)
+        var type = ((this.props.picType ==="random" || forced) ? this.getRandomPicType(isLeadEdge) : this.props.picType)
       
         var drawFunc:DrawFunction = this.functions[type];
         if (drawFunc === undefined) drawFunc = drawAzimuth;
@@ -68,7 +70,7 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         // "threat": drawThreatLocal,
         // "ea": drawEA,
         // "pod": drawPOD,
-        // "leading edge": drawLeadEdge,
+        "leading edge": drawLeadEdge,
         // "package": drawPackage,
     }
 
