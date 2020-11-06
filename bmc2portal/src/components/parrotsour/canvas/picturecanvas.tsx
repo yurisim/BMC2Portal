@@ -43,7 +43,7 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         return types[numType];
     }
     
-    drawPicture = async (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, forced?: boolean) => {
+    drawPicture = async (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, forced?: boolean, start?: Bullseye) => {
         
         var isLeadEdge = (this.props.picType === "leading edge" || this.props.picType === "package")
 
@@ -52,7 +52,7 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         var drawFunc:DrawFunction = this.functions[type];
         if (drawFunc === undefined) drawFunc = drawAzimuth;
       
-        var answer = await drawFunc(canvas, context, this.props, this.state);
+        var answer = await drawFunc(canvas, context, this.props, this.state, start);
 
         return {
           picture: answer,

@@ -760,22 +760,25 @@ export const drawLeadEdge:DrawFunction = (
 
   if (!state.bluePos) { return { pic: "", groups: []} }
 
-  // var startX1: number = randomNumber(canvas.width * 0.5, canvas.width * 0.6);
-  // var startY1: number = randomNumber(canvas.height *0.42, canvas.height * 0.5);
-  // var start1 = { x: props.orientation==="NS" ? undefined : startX1, y: props.orientation==="NS" ? startY1 : undefined};
-  console.log("draw1")
-  return state.reDraw(canvas, context, true).then((answer1: any) => {
-
-    console.log("draw2")
-
-    // var startX2 = randomNumber(canvas.width * 0.15, canvas.width * 0.25);
-    // var startY2 = randomNumber(canvas.height * 0.25, canvas.height * 0.29);
-    // var start2 = { x: props.orientation ==="NS" ? undefined : startX2, y: props.orientation==="NS" ? startY2 : undefined};
-    return state.reDraw(canvas, context, true).then((answer2:any) => { 
-      console.log("draw3")
+  var lowYMult = (props.orientation ==="NS") ? 0.5 : 0.42
+  var hiYMult = (props.orientation === "NS") ? 0.6 : 0.5
+  var lowXMult = (props.orientation === "NS") ? 0.2 : 0.5
+  var hiXMult = (props.orientation === "NS") ? 0.8 : 0.6
+  var startX1: number = randomNumber(canvas.width * lowXMult, canvas.width * hiXMult);
+  var startY1: number = randomNumber(canvas.height * lowYMult, canvas.height * hiYMult);
+  var start1 = { x: props.orientation==="NS" ? undefined : startX1, y: props.orientation==="NS" ? startY1 : undefined};
+  return state.reDraw(canvas, context, true, start1).then((answer1: any) => {
+   
+    var lowYMult = (props.orientation ==="NS") ? 0.7 : 0.25
+    var hiYMult = (props.orientation === "NS") ? 0.9 : 0.29
+    var lowXMult = (props.orientation === "NS") ? 0.2 : 0.15
+    var hiXMult = (props.orientation === "NS") ? 0.8 : 0.25
+    var startX2 = randomNumber(canvas.width * lowXMult, canvas.width * hiXMult);
+    var startY2 = randomNumber(canvas.height * lowYMult, canvas.height * hiYMult);
+    var start2 = { x: props.orientation ==="NS" ? undefined : startX2, y: props.orientation==="NS" ? startY2 : undefined};
+    return state.reDraw(canvas, context, true, start2).then((answer2:any) => { 
 
       if (!state.bluePos) { return { pic: "", groups: []} }
-      console.log(answer1)
       var groups1 = answer1.picture.groups;
       var groups2 = answer2.picture.groups;
 
@@ -785,8 +788,8 @@ export const drawLeadEdge:DrawFunction = (
         groups2 = tmp;
         answer1= answer2;
       }
-      var closestFollow = (props.orientation==="NS" ? Math.min : Math.max).apply(Math, groups2.map(function(o:Group) { return props.orientation==="NS" ? o.y : o.x;})); 
-      var closestLead = (props.orientation==="NS" ? Math.max : Math.min).apply(Math, groups1.map(function(o:Group) { return props.orientation==="NS" ? o.y : o.x;}));
+      var closestFollow = Math.max.apply(Math, groups2.map(function(o:Group) { return props.orientation==="NS" ? o.y : o.x;})); 
+      var closestLead = Math.min.apply(Math, groups1.map(function(o:Group) { return props.orientation==="NS" ? o.y : o.x;}));
 
       var rngBack;
       
@@ -799,7 +802,7 @@ export const drawLeadEdge:DrawFunction = (
         });
       }
 
-      if (Math.abs(closestLead - closestFollow) <= 20 || rngBack.range >= 40){
+      if (closestLead - closestFollow <= 20 || rngBack.range >= 40){
         context.clearRect(0, 0, canvas.width, canvas.height);
         drawBullseye(canvas, context);
         drawArrow(canvas, props.orientation, 4, state.bluePos.x, state.bluePos.y, (props.orientation==="NS" ? 180 : 270), "blue");
