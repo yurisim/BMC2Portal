@@ -503,3 +503,122 @@ export const drawLadder: DrawFunction =  (
   };
 }
 
+export const drawChampagne:DrawFunction =  (
+  canvas: HTMLCanvasElement,
+  context: CanvasRenderingContext2D,
+  props: PicCanvasProps,
+  state: PicCanvasState,
+  start?: Bullseye|undefined ) => {
+  
+  if (!state.bluePos) { return { pic: "", groups: []} }
+
+  var lowYMult = (props.orientation ==="NS") ? 0.5 : 0.2
+  var hiYMult = (props.orientation === "NS") ? 0.9 : 0.8
+  var lowXMult = (props.orientation === "NS") ? 0.2 : 0.2
+  var hiXMult = (props.orientation === "NS") ? 0.8 : 0.5
+  var startY = (start && start.y) || randomNumber(canvas.height * lowYMult, canvas.height * hiYMult);
+  var startX = (start && start.x) || randomNumber(canvas.width * lowXMult, canvas.width * hiXMult);
+
+  var incr:number = canvas.width / (canvas.width / 10);
+  var champWidth:number = randomNumber(3.5 * incr, 10 * incr);
+  var champDepth:number = randomNumber(3.5 * incr, 10 * incr);
+
+  var heading:number = randomHeading(props.format);
+  var tg:Group = drawArrow(canvas, props.orientation, randomNumber(1, 4), startX, startY, heading + randomNumber(-10, 10));
+
+  if (props.isHardMode) heading = randomHeading(props.format);
+  
+  var nlg:Group
+  if (props.orientation === "NS"){
+    nlg = drawArrow(canvas, props.orientation, randomNumber(1, 4), startX - champWidth/2, startY - champDepth,  heading + randomNumber(-10, 10));
+  } else {
+    nlg = drawArrow(canvas, props.orientation, randomNumber(1, 4), startX + champDepth, startY - champWidth / 2,  heading + randomNumber(-10, 10));
+  }
+  
+  if (props.isHardMode) heading = randomHeading(props.format);
+  var slg:Group
+  if (props.orientation === "NS"){
+    slg = drawArrow(canvas, props.orientation, randomNumber(1, 4), startX + champWidth/2, startY - champDepth, heading + randomNumber(-10, 10));
+  } else {
+    slg = drawArrow(canvas, props.orientation, randomNumber(1, 4), startX + champDepth, startY + champWidth / 2, heading + randomNumber(-10, 10));
+  }
+
+  var width:number = Math.floor(champWidth / 4);
+  var depth:number = Math.floor(champDepth / 4);
+
+  if (props.orientation === "NS"){
+    drawMeasurement(canvas, context, nlg.x, nlg.y, slg.x, slg.y, champWidth, props.showMeasurements);
+    drawMeasurement(canvas, context, tg.x, tg.y, tg.x, nlg.y, champDepth, props.showMeasurements);
+  }
+  else {
+    drawMeasurement(canvas, context, tg.x, tg.y, nlg.x, tg.y, champDepth, props.showMeasurements);
+    drawMeasurement(canvas, context, nlg.x, slg.y, nlg.x, nlg.y, champWidth, props.showMeasurements);
+  }
+  
+  var offsetX = 0;
+  var offsetX2 = 0;
+  if (props.orientation==="NS"){
+    offsetX2 = -70;
+  } else {
+    offsetX = -70;
+  }
+  drawAltitudes(canvas, context, tg.x +20 + offsetX, tg.y - 11, tg.z);
+  drawAltitudes(canvas, context, slg.x + 20, slg.y - 11, slg.z);
+  drawAltitudes(canvas, context, nlg.x + 20 + offsetX2, nlg.y - 11, nlg.z);
+  
+  var tgBraaseye:Braaseye = drawBraaseye(canvas, context, state.bluePos, tg, state.bullseye, props.showMeasurements, props.braaFirst, offsetX);
+  var nlgBraaseye:Braaseye = drawBraaseye(canvas, context, state.bluePos, nlg, state.bullseye, props.showMeasurements, props.braaFirst, offsetX2);
+  var slgBraaseye:Braaseye = drawBraaseye(canvas, context, state.bluePos, slg, state.bullseye, props.showMeasurements, props.braaFirst);
+
+  var tgAlts:AltStack = getAltStack(tg.z, props.format);
+  var nlgAlts:AltStack = getAltStack(nlg.z, props.format);
+  var slgAlts:AltStack = getAltStack(slg.z, props.format);
+
+  var answer = "THREE GROUP CHAMPAGNE " +width +" WIDE, " +depth +" DEEP, ";
+ 
+  var sLbl = "SOUTH";
+  var nLbl = "NORTH";
+  if (props.orientation==="NS"){
+    sLbl = "EAST";
+    nLbl = "WEST";
+  }
+  // determine if weighted
+  if (getBR(nlg.x, nlg.y, {x:nlg.x, y:tg.y}).range < width/3){
+    answer += " WEIGHTED " + nLbl + ", ";
+  } else if (getBR(slg.x, slg.y, {x:slg.x, y:tg.y}).range < width/3){
+    answer += " WEIGHTED " + sLbl + ", ";
+  }
+  
+  var nlTrack = props.format === "alsa" ? getTrackDir(nlg.heading): undefined;
+  var slTrack = props.format === "alsa" ? getTrackDir(slg.heading): undefined;
+  var tTrack = props.format === "alsa" ? getTrackDir(tg.heading): undefined;
+
+  var sameTrackDir = (nlTrack === slTrack && slTrack === tTrack);
+  if (props.format !== "ipe" && sameTrackDir){
+    answer += " TRACK " + nlTrack + ". ";
+  } 
+
+  var includeBull:boolean = false;
+  if (width >= 10 && props.format !== "ipe") {
+    includeBull = true;
+  }
+
+  // TODO -- anchoring priorities for LE of champagne
+  if (nlgBraaseye.braa.range < slgBraaseye.braa.range) {
+    answer += formatGroup(nLbl +" LEAD", nlgBraaseye, nlgAlts, nlg.numContacts, true, sameTrackDir ? undefined: nlTrack) + " ";
+    answer +=  formatGroup(sLbl +" LEAD",  slgBraaseye,  slgAlts,  slg.numContacts,  includeBull, sameTrackDir ? undefined: slTrack ) + " ";
+  } else {
+    answer += formatGroup(sLbl +" LEAD", slgBraaseye, slgAlts, slg.numContacts, true, sameTrackDir ? undefined: slTrack) + " ";
+    answer += formatGroup(nLbl + " LEAD", nlgBraaseye,  nlgAlts,  nlg.numContacts,  includeBull, sameTrackDir ? undefined : nlTrack ) + " ";
+  }
+  answer += formatGroup("TRAIL", tgBraaseye, tgAlts, tg.numContacts, false, sameTrackDir? undefined: tTrack);
+
+  tg.label = "TRAIL GROUP";
+  nlg.label = nLbl + " LEAD GROUP";
+  slg.label = sLbl +" LEAD GROUP";
+
+  return {
+    pic: answer,
+    groups: [tg, nlg, slg]
+  };
+}
