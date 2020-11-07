@@ -1,4 +1,25 @@
-import { AltStack, BRAA, Bullseye } from '../canvas/interfaces'
+import { AltStack, BRAA, Bullseye, Group } from '../canvas/interfaces'
+
+export function getAspect(bluePos:Bullseye, group:Group){
+  var recipBrg:BRAA = getBR(bluePos.x, bluePos.y, {x: group.x, y:group.y});
+
+  var dist = (group.heading - parseInt(recipBrg.bearing) + 360) % 360;
+  if (dist > 180) dist = 360 - dist;
+  var cata = dist;
+
+  var aspectH = "MANEUVER";
+
+  if (cata < 30){
+    aspectH = "HOT";
+  } else if (cata < 60 ){
+    aspectH = "FLANK";
+  } else if (cata < 110){
+    aspectH = "BEAM";
+  } else if (cata <= 180){
+    aspectH = "DRAG";
+  }
+  return aspectH;
+}
 
 export function getTrackDir(heading: number): string {
   var direction:string = "";

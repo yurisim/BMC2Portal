@@ -5,7 +5,8 @@ import Canvas from './canvas'
 import {randomNumber } from '../utils/mathutilities'
 import { drawArrow } from './draw/drawutils'
 import { Bullseye, DrawFunction } from './interfaces'
-import { drawAzimuth, drawBullseye, drawChampagne, drawLadder, drawLeadEdge, drawPackage, drawRange, drawVic, drawWall } from './draw/picturedraw'
+import { drawAzimuth, drawBullseye, drawChampagne, drawLadder, drawLeadEdge, drawPackage, drawRange, drawVic, drawWall } from './draw/intercept/picturedraw'
+import { drawThreat } from './draw/intercept/threat'
 
 export type PicCanvasProps = {
     height: number,
@@ -67,7 +68,7 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         "vic": drawVic,
         "champagne":drawChampagne,
         // "cap": drawCapLocal,
-        // "threat": drawThreatLocal,
+        "threat": drawThreat,
         // "ea": drawEA,
         // "pod": drawPOD,
         "leading edge": drawLeadEdge,

@@ -1,11 +1,11 @@
-import { AltStack, Braaseye, Bullseye, drawAnswer } from '../interfaces'
+import { AltStack, Braaseye, Bullseye, drawAnswer } from '../../interfaces'
 
-import { randomNumber, randomHeading, getBR, getAltStack, getTrackDir } from '../../utils/mathutilities'
-import { drawAltitudes, drawArrow, drawBraaseye, drawMeasurement } from './drawutils'
-import { DrawFunction, Group } from '../interfaces'
-import { PicCanvasProps, PicCanvasState } from '../picturecanvas';
-import { formatGroup, getGroupOpenClose } from './formatutils';
-import snackbar from '../../../utils/alert';
+import { randomNumber, randomHeading, getBR, getAltStack, getTrackDir } from '../../../utils/mathutilities'
+import { drawAltitudes, drawArrow, drawBraaseye, drawMeasurement } from '../drawutils'
+import { DrawFunction, Group } from '../../interfaces'
+import { PicCanvasProps, PicCanvasState } from '../../picturecanvas';
+import { formatGroup, getGroupOpenClose } from '../formatutils';
+import snackbar from '../../../../utils/alert';
 
 export function drawBullseye (
     canvas:HTMLCanvasElement, 
