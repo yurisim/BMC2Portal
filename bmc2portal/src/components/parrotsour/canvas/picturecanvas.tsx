@@ -9,6 +9,7 @@ import { drawAzimuth, drawBullseye, drawChampagne, drawLadder, drawLeadEdge, dra
 import { drawThreat } from './draw/intercept/threatdraw'
 import { drawCap } from './draw/intercept/capdraw'
 import { drawEA } from './draw/intercept/eadraw'
+import { drawPOD } from './draw/intercept/poddraw'
 
 export type PicCanvasProps = {
     height: number,
@@ -72,7 +73,7 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         "cap": drawCap,
         "threat": drawThreat,
         "ea": drawEA,
-        // "pod": drawPOD,
+        "pod": drawPOD,
         "leading edge": drawLeadEdge,
         "package": drawPackage,
     }

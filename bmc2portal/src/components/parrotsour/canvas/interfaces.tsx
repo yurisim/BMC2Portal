@@ -38,7 +38,8 @@ export type Group = {
     numContacts: number,
     type: string,
     label?: string,
-    isCapping?: boolean
+    isCapping?: boolean,
+    braaseye?: Braaseye
 }
 
 export type drawAnswer = {
