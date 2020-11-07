@@ -39,7 +39,8 @@ export type Group = {
     type: string,
     label?: string,
     isCapping?: boolean,
-    braaseye?: Braaseye
+    braaseye?: Braaseye,
+    maneuvers?: boolean,
 }
 
 export type drawAnswer = {

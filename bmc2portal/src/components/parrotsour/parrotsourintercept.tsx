@@ -9,7 +9,7 @@ import '../../css/toggle.css'
 
 import InterceptQT from './quicktips/interceptQT.js'
 import AlsaHelp from './quicktips/alsahelp.js'
-import ParrotSourHeader from './parrotsourheader.js'
+import ParrotSourHeader from './parrotsourheader'
 import ParrotSourControls from './parrotsourcontrols.js'
 import PictureCanvas from './canvas/picturecanvas'
 
@@ -36,6 +36,7 @@ interface PSIState {
     braaFirst: boolean,
     picType: string,
     answer: string,
+    animate:boolean,
     newPic: boolean
 }
 export default class ParrotSourIntercept extends React.Component<PSIProps, PSIState> {
@@ -58,6 +59,7 @@ export default class ParrotSourIntercept extends React.Component<PSIProps, PSISt
             picType:"random",
             answer: "",
             newPic: false,
+            animate: false,
         }
     }
 
@@ -100,6 +102,14 @@ export default class ParrotSourIntercept extends React.Component<PSIProps, PSISt
 
     setAnswer = (answer: string) => {
         this.setState({answer: answer})
+    }
+
+    startAnimate = () =>{
+        this.setState({animate:true})
+    }
+
+    pauseAnimate = () => {
+        this.setState({animate:false})
     }
 
     modifyCanvas = () => {
@@ -215,6 +225,8 @@ export default class ParrotSourIntercept extends React.Component<PSIProps, PSISt
                     modifyCanvas={this.modifyCanvas}
                     showNewPic={this.showNewPic}
                     braaChanged={this.braaChanged}
+                    startAnimate={this.startAnimate}
+                    pauseAnimate={this.pauseAnimate}
                 />
                 
                 <br/>
@@ -238,6 +250,8 @@ export default class ParrotSourIntercept extends React.Component<PSIProps, PSISt
                     orientation={this.state.canvasConfig.orient}
                     setAnswer={this.setAnswer}
                     newPic={this.state.newPic}
+                    animate={this.state.animate}
+                    sliderSpeed={this.state.speedSliderValue}
                 />
 
                 <VersionInfo/>

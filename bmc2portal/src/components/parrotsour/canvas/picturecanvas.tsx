@@ -10,6 +10,7 @@ import { drawThreat } from './draw/intercept/threatdraw'
 import { drawCap } from './draw/intercept/capdraw'
 import { drawEA } from './draw/intercept/eadraw'
 import { drawPOD } from './draw/intercept/poddraw'
+import { animateGroups } from './draw/intercept/animate'
 
 export type PicCanvasProps = {
     height: number,
@@ -22,12 +23,17 @@ export type PicCanvasProps = {
     isHardMode: boolean,
     setAnswer: Function,
     newPic: boolean,
+    animate:boolean,
+    sliderSpeed: number
 }
 
 export type PicCanvasState = {
     bullseye: Bullseye
     bluePos: Bullseye|undefined,
     reDraw: Function,
+    answer:drawAnswer,
+    canvas?:HTMLCanvasElement,
+    animateCanvas?: ImageData,
 }
 
 export default class PictureCanvas extends React.Component<PicCanvasProps, PicCanvasState> {
@@ -38,6 +44,44 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
             bullseye: {x:0, y:0},
             bluePos: undefined,
             reDraw: this.drawPicture,
+            answer: {pic:"", groups:[]}
+        }
+    }
+
+    componentDidUpdate = (prevProps: PicCanvasProps, prevState:PicCanvasState, snapshot:any) => {
+        var {animate, ...rest} = prevProps
+        var oldAnimate = animate
+        var {animate, ...newrest} = this.props
+        var newAnimate = animate
+        function areEqualShallow(a:any, b:any) {
+            for(var key in a) {
+                if(!(key in b) || a[key] !== b[key]) {
+                    return false;
+                }
+            }
+            for(key in b) {
+                if(!(key in a) || a[key] !== b[key]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    
+        if (areEqualShallow(rest, newrest) && oldAnimate !== newAnimate){    
+            if (this.props.animate){
+                console.log("initiating animation...")
+                console.log(this.state.canvas)
+                console.log(this.state.animateCanvas)
+                if (this.state.canvas && this.state.animateCanvas){
+                //   var context: any = this.state.canvas.getContext("2d")
+                  animateGroups(this.state.canvas, this.props, this.state, this.state.answer.groups, this.state.animateCanvas);
+                //   if (context !== undefined){
+                //     this.setState({animateCanvas: context.getImageData(0, 0, this.state.canvas.width, this.state.canvas.height)})
+                //   }
+                }
+            } else {
+                console.log("pausing canvas")
+            }
         }
     }
 
@@ -96,10 +140,13 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         var bluePos = drawArrow(canvas, this.props.orientation, 4, xPos, yPos, heading, "blue");
         await this.setState({bluePos, bullseye})
         
+        var blueOnly = context.getImageData(0, 0, canvas.width, canvas.height)
+
         var answer: drawAnswer = await this.drawPicture(canvas, context)
 
         this.props.setAnswer(answer.pic)
         
+        this.setState({canvas, answer, animateCanvas: blueOnly})
         //groups = answer.picture.groups;
         //animateCanvas = answer.imageData;
     }

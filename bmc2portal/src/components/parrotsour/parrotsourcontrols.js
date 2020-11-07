@@ -18,10 +18,11 @@ export default class ParrotSourControls extends React.Component {
     }
 
     fightsOn = () => {
-        console.log("Fights On")
+        this.props.startAnimate()
     }
 
     pauseFight = () =>{
+        this.props.pauseAnimate()
         console.log("Fight is Paused")
     }
 

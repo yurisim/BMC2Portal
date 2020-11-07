@@ -3,16 +3,24 @@ import React from 'react'
 import IssueReport from './issuereport'
 import {Dialog} from '@material-ui/core'
 
-export default class ParrotSourHeader extends React.Component {
+interface PSHeaderProps{
+    comp:any
+}
 
-    imgStyle = {
+interface PSHeaderState{
+    showQT: boolean,
+}
+
+export default class ParrotSourHeader extends React.Component<PSHeaderProps, PSHeaderState> {
+
+    imgStyle:Object = {
         position:"absolute",
         height: "60px",
         top: "5px", 
     }
 
-    constructor(){
-        super()
+    constructor(props: PSHeaderProps){
+        super(props)
         this.state={
             showQT: false,
         }
