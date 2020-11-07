@@ -4,10 +4,11 @@ import Canvas from './canvas'
 
 import {randomNumber } from '../utils/mathutilities'
 import { drawArrow } from './draw/drawutils'
-import { Bullseye, DrawFunction } from './interfaces'
+import { Bullseye, drawAnswer, DrawFunction } from './interfaces'
 import { drawAzimuth, drawBullseye, drawChampagne, drawLadder, drawLeadEdge, drawPackage, drawRange, drawVic, drawWall } from './draw/intercept/picturedraw'
 import { drawThreat } from './draw/intercept/threatdraw'
 import { drawCap } from './draw/intercept/capdraw'
+import { drawEA } from './draw/intercept/eadraw'
 
 export type PicCanvasProps = {
     height: number,
@@ -47,18 +48,18 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
     
     drawPicture = async (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, forced?: boolean, start?: Bullseye) => {
         
-        var isLeadEdge = (this.props.picType === "leading edge" || this.props.picType === "package")
+        var isLeadEdge = (this.props.picType === "leading edge" || this.props.picType === "package" || this.props.picType==="ea")
 
         var type = ((this.props.picType ==="random" || forced) ? this.getRandomPicType(isLeadEdge) : this.props.picType)
       
         var drawFunc:DrawFunction = this.functions[type];
         if (drawFunc === undefined) drawFunc = drawAzimuth;
       
+        console.log(drawFunc.name)
         var answer = await drawFunc(canvas, context, this.props, this.state, start);
 
-        return {
-          picture: answer,
-        };
+        //console.log("drawPicture: " , answer)
+        return answer
     }
 
     functions: { [key:string]: DrawFunction } = {
@@ -70,7 +71,7 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         "champagne":drawChampagne,
         "cap": drawCap,
         "threat": drawThreat,
-        // "ea": drawEA,
+        "ea": drawEA,
         // "pod": drawPOD,
         "leading edge": drawLeadEdge,
         "package": drawPackage,
@@ -91,10 +92,10 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         var bluePos = drawArrow(canvas, this.props.orientation, 4, xPos, yPos, heading, "blue");
         await this.setState({bluePos, bullseye})
         
-        var answer = await this.drawPicture(canvas, context)
+        var answer: drawAnswer = await this.drawPicture(canvas, context)
 
-        this.props.setAnswer(answer.picture.pic)
-      
+        this.props.setAnswer(answer.pic)
+        
         //groups = answer.picture.groups;
         //animateCanvas = answer.imageData;
     }

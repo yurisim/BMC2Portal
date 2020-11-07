@@ -173,7 +173,7 @@ export const drawRange:DrawFunction = (
     context:CanvasRenderingContext2D,
     props: PicCanvasProps,
     state: PicCanvasState,
-    start?:Bullseye) => {
+    start?:Bullseye): drawAnswer => {
         
     if (!state.bluePos) { return { pic: "", groups: []} }
 
@@ -271,7 +271,7 @@ export const drawWall: DrawFunction = (
     context: CanvasRenderingContext2D,
     props: PicCanvasProps,
     state: PicCanvasState,
-    start?: Bullseye|undefined ) => {
+    start?: Bullseye|undefined ): drawAnswer => {
 
     if (!state.bluePos) { return { pic: "", groups: []} }
 
@@ -404,7 +404,7 @@ export const drawLadder: DrawFunction =  (
   context: CanvasRenderingContext2D,
   props: PicCanvasProps,
   state: PicCanvasState,
-  start?: Bullseye|undefined ) => {
+  start?: Bullseye|undefined ): drawAnswer => {
   
   if (!state.bluePos) { return { pic: "", groups: []} }
 
@@ -508,7 +508,7 @@ export const drawChampagne:DrawFunction =  (
   context: CanvasRenderingContext2D,
   props: PicCanvasProps,
   state: PicCanvasState,
-  start?: Bullseye|undefined ) => {
+  start?: Bullseye|undefined ): drawAnswer => {
   
   if (!state.bluePos) { return { pic: "", groups: []} }
 
@@ -628,7 +628,7 @@ export const drawVic:DrawFunction =  (
   context: CanvasRenderingContext2D,
   props: PicCanvasProps,
   state: PicCanvasState,
-  start?: Bullseye|undefined ) => {
+  start?: Bullseye|undefined ): drawAnswer => {
 
   if (!state.bluePos) { return { pic: "", groups: []} }
 
@@ -756,7 +756,7 @@ export const drawLeadEdge:DrawFunction = (
   context: CanvasRenderingContext2D,
   props: PicCanvasProps,
   state: PicCanvasState,
-  start?: Bullseye|undefined ) => {
+  start?: Bullseye|undefined ): drawAnswer => {
 
   if (!state.bluePos) { return { pic: "", groups: []} }
 
@@ -767,7 +767,7 @@ export const drawLeadEdge:DrawFunction = (
   var startX1: number = randomNumber(canvas.width * lowXMult, canvas.width * hiXMult);
   var startY1: number = randomNumber(canvas.height * lowYMult, canvas.height * hiYMult);
   var start1 = { x: props.orientation==="NS" ? undefined : startX1, y: props.orientation==="NS" ? startY1 : undefined};
-  return state.reDraw(canvas, context, true, start1).then((answer1: any) => {
+  return state.reDraw(canvas, context, true, start1).then((answer1: drawAnswer) => {
    
     var lowYMult = (props.orientation ==="NS") ? 0.7 : 0.25
     var hiYMult = (props.orientation === "NS") ? 0.9 : 0.29
@@ -776,11 +776,11 @@ export const drawLeadEdge:DrawFunction = (
     var startX2 = randomNumber(canvas.width * lowXMult, canvas.width * hiXMult);
     var startY2 = randomNumber(canvas.height * lowYMult, canvas.height * hiYMult);
     var start2 = { x: props.orientation ==="NS" ? undefined : startX2, y: props.orientation==="NS" ? startY2 : undefined};
-    return state.reDraw(canvas, context, true, start2).then((answer2:any) => { 
+    return state.reDraw(canvas, context, true, start2).then((answer2:drawAnswer) => { 
 
       if (!state.bluePos) { return { pic: "", groups: []} }
-      var groups1 = answer1.picture.groups;
-      var groups2 = answer2.picture.groups;
+      var groups1 = answer1.groups;
+      var groups2 = answer2.groups;
 
       if (props.orientation==="NS"){
         var tmp = groups1;
@@ -813,7 +813,7 @@ export const drawLeadEdge:DrawFunction = (
         pic:
           (groups1.length +groups2.length) +
           " GROUPS, LEADING EDGE " +
-          answer1.picture.pic +
+          answer1.pic +
           " FOLLOW ON " + (props.format ==="ipe" ? " GROUPS " : "") +
           (rngBack.range > 40 ? " 40 " : rngBack.range) +
           (props.format==="ipe" ? " MILES" : ""),
@@ -828,7 +828,7 @@ export const drawPackage:DrawFunction = (
   context: CanvasRenderingContext2D,
   props: PicCanvasProps,
   state: PicCanvasState,
-  start?: Bullseye|undefined ) => {
+  start?: Bullseye|undefined ): drawAnswer => {
 
   if (!state.bluePos) { return { pic: "", groups: []} }
   var isRange = randomNumber(0,120) < 50
@@ -860,12 +860,12 @@ export const drawPackage:DrawFunction = (
     }
   }
 
-  return state.reDraw(canvas, context, true, { x:startX1, y:startY1 }).then((answer1: any) => {
-    return state.reDraw(canvas, context, true, { x:startX2, y: startY2 }).then((answer2:any) =>{
+  return state.reDraw(canvas, context, true, { x:startX1, y:startY1 }).then((answer1: drawAnswer) => {
+    return state.reDraw(canvas, context, true, { x:startX2, y: startY2 }).then((answer2:drawAnswer) =>{
   
       if (!state.bluePos) { return { pic: "", groups: []} }
-      var groups1: Group[] = answer1.picture.groups;
-      var groups2: Group[] = answer2.picture.groups;
+      var groups1: Group[] = answer1.groups;
+      var groups2: Group[] = answer2.groups;
     
       var xs = 0;
       var ys = 0;

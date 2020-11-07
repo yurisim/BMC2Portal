@@ -37,7 +37,8 @@ export type Group = {
     z: number[],
     numContacts: number,
     type: string,
-    label?: string;
+    label?: string,
+    isCapping?: boolean
 }
 
 export type drawAnswer = {
