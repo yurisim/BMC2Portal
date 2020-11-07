@@ -238,4 +238,77 @@ export function drawArrow(
         };
     }
     return group;
+}
+
+export function drawGroupCap(
+  canvas: HTMLCanvasElement,
+  orientation: string,
+  contacts: number,
+  startX:number,
+  startY:number, 
+  color?:string): Group{
+
+  var c = canvas.getContext("2d");
+  if (!c) { return {x:0, y:0, startX:0, startY:0, heading:0, desiredHeading:0, z:[], numContacts:1, type:"ftr"}}
+
+  color = color || "red";
+
+  var alts:number[] = [];
+
+  alts = [...Array(contacts)].map(_=>randomNumber(15,45));
+
+  c.lineWidth = 1;
+  c.fillStyle = color;
+  c.strokeStyle=color;
+
+  c.beginPath();
+
+  var radius = 10;
+  if (contacts === 1 ){
+    c.arc(startX, startY, 10, 1.0*Math.PI, 0.8*Math.PI);
+    c.stroke();
+    drawLine(c, startX-8, startY+6, startX-6, startY+12, "red");
+  } else{
+    var ratio = 2/contacts - 0.1; 
+    var startPI = 0;
+    var endPI = ratio
+    radius = 12;
+    for (var x = 1 ; x<= contacts; x++){
+      c.arc(startX,startY, radius, startPI*Math.PI, endPI*Math.PI);
+      c.stroke();
+
+      var opp:number = radius * Math.sin(endPI*Math.PI);
+      var adj:number = radius * Math.cos(endPI*Math.PI);
+    
+      var endy = startY + opp;
+      var endx = startX + adj;
+    
+      c.beginPath();
+      c.moveTo(startX+(adj*0.6), startY+(opp*0.9));
+      c.lineTo(endx, endy);
+      c.stroke();
+      c.beginPath();
+
+      startPI = (endPI+0.1);
+      endPI = startPI+ratio;
+    }
   }
+
+  var angle = (orientation==="EW") ? 270 : 0;
+  var sY: number = startY + radius * Math.sin(toRadians(angle));
+  var sX: number = startX + radius * Math.cos(toRadians(angle));
+  var group = {
+    capping: true,
+    startX: sX,
+    startY: sY,
+    x: Math.floor(sX),
+    y: Math.floor(sY),
+    heading: randomNumber(0,360),
+    desiredHeading: 90,
+    z: alts,
+    numContacts: contacts,
+    type:"ftr"
+  };
+
+  return group;
+}

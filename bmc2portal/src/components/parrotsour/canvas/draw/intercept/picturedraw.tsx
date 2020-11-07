@@ -5,7 +5,6 @@ import { drawAltitudes, drawArrow, drawBraaseye, drawMeasurement } from '../draw
 import { DrawFunction, Group } from '../../interfaces'
 import { PicCanvasProps, PicCanvasState } from '../../picturecanvas';
 import { formatGroup, getGroupOpenClose } from '../formatutils';
-import snackbar from '../../../../utils/alert';
 
 export function drawBullseye (
     canvas:HTMLCanvasElement, 
