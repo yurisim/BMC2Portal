@@ -56,7 +56,7 @@ export const drawThreat:DrawFunction = (
     var aspectH = getAspect(state.bluePos, sg);
     var trackDir = getTrackDir(sg.heading);
 
-    var answer:string = "THREAT BRAA " + closest.bearing + "/" + closest.range + " " + sgAlts.stack + " " + aspectH + " " + (aspectH !== "HOT" ? trackDir : "") + " HOSTILE "
+    var answer:string = "[FTR C/S], THREAT GROUP BRAA " + closest.bearing + "/" + closest.range + " " + sgAlts.stack + " " + aspectH + " " + (aspectH !== "HOT" ? trackDir : "") + " HOSTILE "
 
     if (closestGrp.numContacts > 1) {
         answer += (closestGrp.numContacts >= 3 ? "HEAVY " : "") + closestGrp.numContacts + " CONTACTS ";
