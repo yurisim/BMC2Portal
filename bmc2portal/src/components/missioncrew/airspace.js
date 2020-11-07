@@ -63,7 +63,6 @@ export default class Airspace extends React.Component {
 
   // main Component render
   render(){
-    console.log(this.state.loaLoc)
     return (
       <div>
         <table><tbody>

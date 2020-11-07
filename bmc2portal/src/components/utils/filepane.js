@@ -13,8 +13,6 @@ export default class FilePane extends React.Component {
 
   render(){
     var newSrc = this.props.src ? this.props.src : process.env.REACT_APP_STATIC_SERVER_URL+window.location.pathname
-    console.log(newSrc)
-    console.log(process.env.REACT_APP_STATIC_SERVER_URL)
     return (
       <div style={this.style}>
         <iframe id="frameDoc" target="_parent" style={this.style} src={newSrc} title={this.props.title} />

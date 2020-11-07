@@ -865,7 +865,6 @@ export const drawPackage:DrawFunction = (
     return state.reDraw(canvas, context, true, { x:startX2, y: startY2 }).then((answer2:any) =>{
   
       if (!state.bluePos) { return { pic: "", groups: []} }
-      console.log(answer1, answer2)
       var groups1: Group[] = answer1.picture.groups;
       var groups2: Group[] = answer2.picture.groups;
     
@@ -955,7 +954,6 @@ export const drawPackage:DrawFunction = (
       else {
         rngBack = props.orientation==="NS" ?  getBR(bullPtXL, bullPtYL, {x: bullPtXT, y: bullPtYL}) : getBR(bullPtXL, bullPtYL, {x: bullPtXL, y: bullPtYT});
         if (rngBack.range < 40) { 
-          snackbar.alert("redraw", 5000, "red")
           context.clearRect(0, 0, canvas.width, canvas.height);
           drawBullseye(canvas, context);
           drawArrow(canvas, props.orientation, 4, state.bluePos.x, state.bluePos.y, (props.orientation==="NS") ? 180 : 270, "blue");

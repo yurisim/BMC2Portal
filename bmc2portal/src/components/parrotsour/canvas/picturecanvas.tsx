@@ -6,7 +6,7 @@ import {randomNumber } from '../utils/mathutilities'
 import { drawArrow } from './draw/drawutils'
 import { Bullseye, DrawFunction } from './interfaces'
 import { drawAzimuth, drawBullseye, drawChampagne, drawLadder, drawLeadEdge, drawPackage, drawRange, drawVic, drawWall } from './draw/intercept/picturedraw'
-import { drawThreat } from './draw/intercept/threat'
+import { drawThreat } from './draw/intercept/threatdraw'
 
 export type PicCanvasProps = {
     height: number,
