@@ -51,7 +51,12 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         
         var isLeadEdge = (this.props.picType === "leading edge" || this.props.picType === "package" || this.props.picType==="ea")
 
-        var type = ((this.props.picType ==="random" || forced) ? this.getRandomPicType(isLeadEdge) : this.props.picType)
+        var type = "azimuth"
+        if (forced) {
+            type = this.getRandomPicType(true)
+        } else {
+            type = ((this.props.picType ==="random") ? this.getRandomPicType(isLeadEdge) : this.props.picType)
+        }
       
         var drawFunc:DrawFunction = this.functions[type];
         if (drawFunc === undefined) drawFunc = drawAzimuth;
@@ -89,7 +94,7 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
             yPos = 20;
             heading = 180;
         }
-            
+        
         var bluePos = drawArrow(canvas, this.props.orientation, 4, xPos, yPos, heading, "blue");
         await this.setState({bluePos, bullseye})
         
