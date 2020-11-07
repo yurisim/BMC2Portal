@@ -5,6 +5,7 @@ import { drawAltitudes, drawArrow, drawBraaseye, drawMeasurement } from './drawu
 import { DrawFunction, Group } from '../interfaces'
 import { PicCanvasProps, PicCanvasState } from '../picturecanvas';
 import { formatGroup, getGroupOpenClose } from './formatutils';
+import snackbar from '../../../utils/alert';
 
 export function drawBullseye (
     canvas:HTMLCanvasElement, 
@@ -819,6 +820,153 @@ export const drawLeadEdge:DrawFunction = (
           (props.format==="ipe" ? " MILES" : ""),
         groups: groups1.concat(groups2)
       };
+    })
+  })
+}
+
+export const drawPackage:DrawFunction = (
+  canvas: HTMLCanvasElement,
+  context: CanvasRenderingContext2D,
+  props: PicCanvasProps,
+  state: PicCanvasState,
+  start?: Bullseye|undefined ) => {
+
+  if (!state.bluePos) { return { pic: "", groups: []} }
+  var isRange = randomNumber(0,120) < 50
+
+  var startX1:any, startX2:any, startY1:any, startY2:any
+  if (props.orientation==="EW"){
+    if (isRange){
+      startX1 = randomNumber(canvas.width* 0.5, canvas.width*0.59);
+      startX2 = randomNumber(canvas.width * 0.2, canvas.width*0.35);
+      startY1 = undefined;
+      startY2 = undefined;
+    } else {
+      startX1 =  randomNumber(canvas.width * 0.25, canvas.width * 0.5);
+      startX2 = startX1;
+      startY1 =  randomNumber(canvas.height * 0.60, canvas.height * 0.70);
+      startY2 =  randomNumber(canvas.height * 0.25, canvas.height * 0.40);
+    }
+  } else {
+    if (isRange){
+      startX1 = undefined;
+      startX2 = undefined;
+      startY1 = randomNumber(canvas.height*0.5, canvas.height *0.59);
+      startY2 = randomNumber(canvas.height * 0.3, canvas.height *0.35);
+    } else {
+      startX1 = randomNumber(canvas.width * 0.2, canvas.width*0.3);
+      startX2 = randomNumber(canvas.width * 0.7, canvas.width*0.8);
+      startY1 = randomNumber(canvas.height * 0.25, canvas.height*0.50);
+      startY2 = startY1;
+    }
+  }
+
+  return state.reDraw(canvas, context, true, { x:startX1, y:startY1 }).then((answer1: any) => {
+    return state.reDraw(canvas, context, true, { x:startX2, y: startY2 }).then((answer2:any) =>{
+  
+      if (!state.bluePos) { return { pic: "", groups: []} }
+      console.log(answer1, answer2)
+      var groups1: Group[] = answer1.picture.groups;
+      var groups2: Group[] = answer2.picture.groups;
+    
+      var xs = 0;
+      var ys = 0;
+    
+      var bullPtXL, bullPtYL, bullPtXT, bullPtYT;
+      var closestFollowx, farthestLeadx;
+    
+      if (props.orientation==="NS"){ 
+        closestFollowx = groups2[0].y;
+        farthestLeadx = groups1[0].y;
+        for (var x = 0; x < groups2.length; x++) {
+          if (groups2[x].y < closestFollowx){
+            closestFollowx  = groups2[x].y;
+          }
+          xs += groups2[x].x;
+        }
+    
+        bullPtYT = closestFollowx;
+        bullPtXT = xs / groups2.length;
+        xs = 0;
+    
+        for (x = 0; x < groups1.length; x++) {
+          if (groups1[x].y < farthestLeadx){
+            farthestLeadx = groups1[x].y;
+          }
+          xs += groups1[x].x;
+        }
+        bullPtXL = xs / groups1.length;
+        bullPtYL = farthestLeadx;
+      } else {
+        closestFollowx = groups2[0].x;
+        farthestLeadx = groups1[0].x;
+        for (x = 0; x < groups2.length; x++) {
+          if (groups2[x].x > closestFollowx){
+            closestFollowx  = groups2[x].x;
+          }
+          ys += groups2[x].y;
+        }
+    
+        bullPtYT = ys / groups2.length;
+        bullPtXT = closestFollowx;
+        ys = 0;
+    
+        for (x = 0; x < groups1.length; x++) {
+          if (groups1[x].x > farthestLeadx){
+            farthestLeadx = groups1[x].x;
+          }
+          ys += groups1[x].y;
+        }
+        bullPtYL = ys / groups1.length;
+        bullPtXL = farthestLeadx;
+      }
+      var leadPackage = getBR(bullPtXL, bullPtYL, state.bullseye);
+      var trailPackage = getBR(bullPtXT, bullPtYT, state.bullseye);
+      
+      if (props.orientation==="NS") {
+        var tmpPkg = leadPackage;
+        leadPackage = trailPackage;
+        trailPackage = tmpPkg;
+      }
+    
+      var realAnswer: drawAnswer = {
+        pic: "",
+        groups: groups1.concat(groups2)
+      }
+    
+      var lLbl = !isRange ? "SOUTH": "EAST";
+      var tLbl = !isRange ? "NORTH" : "WEST";
+      if (props.orientation==="NS"){ 
+        lLbl = isRange ? "NORTH" : "EAST";
+        tLbl = isRange ? "SOUTH" : "WEST"; 
+      }
+      if ( isRange ){
+        var rngBack = props.orientation==="NS" ? getBR(bullPtXL, bullPtYL, {x: bullPtXL, y: bullPtYT}) : getBR(bullPtXL, bullPtYL, {x: bullPtXT, y: bullPtYL}); 
+        if (rngBack.range < 40 ){
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          drawBullseye(canvas, context);
+          drawArrow(canvas, props.orientation, 4, state.bluePos.x, state.bluePos.y, (props.orientation==="NS"? 180 : 270), "blue");
+          return drawPackage(canvas, context, props, state, start);
+        }
+        realAnswer.pic = " 2 PACKAGES RANGE " + rngBack.range + " "+ 
+            lLbl + " PACKAGE BULLSEYE " + leadPackage.bearing + "/" + leadPackage.range + " " +
+            tLbl + " PACKAGE BULLSEYE " + trailPackage.bearing + "/" + trailPackage.range;
+      }
+      else {
+        rngBack = props.orientation==="NS" ?  getBR(bullPtXL, bullPtYL, {x: bullPtXT, y: bullPtYL}) : getBR(bullPtXL, bullPtYL, {x: bullPtXL, y: bullPtYT});
+        if (rngBack.range < 40) { 
+          snackbar.alert("redraw", 5000, "red")
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          drawBullseye(canvas, context);
+          drawArrow(canvas, props.orientation, 4, state.bluePos.x, state.bluePos.y, (props.orientation==="NS") ? 180 : 270, "blue");
+          return drawPackage(canvas, context, props, state, start);
+        }
+        realAnswer.pic = " 2 PACKAGES AZIMUTH " + rngBack.range + " " +
+            tLbl + " PACKAGE BULLSEYE " + trailPackage.bearing + "/" + trailPackage.range + " "+
+            lLbl +" PACKAGE BULLSEYE " + leadPackage.bearing + "/" + leadPackage.range;
+      }
+      return realAnswer;
+      
     })
   })
 }
