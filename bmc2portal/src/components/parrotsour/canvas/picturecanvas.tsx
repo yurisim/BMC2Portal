@@ -61,10 +61,8 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         var drawFunc:DrawFunction = this.functions[type];
         if (drawFunc === undefined) drawFunc = drawAzimuth;
       
-        console.log(drawFunc.name)
         var answer = await drawFunc(canvas, context, this.props, this.state, start);
 
-        //console.log("drawPicture: " , answer)
         return answer
     }
 
