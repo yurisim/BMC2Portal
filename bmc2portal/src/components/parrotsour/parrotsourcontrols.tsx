@@ -15,6 +15,15 @@ interface PSCState {
     showHelpText: boolean
 }
 
+/**
+ * 'Basic' controls for the ParrotSour pictures.
+ * 
+ * Includes:
+ * - Play/Pause
+ * - Speed Slider
+ * - Orientation toggle
+ * - BRAA/Bull first toggle
+ */
 export default class ParrotSourControls extends React.Component<PSCProps, PSCState> {
 
     constructor(props:PSCProps){
@@ -25,23 +34,40 @@ export default class ParrotSourControls extends React.Component<PSCProps, PSCSta
         }
     }
 
+    /**
+     * Called when the slider changes speed
+     * @param evt - a ChangeEvent containing the new speed value
+     */
     handleSliderChange = (evt: ChangeEvent<HTMLInputElement>): void => {
         const val = parseInt(evt.currentTarget.value)
         this.setState({speedSliderValue: val})
         this.props.handleSliderChange(val)
     }
 
+    /**
+     * Called to start the animation
+     */
     fightsOn = ():void => {
         this.props.startAnimate()
     }
 
+    /**
+     * Called to stop the animation
+     */
     pauseFight = ():void =>{
         this.props.pauseAnimate()
     }
 
+    /**
+     * Toggle display of help text
+     */
     toggleHelp = ():void => {
         this.setState({showHelpText: !this.state.showHelpText})
     }
+
+    /**
+     * Close the help text dialog
+     */
     handleHelpClose = ():void =>{
         this.setState({showHelpText: false})
     }

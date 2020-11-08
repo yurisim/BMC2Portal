@@ -1,12 +1,15 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 
+/**
+ * Component to display versioning information at the bottom of PS sites
+ */
 export default class VersionInfo extends React.Component {
 
     vStyle = {
         color:"lightblue"
     }
 
-    render(){
+    render(): ReactElement {
         return(
             <div style={this.vStyle}>
                  <br /><br /><br /><br /><br /><br /><br />

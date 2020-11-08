@@ -11,6 +11,13 @@ interface PSHeaderState{
     showQT: boolean,
 }
 
+/**
+ * ParrotSour top header. Includes controls for:
+ * 
+ * - Quick Tips
+ * - Issue Report
+ * - 552 Logos
+ */
 export default class ParrotSourHeader extends React.Component<PSHeaderProps, PSHeaderState> {
 
     imgStyle:CSSProperties = {
@@ -26,12 +33,20 @@ export default class ParrotSourHeader extends React.Component<PSHeaderProps, PSH
         }
     }
 
+    /**
+     * Toggle display of the QuickTips Dialog Element (component passed in props)
+     */
     toggleQuickTips = ():void =>{
         this.setState({showQT: !this.state.showQT})
     }
+    
+    /**
+     * Called when the quick tips dialog is closed
+     */
     handleQTClose = ():void => {
         this.setState({showQT: false})
     }
+    
     render():ReactElement{
         return (
             <div>

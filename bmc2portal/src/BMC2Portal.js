@@ -18,10 +18,10 @@ const UnitList = lazy(()=>import("./components/missioncrew/unitlist.js"))
 const Airspace = lazy(()=>import("./components/missioncrew/airspace.js"))
 const Unit = lazy(()=>import("./components/missioncrew/unit.js"))
 const LessonsLearnedList = lazy(()=>import("./components/lessonslearned/lessonslearned.js"))
-const ResourceList = lazy(()=>import("./components/resourcelist.js"))
+const ResourceList = lazy(()=>import("./components/resourcelist"))
 
 const SideBar = lazy(()=> import("./components/navigation/sidebar.js"));
-const Home = lazy(()=> import("./components/home.js"))
+const Home = lazy(()=> import("./components/home"))
 
 const ParrotSour = lazy(()=>import("./components/parrotsour/parrotsour"))
 

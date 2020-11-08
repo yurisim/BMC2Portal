@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 
 import ImagePane from './utils/imagepane'
 
@@ -7,7 +7,7 @@ import ImagePane from './utils/imagepane'
  */
 export default class Home extends React.PureComponent {
 
-  render(){
+  render(): ReactElement {
     return (
       <ImagePane imageSrc="./icon/552trans.png" />
     )}

@@ -3,14 +3,19 @@ import React from 'react';
 import '../css/styles.css';
 import '../css/links.css';
 
+interface RLState{
+  curTab: string,
+  tabClasses: string[]
+}
+
 /**
  * This Component contains the rendering of the "Links & Resourcs" 'page'.
  */
-export default class ResourceList extends React.Component {
+export default class ResourceList extends React.Component<Record<string,unknown>, RLState> {
 
   // Set initial tabs
-  constructor(){
-    super();
+  constructor(props:Record<string,unknown>){
+    super(props);
     this.state = {
       curTab: "adminTabLI",
       tabClasses: [ "cur-tab red", "green", "blue" ]
@@ -18,7 +23,7 @@ export default class ResourceList extends React.Component {
   }
 
   // Handle a click on a top tab (menu item)
-  handleMenuClick = (e) => {
+  handleMenuClick = (e: React.MouseEvent<HTMLLIElement>) => {
     e.preventDefault();
     var id = e.currentTarget.id
     this.setState({
@@ -33,7 +38,6 @@ export default class ResourceList extends React.Component {
 
   // main render
   render(){
-    this.elems = [];
     return (
       <div>
         <div style={{display:"inline-flex", width:"95%"}}>
