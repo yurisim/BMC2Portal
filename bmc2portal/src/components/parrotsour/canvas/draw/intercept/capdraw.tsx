@@ -14,11 +14,11 @@ export const drawCap:DrawFunction = (
     
     if (!state.bluePos) { return { pic: "", groups: []} }
 
-    var offsetDeg1: number = randomNumber(-10, 10);
-    var offsetDeg2: number = randomNumber(-10, 10);
+    const offsetDeg1: number = randomNumber(-10, 10);
+    const offsetDeg2: number = randomNumber(-10, 10);
     
-    var startY:any = start && start.y;
-    var startX:any = start && start.x;
+    let startY:number|undefined = start && start.y;
+    let startX:number|undefined = start && start.x;
 
     if (startY === undefined){
         startY = randomNumber(canvas.height / 20, canvas.height * 0.7);
@@ -27,11 +27,11 @@ export const drawCap:DrawFunction = (
         startX = randomNumber(canvas.width / 20, canvas.width * 0.5);
     }
     
-    var incr:number = canvas.width / (canvas.width / 10);
+    const incr:number = canvas.width / (canvas.width / 10);
 
-    var distanceX:number = 0;
-    var distanceY:number = 0;
-    var distance:number = 0;
+    let distanceX = 0;
+    let distanceY = 0;
+    let distance = 0;
 
     if (props.orientation==="NS"){
         distanceX = randomNumber(2.5 * incr, 10 * incr);
@@ -41,16 +41,16 @@ export const drawCap:DrawFunction = (
         distance = distanceY;
     }
     
-    var heading1: number = randomHeading(props.format);
-    var heading2: number = randomHeading(props.format);
+    const heading1: number = randomHeading(props.format);
+    const heading2: number = randomHeading(props.format);
     
-    var nNumContacts:number = randomNumber(1, 4);
-    var sNumContacts:number = randomNumber(1, 4);
+    const nNumContacts:number = randomNumber(1, 4);
+    const sNumContacts:number = randomNumber(1, 4);
 
-    var whichCap: number = randomNumber(0,100);
+    const whichCap: number = randomNumber(0,100);
 
-    var ngCap:boolean = false;
-    var sgCap:boolean = false;
+    let ngCap = false;
+    let sgCap = false;
 
     if (whichCap < 33){
         ngCap = true;
@@ -61,10 +61,10 @@ export const drawCap:DrawFunction = (
         sgCap = true;
     }
     
-    var ntrackDir: string = getTrackDir(heading1);
-    var strackDir: string = getTrackDir(heading2);
+    let ntrackDir: string = getTrackDir(heading1);
+    let strackDir: string = getTrackDir(heading2);
 
-    var ng: Group, sg: Group
+    let ng: Group, sg: Group
     if (ngCap){
         ntrackDir = "CAP";
         ng = drawGroupCap (canvas, props.orientation, nNumContacts, startX, startY);
@@ -84,9 +84,9 @@ export const drawCap:DrawFunction = (
         drawMeasurement(canvas, context, ng.x, ng.y + 2, ng.x, sg.y + 2, distance, props.showMeasurements);
     }
     
-    var width:number = Math.floor(distance / 4);
+    const width:number = Math.floor(distance / 4);
     
-    var offsetX = 0;
+    let offsetX = 0;
     if (props.orientation==="NS"){
         offsetX = -70;
     }
@@ -95,15 +95,15 @@ export const drawCap:DrawFunction = (
     drawAltitudes(canvas, context, sg.x + 20, sg.y - 11, sg.z);
     
     
-    var ngBraaseye: Braaseye = drawBraaseye(canvas, context, state.bluePos, ng, state.bullseye, props.showMeasurements, props.braaFirst, offsetX);
-    var sgBraaseye: Braaseye = drawBraaseye(canvas, context, state.bluePos, sg, state.bullseye, props.showMeasurements, props.braaFirst);
+    const ngBraaseye: Braaseye = drawBraaseye(canvas, context, state.bluePos, ng, state.bullseye, props.showMeasurements, props.braaFirst, offsetX);
+    const sgBraaseye: Braaseye = drawBraaseye(canvas, context, state.bluePos, sg, state.bullseye, props.showMeasurements, props.braaFirst);
     
-    var ngAlts: AltStack = getAltStack(ng.z, props.format);
-    var sgAlts: AltStack = getAltStack(sg.z, props.format);
+    const ngAlts: AltStack = getAltStack(ng.z, props.format);
+    const sgAlts: AltStack = getAltStack(sg.z, props.format);
 
-    var answer = "";
+    let answer = "";
     
-    var includeBull:boolean = false;
+    let includeBull = false;
     if (width >= 10 && props.format !== "ipe") {
         includeBull = true;
     }
@@ -112,8 +112,8 @@ export const drawCap:DrawFunction = (
         width +
         ", ";
 
-    var nLbl = "NORTH";
-    var sLbl = "SOUTH";
+    let nLbl = "NORTH";
+    let sLbl = "SOUTH";
     if (props.orientation==="NS"){
         nLbl = "WEST";
         sLbl = "EAST";
@@ -129,7 +129,7 @@ export const drawCap:DrawFunction = (
         " " + formatGroup(nLbl, ngBraaseye, ngAlts, nNumContacts, includeBull, ntrackDir);
     }
     
-    var groups = [];
+    const groups = [];
     
     ng.label = nLbl + " GROUP";
     sg.label = sLbl +" GROUP";

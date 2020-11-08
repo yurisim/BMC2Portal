@@ -1,11 +1,11 @@
-import React, {useRef, useState, useEffect } from 'react'
+import React, {useRef, useState, useEffect, ReactElement } from 'react'
 
 import { getBR } from '../utils/mathutilities'
 import { BRAA, Bullseye } from './interfaces'
 import { drawText, drawLine } from './draw/drawutils'
 
 interface CanvasProps {
-    draw: Function,
+    draw: any,
     height: number,
     width: number,
     braaFirst: boolean,
@@ -17,16 +17,21 @@ interface CanvasProps {
 }
 
 // TODO - remove :any as descriptors
-function Canvas(props: CanvasProps) {
+function Canvas(props: CanvasProps):ReactElement {
     const { draw, height, width, braaFirst, bullseye, picType, showMeasurements, isHardMode, newPic, ...rest } =  props
 
     const canvasRef: React.RefObject<HTMLCanvasElement>|null = useRef<HTMLCanvasElement>(null)
-    const ctx: any = useRef(null)
-    const img: any = useRef(null)
+    const ctx: React.MutableRefObject<CanvasRenderingContext2D|null|undefined>= useRef(null)
+    const img: React.MutableRefObject<ImageData|null|undefined> = useRef(null)
 
     const [mouseStart, setStart] = useState({x:0,y:0})
     const [mousePressed, setMousePressed] = useState(false)
-    
+   
+    const getImageData = () =>{
+        if (ctx.current && canvasRef && canvasRef.current)
+            return ctx.current.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height)
+    }
+
     useEffect(()=>{
         const canvas: HTMLCanvasElement|null = canvasRef.current
 
@@ -57,14 +62,9 @@ function Canvas(props: CanvasProps) {
         }
     }, [draw, height, width, braaFirst, picType, showMeasurements, newPic, isHardMode])
 
-    let getImageData = () =>{
-        if (ctx.current && canvasRef && canvasRef.current)
-            return ctx.current.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height)
-    }
-
-    let getMousePos = (canvas: HTMLCanvasElement|null, evt: MouseEvent): Bullseye=> {
+    const getMousePos = (canvas: HTMLCanvasElement|null, evt: MouseEvent): Bullseye=> {
         if (canvas){
-            var rect = canvas.getBoundingClientRect();
+            const rect = canvas.getBoundingClientRect();
             return {
                 x: evt.clientX - rect.left,
                 y: evt.clientY - rect.top
@@ -78,20 +78,20 @@ function Canvas(props: CanvasProps) {
     }
 
     function drawBR(startX: number, startY: number, bull: BRAA, color: string, showMeasurements: boolean) {
-        if (showMeasurements && canvasRef && canvasRef.current) {
+        if (showMeasurements && canvasRef && canvasRef.current && ctx.current) {
           drawText(canvasRef.current, ctx.current, bull.bearing + "/" + bull.range, startX, startY, 11, color);
         }
     }
 
     function drawMouse(start: Bullseye, end: Bullseye, isDown: boolean) {
-        if (isDown) {
+        if (isDown && ctx.current) {
           drawLine(ctx.current, start.x, start.y, end.x, end.y);
         }
 
-        var startPoint = { x: start.x, y: start.y };
-        var BRAA: BRAA = getBR(end.x, end.y, startPoint);
+        const startPoint = { x: start.x, y: start.y };
+        const BRAA: BRAA = getBR(end.x, end.y, startPoint);
         if (end.y<20) end.y=20
-        var bull: BRAA = getBR(end.x, end.y, bullseye)
+        const bull: BRAA = getBR(end.x, end.y, bullseye)
 
         if (props.braaFirst) {
             if (isDown){
@@ -106,38 +106,40 @@ function Canvas(props: CanvasProps) {
         }
       }
 
-    let canvasMouseDown = function(e: any) {
+    const canvasMouseDown = function(e: any) {
         setMousePressed(true)
-        var mousePos = getMousePos(canvasRef.current, e);
+        const mousePos = getMousePos(canvasRef.current, e);
         setStart(mousePos)
     };
 
-    let canvasMouseMove = (e: any) =>{
-        var mousePos = getMousePos(canvasRef.current, e)
-        ctx.current.putImageData(img.current, 0, 0);
+    const canvasMouseMove = (e: any) =>{
+        const mousePos = getMousePos(canvasRef.current, e)
+        if (ctx.current && img.current)
+            ctx.current.putImageData(img.current, 0, 0);
         drawMouse(mouseStart, mousePos, mousePressed)
     }
 
-    let canvasMouseUp = (e: any) =>{
+    const canvasMouseUp = () =>{
         setMousePressed(false)
-        ctx.current.putImageData(img.current, 0, 0)
+        if (ctx.current && img.current)
+            ctx.current.putImageData(img.current, 0, 0)
     }
 
-    let canvasTouchStart = (e: any) => {
-        var touch = e.changedTouches[0]
+    const canvasTouchStart = (e: any) => {
+        const touch = e.changedTouches[0]
         canvasMouseDown({clientX: touch.clientX, clientY:touch.clientY})
     }
 
-    let canvasTouchMove = (e: any) => {
-        var touch = e.changedTouches[0]
+    const canvasTouchMove = (e: any) => {
+        const touch = e.changedTouches[0]
         canvasMouseMove({clientX: touch.clientX, clientY:touch.clientY})
     }
 
-    let canvasTouchEnd = (e: any) => {
-        canvasMouseUp(null)
+    const canvasTouchEnd = () => {
+        canvasMouseUp()
     }
 
-    let style={
+    const style={
         touchAction:"none",
         backgroundColor:"white",
         width:{width}+"px",
@@ -145,7 +147,7 @@ function Canvas(props: CanvasProps) {
         border:"1px solid #000000"
     }
 
-    let moveProps = {
+    const moveProps = {
         onMouseDown:canvasMouseDown,
         onMouseMove:canvasMouseMove,
         onMouseUp:canvasMouseUp,

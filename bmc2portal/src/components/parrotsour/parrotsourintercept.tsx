@@ -1,5 +1,5 @@
 import {Dialog, MenuItem, Select} from '@material-ui/core'
-import React from 'react'
+import React, { ChangeEvent, ReactElement } from 'react'
 
 import '../../css/collapsible.css'
 import '../../css/select.css'
@@ -15,9 +15,7 @@ import PictureCanvas from './canvas/picturecanvas'
 
 import VersionInfo from './versioninfo.js'
 
-interface PSIProps{
-
-}
+//interface PSIProps {}
 
 interface CanvasConfig {
     height: number,
@@ -39,9 +37,9 @@ interface PSIState {
     animate:boolean,
     newPic: boolean
 }
-export default class ParrotSourIntercept extends React.Component<PSIProps, PSIState> {
+export default class ParrotSourIntercept extends React.Component<void, PSIState> {
 
-    constructor(props:any){
+    constructor(props:void){
         super(props)
         this.state = {
             showAlsaQT: false,
@@ -63,57 +61,57 @@ export default class ParrotSourIntercept extends React.Component<PSIProps, PSISt
         }
     }
 
-    toggleAlsaQT = () =>{
+    toggleAlsaQT = ():void =>{
         this.setState({showAlsaQT: !this.state.showAlsaQT})
     }
-    handleAlsaQTClose = () =>{
+    handleAlsaQTClose = ():void =>{
         this.setState({showAlsaQT: false})
     }
 
-    handleSliderChange = (value: number) => {
+    handleSliderChange = (value: number):void => {
         this.setState({speedSliderValue: value})
     }
 
-    formatSelChange = (fmt: string) =>{
-        return () => {
+    formatSelChange = (fmt: string) => {
+        return ():void => {
             this.setState({format: fmt})
         }
     }
 
-    showNewPic = () =>{
+    showNewPic = ():void =>{
         this.setState({newPic:!this.state.newPic})
     }
 
-    revealPic = () => {
+    revealPic = ():void => {
         this.setState({showAnswer: !this.state.showAnswer})
     }
 
-    braaChanged = () =>{
+    braaChanged = ():void =>{
         this.setState({braaFirst: !this.state.braaFirst})
     }
 
-    toggleMeasurements = () => {
+    toggleMeasurements = ():void => {
         this.setState({showMeasurements: !this.state.showMeasurements})
     }
 
-    toggleHardMode = () => {
+    toggleHardMode = ():void => {
         this.setState({isHardMode: !this.state.isHardMode})
     }
 
-    setAnswer = (answer: string) => {
+    setAnswer = (answer: string):void => {
         this.setState({answer: answer})
     }
 
-    startAnimate = () =>{
+    startAnimate = ():void =>{
         this.setState({animate:true})
     }
 
-    pauseAnimate = () => {
+    pauseAnimate = ():void => {
         this.setState({animate:false})
     }
 
-    modifyCanvas = () => {
-        var newConfig = {
+    modifyCanvas = ():void => {
+        let newConfig = {
             height:700,
             width:600,
             orient:"NS"
@@ -128,11 +126,12 @@ export default class ParrotSourIntercept extends React.Component<PSIProps, PSISt
         this.setState({canvasConfig:newConfig})
     }
 
-    changePicType = (e: any) => {
-        this.setState({picType:e.target.value})
+    changePicType = (e: ChangeEvent<{name?:string|undefined, value:unknown}>):void => {
+        if (typeof e.target.value === "string")
+            this.setState({picType:e.target.value})
     }
 
-    render(){
+    render():ReactElement {
         return (
             <div>
                 <ParrotSourHeader comp={<InterceptQT/>} />

@@ -25,8 +25,8 @@ const Home = lazy(()=> import("./components/home.js"))
 
 const ParrotSour = lazy(()=>import("./components/parrotsour/parrotsour.js"))
 
-const ImagePane = lazy(()=>import("./components/utils/imagepane.js"))
-const FilePane = lazy(()=>import("./components/utils/filepane.js"))
+const ImagePane = lazy(()=>import("./components/utils/imagepane"))
+const FilePane = lazy(()=>import("./components/utils/filepane"))
 const FaaMap = lazy(()=>import("./components/common/faamap"))
 
 let browserHistory = createBrowserHistory();

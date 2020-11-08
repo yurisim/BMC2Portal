@@ -3,64 +3,48 @@ import { BRAA, Group } from "../../interfaces";
 import { PicCanvasProps, PicCanvasState } from "../../picturecanvas";
 import { drawAltitudes, drawArrow, drawBraaseye } from "../drawutils";
 
-export function animateGroups(
-    canvas: HTMLCanvasElement,
-    props: PicCanvasProps, 
-    state: PicCanvasState,
-    groups: Group[],
-    animateCanvas: ImageData) {
-    console.log("doing animation....")
-    for (var x = 0; x < groups.length; x++) {
-      if (randomNumber(0, 10) <= 2) {
-        groups[x].maneuvers = true;
-      }
-    }
-    console.log("set mvrs")
-    continueAnimation = true;
-    doAnimation(canvas, props, state, groups, animateCanvas);
-}
+let continueAnimation = true;
+let pauseShowMeasure = true
   
-  
-function sleep(milliseconds: number) {
-    var start = new Date().getTime();
-    for (var i = 0; i < 1e7; i++) {
+function sleep(milliseconds: number):void {
+    const start = new Date().getTime();
+    for (let i = 0; i < 1e7; i++) {
       if (new Date().getTime() - start > milliseconds) {
         break;
       }
     }
 }
   
-var continueAnimation: boolean = true;
-var pauseShowMeasure: boolean = true;
-  
-// function setContinueAnimate(val: boolean) {
-//     continueAnimation = val;
-// }
+function setContinueAnimate(val: boolean) {
+    continueAnimation = val;
+}
 
 // function getContinueAnimate() {
 //     return continueAnimation;
 // }
   
-// function pauseFight(showMeasure: boolean) {
-//     pauseShowMeasure = showMeasure;
-//     setContinueAnimate(false);
-// }
+function pauseFight(showMeasure: boolean) {
+    pauseShowMeasure = showMeasure;
+    setContinueAnimate(false);
+}
   
 function doAnimation(
     canvas: HTMLCanvasElement,
     props: PicCanvasProps,
     state: PicCanvasState,
     groups:Group[],
-    animateCanvas: ImageData) {
+    animateCanvas: ImageData):void {
 
-    var context = canvas.getContext("2d");
+    const context = canvas.getContext("2d");
 
     if (!context || !state.bluePos) return 
     
     context.putImageData(animateCanvas, 0, 0);
   
-    var doManeuvers:boolean = false;
-    for (var x = 0; x < groups.length; x++) {
+    let br: BRAA
+    let doManeuvers = false;
+
+    for (let x = 0; x < groups.length; x++) {
   
       if (groups[x].startY > (canvas.height*0.95) || groups[x].startY <= canvas.height* 0.05){
         console.log("too far north, setting new heading")
@@ -68,13 +52,13 @@ function doAnimation(
       }
       drawArrow(canvas,props.orientation, groups[x].numContacts, groups[x].startX, groups[x].startY, groups[x].heading );
   
-      var xyDeg: number = groups[x].heading - 90;
+      let xyDeg: number = groups[x].heading - 90;
       if (xyDeg < 0) xyDeg += 360;
   
-      var rads: number = toRadians(xyDeg);
+      const rads: number = toRadians(xyDeg);
   
-      var offsetX: number = 7 * Math.cos(rads);
-      var offsetY: number = 7 * Math.sin(rads);
+      let offsetX: number = 7 * Math.cos(rads);
+      const offsetY: number = 7 * Math.sin(rads);
   
       if (groups[x].startX >= canvas.width * 0.8) {
         offsetX = 0;
@@ -82,10 +66,10 @@ function doAnimation(
       groups[x].startX = groups[x].startX + offsetX;
       groups[x].startY = groups[x].startY + offsetY;
   
-      var deltaA = groups[x].desiredHeading - groups[x].heading;
+      const deltaA = groups[x].desiredHeading - groups[x].heading;
   
-      var offset = 0;
-      var newHeading = groups[x].desiredHeading;
+      let offset = 0;
+      let newHeading = groups[x].desiredHeading;
       if (Math.abs(deltaA) > 90) {
         offset = deltaA / 15;
         if (groups[x].heading > 300) {
@@ -125,7 +109,7 @@ function doAnimation(
       groups[x].heading = newHeading;
   
       if (groups[x].maneuvers) {
-        var br = getBR(state.bluePos.x, state.bluePos.y, { x: groups[x].startX, y: groups[x].startY});
+        br = getBR(state.bluePos.x, state.bluePos.y, { x: groups[x].startX, y: groups[x].startY});
   
         if ((groups[x].desiredHeading === 90 || groups[x].desiredHeading === 360) && br.range < 70) {
           groups[x].desiredHeading = randomNumber(45, 270);
@@ -153,21 +137,21 @@ function doAnimation(
     if (continueAnimation) {
       sleep(500 * ((100-props.sliderSpeed)/100));
   
-      var animate = function() {
+      const animate = function() {
         doAnimation(canvas, props, state, groups, animateCanvas);
       };
       window.requestAnimationFrame(animate);
   
-      for (var y =0 ; y < groups.length; y++){
+      for (let y =0 ; y < groups.length; y++){
         drawAltitudes(canvas, context, groups[y].startX + 20, groups[y].startY - 11, groups[y].z);
       }
     } else {
     //   var mxCommDiv = document.getElementById("maneuverComm");
   
-      var closest: BRAA = { bearing: "90", range: 1000 };
+      let closest: BRAA = { bearing: "90", range: 1000 };
     //   var closestGrp: Group = groups[0];
   
-      for (y = 0; y < groups.length; y++) {
+      for (let y = 0; y < groups.length; y++) {
         if (pauseShowMeasure) {
           drawBraaseye(
             canvas,
@@ -206,6 +190,22 @@ function doAnimation(
         //   altStack.fillIns;
       }
     }
+}
+
+export function animateGroups(
+  canvas: HTMLCanvasElement,
+  props: PicCanvasProps, 
+  state: PicCanvasState,
+  groups: Group[],
+  animateCanvas: ImageData):void {
+  console.log("doing animation....")
+  for (let x = 0; x < groups.length; x++) {
+    if (randomNumber(0, 10) <= 2) {
+      groups[x].maneuvers = true;
+    }
   }
+  continueAnimation = true;
+  doAnimation(canvas, props, state, groups, animateCanvas);
+}
   
   

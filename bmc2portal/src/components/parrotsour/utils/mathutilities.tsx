@@ -1,13 +1,41 @@
 import { AltStack, BRAA, Bullseye, Group } from '../canvas/interfaces'
 
-export function getAspect(bluePos:Bullseye, group:Group){
-  var recipBrg:BRAA = getBR(bluePos.x, bluePos.y, {x: group.x, y:group.y});
+export function toRadians(angle: number): number {
+  return angle * (Math.PI / 180);
+}
 
-  var dist = (group.heading - parseInt(recipBrg.bearing) + 360) % 360;
+export function toDegrees(rads: number): number {
+  return rads * (180 / Math.PI);
+}
+
+export function lpad(value: number, padding: number): string {
+  return ([...Array(padding)].join("0") + value).slice(-padding);
+}
+
+export function getBR(x: number, y:number, bullseye: Bullseye): BRAA {
+  const deltaX = bullseye.x - x;
+  const deltaY = bullseye.y - y;
+
+  const rng = Math.floor(Math.sqrt(deltaX * deltaX + deltaY * deltaY) / 4);
+  let brg = Math.round(270 + toDegrees(Math.atan2(bullseye.y - y, bullseye.x - x)));
+  if (brg > 360) {
+    brg = brg - 360;
+  }
+
+  return {
+    bearing: lpad(brg, 3),
+    range: rng
+  };
+}
+
+export function getAspect(bluePos:Bullseye, group:Group):string{
+  const recipBrg:BRAA = getBR(bluePos.x, bluePos.y, {x: group.x, y:group.y});
+
+  let dist = (group.heading - parseInt(recipBrg.bearing) + 360) % 360;
   if (dist > 180) dist = 360 - dist;
-  var cata = dist;
+  const cata = dist;
 
-  var aspectH = "MANEUVER";
+  let aspectH = "MANEUVER";
 
   if (cata < 30){
     aspectH = "HOT";
@@ -22,7 +50,7 @@ export function getAspect(bluePos:Bullseye, group:Group){
 }
 
 export function getTrackDir(heading: number): string {
-  var direction:string = "";
+  let direction = "";
   if (heading > 0 && heading < 20) {
     direction = "NORTH";
   } else if (heading >= 20 && heading < 70) {
@@ -45,22 +73,6 @@ export function getTrackDir(heading: number): string {
   return direction;
 }
 
-export function getBR(x: number, y:number, bullseye: Bullseye): BRAA {
-    var deltaX = bullseye.x - x;
-    var deltaY = bullseye.y - y;
-  
-    var rng = Math.floor(Math.sqrt(deltaX * deltaX + deltaY * deltaY) / 4);
-    var brg = Math.round(270 + toDegrees(Math.atan2(bullseye.y - y, bullseye.x - x)));
-    if (brg > 360) {
-      brg = brg - 360;
-    }
-  
-    return {
-      bearing: lpad(brg, 3),
-      range: rng
-    };
-}
-
 export function randomNumber(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min) + min);
 }
@@ -73,27 +85,15 @@ export function randomHeading(format: string): number {
     }
 }
   
-export function toRadians(angle: number): number {
-    return angle * (Math.PI / 180);
-}
-  
-export function toDegrees(rads: number): number {
-    return rads * (180 / Math.PI);
-}
-  
-export function lpad(value: number, padding: number): string {
-    return ([...Array(padding)].join("0") + value).slice(-padding);
-}
-
 export function getAltStack(altitudes: number[], format: string): AltStack {
-  var formattedAlts: string[] = altitudes.map((a: number) => ("0" + a).slice(-2) + "0").sort().reverse();
+  const formattedAlts: string[] = altitudes.map((a: number) => ("0" + a).slice(-2) + "0").sort().reverse();
   
-  var stackHeights: string[] = [];
-  var stackIndexes: number[] = [];
+  const stackHeights: string[] = [];
+  const stackIndexes: number[] = [];
 
-  for (var x = 0; x < formattedAlts.length; x++) {
+  for (let x = 0; x < formattedAlts.length; x++) {
     if (x + 1 < formattedAlts.length) {
-      var diff:number = parseInt(formattedAlts[x]) - parseInt(formattedAlts[x + 1]);
+      const diff:number = parseInt(formattedAlts[x]) - parseInt(formattedAlts[x + 1]);
       if (diff >= 100) {
         if (stackHeights.indexOf(formattedAlts[x]) === -1) {
           stackHeights.push(formattedAlts[x]);
@@ -106,19 +106,19 @@ export function getAltStack(altitudes: number[], format: string): AltStack {
     }
   }
 
-  var stacks: string[][] = [];
-  var lastZ: number = 0;
-  for (var z = 0; z < stackIndexes.length; z++) {
+  const stacks: string[][] = [];
+  let lastZ = 0;
+  for (let z = 0; z < stackIndexes.length; z++) {
     stacks.push(formattedAlts.slice(lastZ, stackIndexes[z]));
     lastZ = stackIndexes[z];
   }
   stacks.push(formattedAlts.slice(lastZ));
 
-  var answer = formattedAlts[0].replace(/0$/, "k") + " ";
-  var answer2 = "";
+  let answer = formattedAlts[0].replace(/0$/, "k") + " ";
+  let answer2 = "";
   if (stacks.length > 1) {
     answer = "STACK ";
-    for (var y = 0; y < stacks.length; y++) {
+    for (let y = 0; y < stacks.length; y++) {
       answer +=
         (y === stacks.length - 1 && format !== "ipe" ? " AND " : "") +
         stacks[y][0].replace(/0$/, "k") +

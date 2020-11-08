@@ -1,21 +1,27 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 
 import '../../css/search.css'
+
+interface SIProps{
+  label:string,
+  defaultValue: string,
+  searchFunc(arg0:string):void
+}
 
 /**
  * This Component renders a search input box.
  */
-export default class SearchInput extends React.Component {
+export default class SearchInput extends React.Component<SIProps> {
 
   // perform the parent search with search input from user
-  search = (e) => {
+  search = (e:React.FormEvent<HTMLInputElement>):void => {
     this.props.searchFunc(e.currentTarget.value)
   }
 
   // blur/focus input
-  waterMark(txt, evtType, defaultTxt) {
-    var itm = txt.target;
-    if(itm.value.length === 0 && evtType === "blur")        
+  waterMark(txt:React.FocusEvent<HTMLInputElement>, evtType:string, defaultTxt:string): void {
+    const itm = txt.target;
+    if(itm && itm.value.length === 0 && evtType === "blur")        
     {
         itm.style.color = "gray";
         itm.value = defaultTxt;
@@ -28,8 +34,8 @@ export default class SearchInput extends React.Component {
   }
 
   // main Component render function
-  render(){
-    let defaultText = this.props.defaultValue ? this.props.defaultValue : "Enter search text...";
+  render(): ReactElement{
+    const defaultText = this.props.defaultValue ? this.props.defaultValue : "Enter search text...";
     return (
       <div className="searchDiv">
         {this.props.label && 

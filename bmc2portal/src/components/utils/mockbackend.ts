@@ -1,13 +1,14 @@
-let mockBackend = {
+/* eslint-disable */
+const mockBackend = {
     // Mock fetch to ensure Promises are handled correctly?
     async getData(){
-        let response = await fetch("https://jsonplaceholder.typicode.com/users")
-        let data = response.json();
+        const response = await fetch("https://jsonplaceholder.typicode.com/users")
+        const data = response.json();
         return data;
     },
 
     // Mock endpoint for getting unit data
-    unitMock(unitName){
+    unitMock(unitName:string){
         return {
             name: unitName,
             DSN: "405-867-5309",
@@ -19,7 +20,7 @@ let mockBackend = {
     },
 
     // Mock endpoint for getting ATC Agency data
-    agencyMock(agency){
+    agencyMock(agency:string){
         return {
             name: agency,
             loas: [agency+"LOA.pdf"]
@@ -27,9 +28,9 @@ let mockBackend = {
     },
 
     // Mock endpoing for getting airspace data
-    airspaceMock(aspaceName){
-        let atc =  (aspaceName === "W133" ? "Giantkiller": "Jacksonville Center");
-        let loaLoc = [atc + " LOA.pdf"];
+    airspaceMock(aspaceName:string){
+        const atc =  (aspaceName === "W133" ? "Giantkiller": "Jacksonville Center");
+        const loaLoc = [atc + " LOA.pdf"];
         return {
             name: aspaceName,
             atcAgency: atc,
@@ -39,7 +40,7 @@ let mockBackend = {
     },
 
     // Mock endpoint for getting a lesson learned
-    aLessonMock(tags){
+    aLessonMock(tags:string[]){
         return {
             contributor: 'John McCarthy',
             validator: 'Scotty Seidenberger',
@@ -52,7 +53,7 @@ let mockBackend = {
 
     // Mock endpoint for getting the lessons learned list
     lessonsMock(){
-        let arr =[];
+        const arr =[];
         arr.push(this.aLessonMock(["W122"]));
         arr.push(this.aLessonMock(["W122"]));
         arr.push(this.aLessonMock(["W133"]));
@@ -70,7 +71,7 @@ let mockBackend = {
     //-----------------------------------------------------------------------------
 
     // Mock SELECT * FROM UNITS WHERE NAME=unitname
-    async getUnitInfo(unitName){
+    async getUnitInfo(unitName:string){
         // eslint-disable-next-line
         let data = await this.getData();
         // TODO - remove this and process data from server instead
@@ -81,9 +82,9 @@ let mockBackend = {
     async getUnitList(){
         // eslint-disable-next-line
         let data = await this.getData();
-        let subarr = Array(10).fill().map((_,x) => this.unitMock(x + " FS"));
+        const subarr = Array(10).fill("").map((_,x) => this.unitMock(x + " FS"));
         let arr = subarr;
-        let subarr2 = Array(10).fill().map((_,x) => this.unitMock(x + " FW"));
+        const subarr2 = Array(10).fill("").map((_,x) => this.unitMock(x + " FW"));
         arr = arr.concat(subarr2);
         arr.push(this.unitMock("42 FS"));
         return arr;
@@ -93,7 +94,7 @@ let mockBackend = {
     async getLOAList(){
         // eslint-disable-next-line
         let data = await this.getData();
-        let array = [];
+        const array = [];
         array.push(this.agencyMock("Jacksonville Center"));
         array.push(this.agencyMock("FACSFAC VACAPES"));
         array.push(this.agencyMock("Denver ARTCC"));
@@ -106,7 +107,7 @@ let mockBackend = {
     async getAirspaceList(){
         // eslint-disable-next-line
         let data = await this.getData();
-        let array = [];
+        const array = [];
         array.push(this.airspaceMock("W122"));
         array.push(this.airspaceMock("W133"));
         array.push(this.airspaceMock("W170"));
@@ -114,7 +115,7 @@ let mockBackend = {
     },
 
     // Mock SELECT * FROM AIRSPACES WHERE NAME = aspacename
-    async getAirspaceInfo(aspacename){
+    async getAirspaceInfo(aspacename:string){
         // eslint-disable-next-line
         let data = await this.getData();
         return this.airspaceMock(aspacename);

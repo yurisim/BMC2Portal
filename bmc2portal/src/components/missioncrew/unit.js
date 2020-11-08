@@ -1,6 +1,6 @@
 import React from 'react';
 
-import backend from '../utils/backend.js';
+import backend from '../utils/backend';
 
 /**
  * This Component contains information on a particular unit.

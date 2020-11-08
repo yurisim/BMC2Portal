@@ -45,7 +45,7 @@ export type Group = {
 
 export type drawAnswer = {
     pic: string,
-    groups: any[]
+    groups: Group[]
 }
 
 export interface DrawFunction {

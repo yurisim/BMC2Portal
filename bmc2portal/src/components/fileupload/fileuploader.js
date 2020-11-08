@@ -6,7 +6,7 @@ import FileAccept from './fileaccept'
 
 import '../../css/fileuploader.css'
 
-import backend from '../utils/backend.js'
+import backend from '../utils/backend'
 
 /**
  * FileUploader provides a Component to render a File Dropzone.

@@ -1,4 +1,4 @@
-let baseURL=process.env.REACT_APP_SERVER_BASE_URL
+const baseURL=process.env.REACT_APP_SERVER_BASE_URL
 
 // FETCH GET for server API
 async function get(url = '') {
@@ -18,7 +18,8 @@ async function get(url = '') {
 }
 
 // FETCH PUT for server API
-async function post(data, url = ''){
+// eslint-disable-next-line
+async function post(data:any, url = ''){
     const response = await fetch(baseURL+url, {
         method: "PUT", 
         mode: "cors",
@@ -34,7 +35,7 @@ async function post(data, url = ''){
 }
 
 // POST for formData with files
-async function _postFiles(formData, url = "/api/uploadLOA"){
+async function _postFiles(formData:FormData, url = "/api/uploadLOA"){
     const response = await fetch(baseURL+url, {
         method: "POST",
         body: formData,
@@ -44,11 +45,11 @@ async function _postFiles(formData, url = "/api/uploadLOA"){
 
 // These are the actual endpoints used by the application to retrieve data
 // from the specified REACT_APP_SERVER_BASE_URL
-let serverBackend = {
+const serverBackend = {
 
     // PUT a lesson learned to the server
-    async postLessonLearned(title, author, content){
-        var lesson = {
+    async postLessonLearned(title:string, author:string, content:string):Promise<Response>{
+        const lesson = {
             title: title,
             author: author,
             content: content,
@@ -57,42 +58,42 @@ let serverBackend = {
     },
 
     // UPLOAD file
-    async postFiles(formData){
+    async postFiles(formData:FormData): Promise<Response>{
         return _postFiles(formData).then((data)=> {return data});
     },
 
     // SELECT * FROM AIRSPACELIST
-    async getAirspaceList(){
+    async getAirspaceList(): Promise<Response>{
         return get('/api/airspacelist').then((data)=>{return data});
     },
 
     // SELECT * FROM AIRSPACES WHERE NAME = aspacename
-    async getAirspaceInfo(aspacename){
+    async getAirspaceInfo(aspacename:string): Promise<Response>{
         return get('/api/airspace/'+aspacename).then((data)=>{return data});
     },
 
     // SELECT * FROM UNITS 
-    async getUnitList(){
+    async getUnitList(): Promise<Response>{
         return get('/api/unitlist').then((data)=>{return data});
     },
 
     // SELECT * FROM UNITS WHERE NAME = name
-    async getUnitInfo(unitname){
+    async getUnitInfo(unitname:string): Promise<Response>{
         return get('/api/unit/'+unitname).then((data)=>{return data});
     },
 
     // SELECT * FROM ATCAGENCIES
-    async getLOAList(){
+    async getLOAList(): Promise<Response>{
         return get('/api/loas').then((data) => {return data});
     },
 
     // SELECT * FROM LESSONS LEARNED
-    async getLessonsLearned(){
+    async getLessonsLearned(): Promise<Response>{
         return get('/api/lessonslearned').then((data) => {return data});
     },
 
     // SELECT DISTINCT TAGS FROM LESSONS LEARNED
-    async getAllTags(){
+    async getAllTags(): Promise<Response>{
         return get('/api/lessontags').then((data) => {return data});
     }
 }

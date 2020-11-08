@@ -14,8 +14,8 @@ export function drawBullseye (
     context.fillStyle = "black";
     context.strokeStyle = "black";
 
-    var centerPointX = randomNumber(canvas.width * 0.33, canvas.width * 0.66);
-    var centerPointY = randomNumber(canvas.height * 0.33, canvas.height * 0.66);
+    const centerPointX = randomNumber(canvas.width * 0.33, canvas.width * 0.66);
+    const centerPointY = randomNumber(canvas.height * 0.33, canvas.height * 0.66);
     
     context.beginPath();
     context.arc(centerPointX, centerPointY, 2, 0, 2 * Math.PI, true);
@@ -42,24 +42,24 @@ export const drawAzimuth:DrawFunction = (
         
     if (!state.bluePos) { return { pic: "", groups: []} }
     
-    var lowYMult = (props.orientation==="NS") ? 0.35 : 0.2
-    var hiYMult = (props.orientation==="NS") ? 0.9 : 0.6
-    var startY:number = (start && start.y) || randomNumber(canvas.height * lowYMult, canvas.height * hiYMult);
-    var startX:number = (start && start.x) || randomNumber(canvas.width * 0.20, !props.orientation ? canvas.width * 0.6: canvas.width * 0.6);
+    const lowYMult = (props.orientation==="NS") ? 0.35 : 0.2
+    const hiYMult = (props.orientation==="NS") ? 0.9 : 0.6
+    const startY:number = (start && start.y) || randomNumber(canvas.height * lowYMult, canvas.height * hiYMult);
+    const startX:number = (start && start.x) || randomNumber(canvas.width * 0.20, !props.orientation ? canvas.width * 0.6: canvas.width * 0.6);
     
-    var incr:number = canvas.width / (canvas.width / 10);
-    var distance:number = randomNumber(3.5 * incr, 10 * incr);
+    const incr:number = canvas.width / (canvas.width / 10);
+    let distance:number = randomNumber(3.5 * incr, 10 * incr);
 
-    var heading:number = randomHeading(props.format);
-    var ng:Group = drawArrow( canvas, props.orientation, randomNumber(1, 4), startX, startY, heading + randomNumber(-10,10));
+    let heading:number = randomHeading(props.format);
+    const ng:Group = drawArrow( canvas, props.orientation, randomNumber(1, 4), startX, startY, heading + randomNumber(-10,10));
     
     if (props.isHardMode) heading = randomHeading(props.format);
     
-    var sg:Group
+    let sg:Group
 
-    var m1x:number = ng.x 
-    var m1y:number = ng.y
-    var m2: Bullseye
+    const m1x:number = ng.x 
+    const m1y:number = ng.y
+    let m2: Bullseye
     if (props.orientation==="EW") {
         sg = drawArrow( canvas, props.orientation, randomNumber(1, 4), startX, startY + distance, heading + randomNumber(-10,10));
         m2 = { x: ng.x, y: sg.y}
@@ -72,10 +72,10 @@ export const drawAzimuth:DrawFunction = (
 
     drawMeasurement(canvas, ctx, m1x, m1y + 2, m2.x, m2.y + 2, distance, props.showMeasurements);
 
-    var offsetX:number = 0;
-    var offsetY:number = 0;
-    var offsetX2:number = 0;
-    var offsetY2:number = 0;
+    let offsetX = 0;
+    let offsetY = 0;
+    let offsetX2 = 0;
+    let offsetY2 = 0;
     if (props.orientation === "NS"){
         offsetX = -60;
         offsetY = 40;
@@ -86,28 +86,28 @@ export const drawAzimuth:DrawFunction = (
     drawAltitudes(canvas, ctx, ng.x + 20 + offsetX, ng.y - 11 +offsetY, ng.z);
     drawAltitudes(canvas, ctx, sg.x + 20 + offsetX2, sg.y - 11 + offsetY2, sg.z);
 
-    var ngBraaseye: Braaseye = drawBraaseye(canvas, ctx, state.bluePos, ng, state.bullseye, props.showMeasurements, props.braaFirst, offsetX, offsetY);
-    var sgBraaseye: Braaseye = drawBraaseye(canvas, ctx, state.bluePos, sg, state.bullseye, props.showMeasurements, props.braaFirst, offsetX2, offsetY2);
+    const ngBraaseye: Braaseye = drawBraaseye(canvas, ctx, state.bluePos, ng, state.bullseye, props.showMeasurements, props.braaFirst, offsetX, offsetY);
+    const sgBraaseye: Braaseye = drawBraaseye(canvas, ctx, state.bluePos, sg, state.bullseye, props.showMeasurements, props.braaFirst, offsetX2, offsetY2);
 
-    var ngAlts: AltStack = getAltStack(ng.z, props.format);
-    var sgAlts: AltStack = getAltStack(sg.z, props.format);
+    const ngAlts: AltStack = getAltStack(ng.z, props.format);
+    const sgAlts: AltStack = getAltStack(sg.z, props.format);
 
-    var trackDir: string = getTrackDir(heading);
+    const trackDir: string = getTrackDir(heading);
 
-    var width: number = Math.floor(distance / 4);
+    const width: number = Math.floor(distance / 4);
 
-    var includeBull: boolean = false;
+    let includeBull = false;
     if (width >= 10 && props.format !== "ipe") {
         includeBull = true;
     }
     
-    var sameTrackDir = (getTrackDir(ng.heading) === getTrackDir(sg.heading));
-    var answer = "TWO GROUPS AZIMUTH " + width + " ";
+    const sameTrackDir = (getTrackDir(ng.heading) === getTrackDir(sg.heading));
+    let answer = "TWO GROUPS AZIMUTH " + width + " ";
 
     answer += getGroupOpenClose(ng, sg) + " ";
 
-    var getEchX = getBR(sg.x, ng.y, {x: ng.x, y: ng.y}).range
-    var getEchY = getBR(ng.x, sg.y, {x:ng.x, y:ng.y}).range
+    const getEchX = getBR(sg.x, ng.y, {x: ng.x, y: ng.y}).range
+    const getEchY = getBR(ng.x, sg.y, {x:ng.x, y:ng.y}).range
     if ((props.orientation==="EW" && getEchX > 5) || (props.orientation==="NS" && getEchY > 5)){
         if (ngBraaseye.braa.range < sgBraaseye.braa.range) {
             answer += " ECHELON " + getTrackDir(parseInt(getBR(sg.x, sg.y, {x:ng.x, y:ng.y}).bearing))+ ", "
@@ -120,12 +120,12 @@ export const drawAzimuth:DrawFunction = (
         answer += " TRACK " + trackDir + ". ";
     }
 
-    var anchorN = false;
+    let anchorN = false;
     if (ngBraaseye.braa.range < sgBraaseye.braa.range) {
         anchorN = true;
     } else if (ngBraaseye.braa.range === sgBraaseye.braa.range) {
-        var altN:number = ng.z.sort((a:number,b:number) => { return b-a;})[0];
-        var altS:number = sg.z.sort((a:number,b:number) => {return b-a;})[0];
+        const altN:number = ng.z.sort((a:number,b:number) => { return b-a;})[0];
+        const altS:number = sg.z.sort((a:number,b:number) => {return b-a;})[0];
         
         if (altN > altS) {
         anchorN = true;
@@ -177,18 +177,18 @@ export const drawRange:DrawFunction = (
         
     if (!state.bluePos) { return { pic: "", groups: []} }
 
-    var lowXMult = 0.2
-    var hiXMult = (props.orientation === "NS") ? 0.8 : 0.6
-    var lowYMult = (props.orientation === "NS") ? 0.4 : 0.2
-    var hiYMult = 0.8
-    var startY:number = (start && start.y) || randomNumber(canvas.height *lowYMult, canvas.height * hiYMult);
-    var startX:number = (start && start.x) || randomNumber(canvas.width *lowXMult, canvas.width * hiXMult);
+    const lowXMult = 0.2
+    const hiXMult = (props.orientation === "NS") ? 0.8 : 0.6
+    const lowYMult = (props.orientation === "NS") ? 0.4 : 0.2
+    const hiYMult = 0.8
+    const startY:number = (start && start.y) || randomNumber(canvas.height *lowYMult, canvas.height * hiYMult);
+    const startX:number = (start && start.x) || randomNumber(canvas.width *lowXMult, canvas.width * hiXMult);
       
-    var incr:number = canvas.width / (canvas.width / 10);
-    var distance:number = randomNumber(3.5 * incr, 10 * incr);
+    const incr:number = canvas.width / (canvas.width / 10);
+    let distance:number = randomNumber(3.5 * incr, 10 * incr);
   
-    var heading:number = randomHeading(props.format);
-    var tg:Group = drawArrow(
+    let heading:number = randomHeading(props.format);
+    const tg:Group = drawArrow(
         canvas,
         props.orientation,
         randomNumber(1, 4), 
@@ -198,10 +198,10 @@ export const drawRange:DrawFunction = (
   
     if (props.isHardMode) heading = randomHeading(props.format);
   
-    var lg: Group
-    var m1x:number = tg.x 
-    var m1y:number = tg.y
-    var m2: Bullseye
+    let lg: Group
+    const m1x:number = tg.x 
+    const m1y:number = tg.y
+    let m2: Bullseye
     if (props.orientation === "NS") {
       lg =  drawArrow( canvas, props.orientation, randomNumber(1, 4), startX, startY + distance, heading + randomNumber(-10,10));
       m2 = { x: m1x, y: lg.y}
@@ -213,13 +213,13 @@ export const drawRange:DrawFunction = (
     distance = getBR( m1x, m1y, m2).range * 4
     drawMeasurement(canvas, context, m1x, m1y, m2.x, m2.y, distance, props.showMeasurements);
   
-    var tgAlts: AltStack = getAltStack(tg.z, props.format);
-    var lgAlts: AltStack = getAltStack(lg.z, props.format);
+    const tgAlts: AltStack = getAltStack(tg.z, props.format);
+    const lgAlts: AltStack = getAltStack(lg.z, props.format);
   
-    var offsetX = 0;
-    var offsetY = 0;
-    var offsetX2 = 0;
-    var offsetY2 = 0;
+    let offsetX = 0;
+    let offsetY = 0;
+    let offsetX2 = 0;
+    let offsetY2 = 0;
     if (props.orientation === "EW"){
       offsetX = -10;
       offsetY = 40;
@@ -229,10 +229,10 @@ export const drawRange:DrawFunction = (
   
     drawAltitudes(canvas, context, lg.x + 20 + offsetX, lg.y - 11 + offsetY, lg.z);
     drawAltitudes(canvas, context, tg.x + 20 + offsetX2, tg.y - 11 + offsetY2, tg.z);
-    var lgBraaseye: Braaseye = drawBraaseye(canvas, context, state.bluePos, lg, state.bullseye, props.showMeasurements, props.braaFirst, offsetX, offsetY );
-    var tgBraaseye: Braaseye = drawBraaseye(canvas, context, state.bluePos, tg, state.bullseye, props.showMeasurements, props.braaFirst, offsetX2, offsetY2);
+    const lgBraaseye: Braaseye = drawBraaseye(canvas, context, state.bluePos, lg, state.bullseye, props.showMeasurements, props.braaFirst, offsetX, offsetY );
+    const tgBraaseye: Braaseye = drawBraaseye(canvas, context, state.bluePos, tg, state.bullseye, props.showMeasurements, props.braaFirst, offsetX2, offsetY2);
   
-    var answer: string = "TWO GROUPS RANGE " +  Math.floor(distance / 4) + ", ";
+    let answer: string = "TWO GROUPS RANGE " +  Math.floor(distance / 4) + ", ";
   
     if ((props.orientation==="EW" && getBR(tg.x, tg.y, {x: tg.x, y: lg.y}).range > 5) || (props.orientation==="NS" && getBR(lg.x, tg.y, {x:tg.x, y:tg.y}).range > 5)){
       if (props.orientation==="EW"){
@@ -242,7 +242,7 @@ export const drawRange:DrawFunction = (
       }
     }
   
-    var sameTrackDir =(getTrackDir(tg.heading) === getTrackDir(lg.heading)); 
+    const sameTrackDir =(getTrackDir(tg.heading) === getTrackDir(lg.heading)); 
     if (props.format !== "ipe" && sameTrackDir) {
       answer += " TRACK " + getTrackDir(heading) + ". ";
     }
@@ -275,25 +275,25 @@ export const drawWall: DrawFunction = (
 
     if (!state.bluePos) { return { pic: "", groups: []} }
 
-    var lowXMult = 0.2
-    var hiXMult = 0.5
-    var lowYMult = (props.orientation === "NS") ? 0.4 : 0.2
-    var hiYMult = (props.orientation === "NS") ? 0.8 : 0.5
-    var startY = (start && start.y) ||  randomNumber(canvas.height * lowYMult, canvas.height * hiYMult);
-    var startX =(start && start.x) || randomNumber(canvas.width * lowXMult, canvas.width * hiXMult);
+    const lowXMult = 0.2
+    const hiXMult = 0.5
+    const lowYMult = (props.orientation === "NS") ? 0.4 : 0.2
+    const hiYMult = (props.orientation === "NS") ? 0.8 : 0.5
+    const startY = (start && start.y) ||  randomNumber(canvas.height * lowYMult, canvas.height * hiYMult);
+    const startX =(start && start.x) || randomNumber(canvas.width * lowXMult, canvas.width * hiXMult);
   
-    var heading = randomHeading(props.format);
+    let heading = randomHeading(props.format);
   
-    var numGroups = randomNumber(3, 6);
+    const numGroups = randomNumber(3, 6);
   
-    var totalOffset = 0;
+    let totalOffset = 0;
   
-    var braaseyes:Braaseye[] = [];
-    var altStacks:AltStack[] = [];
-    var groups:Group[] = [];
-    for (var x = 0; x < numGroups; x++) {
-      var offset = randomNumber(-10, 10);
-      var offsetY = (x === 0) ? 0 : randomNumber(40, 60);
+    const braaseyes:Braaseye[] = [];
+    const altStacks:AltStack[] = [];
+    const groups:Group[] = [];
+    for (let x = 0; x < numGroups; x++) {
+      const offset = randomNumber(-10, 10);
+      let offsetY = (x === 0) ? 0 : randomNumber(40, 60);
       totalOffset += offsetY;
   
       if (props.isHardMode) heading = randomHeading(props.format);
@@ -303,7 +303,7 @@ export const drawWall: DrawFunction = (
         groups.push( drawArrow(canvas, props.orientation, randomNumber(1, 5), startX, startY + totalOffset, heading + offset) );
       }
   
-      var offsetX = 30;
+      let offsetX = 30;
       offsetY = 0;
       if (props.orientation === "NS"){
         offsetX = (-15*(numGroups-x));
@@ -315,7 +315,7 @@ export const drawWall: DrawFunction = (
       altStacks.push(getAltStack(groups[x].z, props.format));
     }
   
-    var width = 0;
+    let width = 0;
     if (props.orientation === "NS"){
       width = groups[groups.length-1].x - groups[0].x;
       drawMeasurement(canvas, context, groups[0].x, groups[0].y-25, groups[groups.length-1].x, groups[0].y - 25, width, props.showMeasurements)
@@ -324,8 +324,8 @@ export const drawWall: DrawFunction = (
       drawMeasurement(canvas, context, groups[0].x+25, groups[0].y, groups[0].x+25, groups[groups.length-1].y, width, props.showMeasurements)
     }
     
-    var nLbl = "WEST"
-    var sLbl = "EAST"
+    let nLbl = "WEST"
+    let sLbl = "EAST"
     if (props.orientation==="EW"){
       nLbl = "NORTH";
       sLbl = "SOUTH";
@@ -352,11 +352,11 @@ export const drawWall: DrawFunction = (
     }
   
     width = Math.floor(width /4);
-    var answer = numGroups + " GROUP WALL " + width + " WIDE, ";
+    let answer = numGroups + " GROUP WALL " + width + " WIDE, ";
   
-    var sameTrackDir = true;
-    var trackDirCheck = getTrackDir(groups[0].heading);
-    for (var i = 1; i < numGroups; i ++){
+    let sameTrackDir = true;
+    const trackDirCheck = getTrackDir(groups[0].heading);
+    for (let i = 1; i < numGroups; i ++){
       if (props.isHardMode && getTrackDir(groups[i].heading) !== trackDirCheck){
         i = numGroups + 1;
         sameTrackDir = false;
@@ -366,12 +366,12 @@ export const drawWall: DrawFunction = (
       answer += " TRACK " + getTrackDir(heading) +" ";
     }
   
-    var anchorNorth = false
+    let anchorNorth = false
     if (braaseyes[0].braa.range < braaseyes[braaseyes.length-1].braa.range) {
       anchorNorth = true;
     } else if (braaseyes[0].braa.range === braaseyes[braaseyes.length-1].braa.range){ 
-        var altN:number = groups[0].z.sort((a:number,b:number) => { return b-a;})[0];
-        var altS:number = groups[groups.length-1].z.sort((a:number,b:number) => {return b-a;})[0];
+        const altN:number = groups[0].z.sort((a:number,b:number) => { return b-a;})[0];
+        const altS:number = groups[groups.length-1].z.sort((a:number,b:number) => {return b-a;})[0];
         
         if (altN > altS) {
           anchorNorth = true;
@@ -383,13 +383,13 @@ export const drawWall: DrawFunction = (
     }
     console.log("DETERMINE IF WEIGHTED WALL");
     
-    var includeBull = false;
+    let includeBull = false;
     if (width > 10 && props.format !== "ipe") {
       includeBull = true;
     }
   
-    for (var g = 0; g < numGroups; g++){
-        var idx: number = anchorNorth ? g : (numGroups-1) - g
+    for (let g = 0; g < numGroups; g++){
+        const idx: number = anchorNorth ? g : (numGroups-1) - g
         answer += formatGroup((groups[idx].label+"").replace(/GROUP/, ""), braaseyes[idx], altStacks[idx], groups[idx].numContacts, (g===0) || (g === numGroups-1 && includeBull) || false, sameTrackDir ? undefined: getTrackDir(groups[idx].heading))+ " ";
     }
 
@@ -408,24 +408,24 @@ export const drawLadder: DrawFunction =  (
   
   if (!state.bluePos) { return { pic: "", groups: []} }
 
-  var groups:Group[] = [];
-  var braaseyes: Braaseye[] = [];
-  var altstacks: AltStack[] = [];
+  const groups:Group[] = [];
+  const braaseyes: Braaseye[] = [];
+  const altstacks: AltStack[] = [];
 
-  var yLowMult = (props.orientation === "NS") ? 0.55 : 0.3
-  var yHiMult = (props.orientation === "NS") ? 0.9 : 0.8
-  var xLowMult = 0.2
-  var xHiMult = (props.orientation === "NS") ? 0.8 : 0.4
-  var startY = (start && start.y) || randomNumber(canvas.height*yLowMult, canvas.height * yHiMult);
-  var startX = (start && start.x) || randomNumber(canvas.width *xLowMult, canvas.width * xHiMult);
+  const yLowMult = (props.orientation === "NS") ? 0.55 : 0.3
+  const yHiMult = (props.orientation === "NS") ? 0.9 : 0.8
+  const xLowMult = 0.2
+  const xHiMult = (props.orientation === "NS") ? 0.8 : 0.4
+  const startY = (start && start.y) || randomNumber(canvas.height*yLowMult, canvas.height * yHiMult);
+  const startX = (start && start.x) || randomNumber(canvas.width *xLowMult, canvas.width * xHiMult);
 
-  var heading = randomHeading(props.format);
-  var numGroups = randomNumber(3, 6);
+  let heading = randomHeading(props.format);
+  const numGroups = randomNumber(3, 6);
 
-  var totalOffset = 0;
+  let totalOffset = 0;
 
-  for (var x = 0; x < numGroups; x++) {
-    var offset = randomNumber(-5, 5);
+  for (let x = 0; x < numGroups; x++) {
+    const offset = randomNumber(-5, 5);
     totalOffset +=(x===0 ? 0 : randomNumber(30,80)); 
 
     heading = (!props.isHardMode) ? heading : randomHeading(props.format);
@@ -436,8 +436,8 @@ export const drawLadder: DrawFunction =  (
       groups.push( drawArrow(canvas, props.orientation, randomNumber(1, 5), startX + totalOffset, startY, heading + offset) );
     }
 
-    var offsetX = 0;
-    var offsetY = 0;
+    let offsetX = 0;
+    let offsetY = 0;
     if (props.orientation==="EW"){
       offsetX = -40 + -5*(numGroups-x);
       offsetY = -20 + -11 * (numGroups-x);
@@ -474,17 +474,17 @@ export const drawLadder: DrawFunction =  (
       break;
   } 
   
-  var answer = numGroups + " GROUP LADDER " + Math.floor(totalOffset / 4) + " DEEP, ";
+  let answer = numGroups + " GROUP LADDER " + Math.floor(totalOffset / 4) + " DEEP, ";
 
-  var trackDirCheck = getTrackDir(groups[0].heading);
-  var sameTrackDir = groups.every( o => getTrackDir(o.heading) === trackDirCheck)
+  const trackDirCheck = getTrackDir(groups[0].heading);
+  const sameTrackDir = groups.every( o => getTrackDir(o.heading) === trackDirCheck)
   if (props.format !== "ipe" && sameTrackDir){
     answer += " TRACK " + getTrackDir(heading) +" ";
   }
 
   console.log("CHECK FOR ECHELON LADDER?");
 
-  var rangeBack = {
+  const rangeBack = {
     label: "SEPARATION",
     range: getBR(groups[groups.length - 1].x, groups[groups.length - 1].y, {
       x: groups[groups.length - 2].x,
@@ -492,8 +492,8 @@ export const drawLadder: DrawFunction =  (
     }).range
   };
 
-  for (var g = groups.length-1; g >=0; g--){
-    var label = groups[g].label!==undefined ? groups[g].label+"" : ""
+  for (let g = groups.length-1; g >=0; g--){
+    const label = groups[g].label!==undefined ? groups[g].label+"" : ""
     answer += formatGroup(label.replace(/GROUP/, ""), braaseyes[g], altstacks[g], groups[g].numContacts, g===groups.length-1, sameTrackDir ? undefined: getTrackDir(groups[g].heading), (g===groups.length-2) ? rangeBack : undefined,)+ " ";
   }
 
@@ -512,23 +512,23 @@ export const drawChampagne:DrawFunction =  (
   
   if (!state.bluePos) { return { pic: "", groups: []} }
 
-  var lowYMult = (props.orientation ==="NS") ? 0.5 : 0.2
-  var hiYMult = (props.orientation === "NS") ? 0.9 : 0.8
-  var lowXMult = (props.orientation === "NS") ? 0.2 : 0.2
-  var hiXMult = (props.orientation === "NS") ? 0.8 : 0.5
-  var startY = (start && start.y) || randomNumber(canvas.height * lowYMult, canvas.height * hiYMult);
-  var startX = (start && start.x) || randomNumber(canvas.width * lowXMult, canvas.width * hiXMult);
+  const lowYMult = (props.orientation ==="NS") ? 0.5 : 0.2
+  const hiYMult = (props.orientation === "NS") ? 0.9 : 0.8
+  const lowXMult = (props.orientation === "NS") ? 0.2 : 0.2
+  const hiXMult = (props.orientation === "NS") ? 0.8 : 0.5
+  const startY = (start && start.y) || randomNumber(canvas.height * lowYMult, canvas.height * hiYMult);
+  const startX = (start && start.x) || randomNumber(canvas.width * lowXMult, canvas.width * hiXMult);
 
-  var incr:number = canvas.width / (canvas.width / 10);
-  var champWidth:number = randomNumber(3.5 * incr, 10 * incr);
-  var champDepth:number = randomNumber(3.5 * incr, 10 * incr);
+  const incr:number = canvas.width / (canvas.width / 10);
+  const champWidth:number = randomNumber(3.5 * incr, 10 * incr);
+  const champDepth:number = randomNumber(3.5 * incr, 10 * incr);
 
-  var heading:number = randomHeading(props.format);
-  var tg:Group = drawArrow(canvas, props.orientation, randomNumber(1, 4), startX, startY, heading + randomNumber(-10, 10));
+  let heading:number = randomHeading(props.format);
+  const tg:Group = drawArrow(canvas, props.orientation, randomNumber(1, 4), startX, startY, heading + randomNumber(-10, 10));
 
   if (props.isHardMode) heading = randomHeading(props.format);
   
-  var nlg:Group
+  let nlg:Group
   if (props.orientation === "NS"){
     nlg = drawArrow(canvas, props.orientation, randomNumber(1, 4), startX - champWidth/2, startY - champDepth,  heading + randomNumber(-10, 10));
   } else {
@@ -536,15 +536,15 @@ export const drawChampagne:DrawFunction =  (
   }
   
   if (props.isHardMode) heading = randomHeading(props.format);
-  var slg:Group
+  let slg:Group
   if (props.orientation === "NS"){
     slg = drawArrow(canvas, props.orientation, randomNumber(1, 4), startX + champWidth/2, startY - champDepth, heading + randomNumber(-10, 10));
   } else {
     slg = drawArrow(canvas, props.orientation, randomNumber(1, 4), startX + champDepth, startY + champWidth / 2, heading + randomNumber(-10, 10));
   }
 
-  var width:number = Math.floor(champWidth / 4);
-  var depth:number = Math.floor(champDepth / 4);
+  const width:number = Math.floor(champWidth / 4);
+  const depth:number = Math.floor(champDepth / 4);
 
   if (props.orientation === "NS"){
     drawMeasurement(canvas, context, nlg.x, nlg.y, slg.x, slg.y, champWidth, props.showMeasurements);
@@ -555,8 +555,8 @@ export const drawChampagne:DrawFunction =  (
     drawMeasurement(canvas, context, nlg.x, slg.y, nlg.x, nlg.y, champWidth, props.showMeasurements);
   }
   
-  var offsetX = 0;
-  var offsetX2 = 0;
+  let offsetX = 0;
+  let offsetX2 = 0;
   if (props.orientation==="NS"){
     offsetX2 = -70;
   } else {
@@ -566,18 +566,18 @@ export const drawChampagne:DrawFunction =  (
   drawAltitudes(canvas, context, slg.x + 20, slg.y - 11, slg.z);
   drawAltitudes(canvas, context, nlg.x + 20 + offsetX2, nlg.y - 11, nlg.z);
   
-  var tgBraaseye:Braaseye = drawBraaseye(canvas, context, state.bluePos, tg, state.bullseye, props.showMeasurements, props.braaFirst, offsetX);
-  var nlgBraaseye:Braaseye = drawBraaseye(canvas, context, state.bluePos, nlg, state.bullseye, props.showMeasurements, props.braaFirst, offsetX2);
-  var slgBraaseye:Braaseye = drawBraaseye(canvas, context, state.bluePos, slg, state.bullseye, props.showMeasurements, props.braaFirst);
+  const tgBraaseye:Braaseye = drawBraaseye(canvas, context, state.bluePos, tg, state.bullseye, props.showMeasurements, props.braaFirst, offsetX);
+  const nlgBraaseye:Braaseye = drawBraaseye(canvas, context, state.bluePos, nlg, state.bullseye, props.showMeasurements, props.braaFirst, offsetX2);
+  const slgBraaseye:Braaseye = drawBraaseye(canvas, context, state.bluePos, slg, state.bullseye, props.showMeasurements, props.braaFirst);
 
-  var tgAlts:AltStack = getAltStack(tg.z, props.format);
-  var nlgAlts:AltStack = getAltStack(nlg.z, props.format);
-  var slgAlts:AltStack = getAltStack(slg.z, props.format);
+  const tgAlts:AltStack = getAltStack(tg.z, props.format);
+  const nlgAlts:AltStack = getAltStack(nlg.z, props.format);
+  const slgAlts:AltStack = getAltStack(slg.z, props.format);
 
-  var answer = "THREE GROUP CHAMPAGNE " +width +" WIDE, " +depth +" DEEP, ";
+  let answer = "THREE GROUP CHAMPAGNE " +width +" WIDE, " +depth +" DEEP, ";
  
-  var sLbl = "SOUTH";
-  var nLbl = "NORTH";
+  let sLbl = "SOUTH";
+  let nLbl = "NORTH";
   if (props.orientation==="NS"){
     sLbl = "EAST";
     nLbl = "WEST";
@@ -589,16 +589,16 @@ export const drawChampagne:DrawFunction =  (
     answer += " WEIGHTED " + sLbl + ", ";
   }
   
-  var nlTrack = props.format === "alsa" ? getTrackDir(nlg.heading): undefined;
-  var slTrack = props.format === "alsa" ? getTrackDir(slg.heading): undefined;
-  var tTrack = props.format === "alsa" ? getTrackDir(tg.heading): undefined;
+  const nlTrack = props.format === "alsa" ? getTrackDir(nlg.heading): undefined;
+  const slTrack = props.format === "alsa" ? getTrackDir(slg.heading): undefined;
+  const tTrack = props.format === "alsa" ? getTrackDir(tg.heading): undefined;
 
-  var sameTrackDir = (nlTrack === slTrack && slTrack === tTrack);
+  const sameTrackDir = (nlTrack === slTrack && slTrack === tTrack);
   if (props.format !== "ipe" && sameTrackDir){
     answer += " TRACK " + nlTrack + ". ";
   } 
 
-  var includeBull:boolean = false;
+  let includeBull = false;
   if (width >= 10 && props.format !== "ipe") {
     includeBull = true;
   }
@@ -632,22 +632,22 @@ export const drawVic:DrawFunction =  (
 
   if (!state.bluePos) { return { pic: "", groups: []} }
 
-  var lowYMult = (props.orientation ==="NS") ? 0.4 : 0.2
-  var hiYMult = (props.orientation === "NS") ? 0.9 : 0.8
-  var lowXMult = (props.orientation === "NS") ? 0.2 : 0.3
-  var hiXMult = (props.orientation === "NS") ? 0.8 : 0.6
-  var startY = (start && start.y) || randomNumber(canvas.height * lowYMult, canvas.height * hiYMult);
-  var startX = (start && start.x) || randomNumber(canvas.width * lowXMult, canvas.width * hiXMult);
+  const lowYMult = (props.orientation ==="NS") ? 0.4 : 0.2
+  const hiYMult = (props.orientation === "NS") ? 0.9 : 0.8
+  const lowXMult = (props.orientation === "NS") ? 0.2 : 0.3
+  const hiXMult = (props.orientation === "NS") ? 0.8 : 0.6
+  const startY = (start && start.y) || randomNumber(canvas.height * lowYMult, canvas.height * hiYMult);
+  const startX = (start && start.x) || randomNumber(canvas.width * lowXMult, canvas.width * hiXMult);
 
-  var incr: number = canvas.width / (canvas.width / 10);
-  var vicWidth: number = randomNumber(3.5 * incr, 10 * incr);
-  var vicDepth: number = randomNumber(3.5 * incr, 10 * incr);
+  const incr: number = canvas.width / (canvas.width / 10);
+  const vicWidth: number = randomNumber(3.5 * incr, 10 * incr);
+  const vicDepth: number = randomNumber(3.5 * incr, 10 * incr);
 
-  var heading:number = randomHeading(props.format);
-  var lg:Group = drawArrow(canvas, props.orientation, randomNumber(1, 4), startX, startY, heading + randomNumber(-10, 10));
+  let heading:number = randomHeading(props.format);
+  const lg:Group = drawArrow(canvas, props.orientation, randomNumber(1, 4), startX, startY, heading + randomNumber(-10, 10));
 
   if (props.isHardMode) heading = randomHeading(props.format);
-  var stg:Group
+  let stg:Group
   if (props.orientation==="NS"){
     stg = drawArrow(canvas, props.orientation, randomNumber(1, 4), startX + vicWidth/2, startY + vicDepth, heading + randomNumber(-10, 10));
   } else {
@@ -655,7 +655,7 @@ export const drawVic:DrawFunction =  (
   }
 
   if (props.isHardMode) heading = randomHeading(props.format);
-  var ntg:Group
+  let ntg:Group
   if (props.orientation==="NS"){
     ntg = drawArrow(canvas, props.orientation, randomNumber(1, 4), startX - vicWidth/2, startY +vicDepth, heading + randomNumber(-10, 10));
   } else {
@@ -670,10 +670,10 @@ export const drawVic:DrawFunction =  (
     drawMeasurement(canvas, context, stg.x, stg.y, ntg.x, ntg.y, vicWidth, props.showMeasurements);
   }
 
-  var width:number = Math.floor(vicWidth / 4);
-  var depth:number = Math.floor(vicDepth / 4);
+  const width:number = Math.floor(vicWidth / 4);
+  const depth:number = Math.floor(vicDepth / 4);
 
-  var offsetX = 0;
+  let offsetX = 0;
   if (props.orientation==="NS"){
     offsetX = -70;
   }
@@ -682,18 +682,18 @@ export const drawVic:DrawFunction =  (
   drawAltitudes(canvas, context, stg.x + 20, stg.y - 11, stg.z);
   drawAltitudes(canvas, context, ntg.x + offsetX + 20, ntg.y - 11, ntg.z);
 
-  var lgBraaseye:Braaseye = drawBraaseye(canvas, context, state.bluePos, lg, state.bullseye, props.showMeasurements, props.braaFirst);
-  var stgBraaseye:Braaseye = drawBraaseye(canvas, context, state.bluePos, stg, state.bullseye, props.showMeasurements, props.braaFirst);
-  var ntgBraaseye:Braaseye = drawBraaseye(canvas, context, state.bluePos, ntg, state.bullseye, props.showMeasurements, props.braaFirst, offsetX);
+  const lgBraaseye:Braaseye = drawBraaseye(canvas, context, state.bluePos, lg, state.bullseye, props.showMeasurements, props.braaFirst);
+  const stgBraaseye:Braaseye = drawBraaseye(canvas, context, state.bluePos, stg, state.bullseye, props.showMeasurements, props.braaFirst);
+  const ntgBraaseye:Braaseye = drawBraaseye(canvas, context, state.bluePos, ntg, state.bullseye, props.showMeasurements, props.braaFirst, offsetX);
 
-  var lgAlts:AltStack = getAltStack(lg.z, props.format);
-  var stgAlts:AltStack = getAltStack(stg.z, props.format);
-  var ntgAlts:AltStack = getAltStack(ntg.z, props.format);
+  const lgAlts:AltStack = getAltStack(lg.z, props.format);
+  const stgAlts:AltStack = getAltStack(stg.z, props.format);
+  const ntgAlts:AltStack = getAltStack(ntg.z, props.format);
 
-  var answer = "THREE GROUP VIC " + depth + " DEEP, " + width + " WIDE, ";
+  let answer = "THREE GROUP VIC " + depth + " DEEP, " + width + " WIDE, ";
 
-  var nLbl = "NORTH";
-  var sLbl = "SOUTH";
+  let nLbl = "NORTH";
+  let sLbl = "SOUTH";
   if (props.orientation==="NS"){
     nLbl = "WEST";
     sLbl = "EAST";
@@ -707,10 +707,10 @@ export const drawVic:DrawFunction =  (
 
   console.log("DETERMINE IF OPENING/CLOSING -- EWI/SPEED TG");
 
-  var ntTrack = props.format === "alsa" ? getTrackDir(ntg.heading) : undefined;
-  var stTrack= props.format === "alsa" ? getTrackDir(stg.heading) : undefined;
-  var lTrack = props.format === "alsa" ? getTrackDir(lg.heading) : undefined;
-  var sameTrackDir =(ntTrack === stTrack && stTrack === lTrack);
+  const ntTrack = props.format === "alsa" ? getTrackDir(ntg.heading) : undefined;
+  const stTrack= props.format === "alsa" ? getTrackDir(stg.heading) : undefined;
+  const lTrack = props.format === "alsa" ? getTrackDir(lg.heading) : undefined;
+  const sameTrackDir =(ntTrack === stTrack && stTrack === lTrack);
     
   if (props.format !== "ipe" && sameTrackDir) {
     answer += " TRACK " +  getTrackDir(ntg.heading) + ". ";
@@ -718,12 +718,12 @@ export const drawVic:DrawFunction =  (
 
   answer += formatGroup("LEAD", lgBraaseye, lgAlts, lg.numContacts, true, sameTrackDir ? undefined: lTrack) + " ";
 
-  var anchorN:boolean = false;
+  let anchorN = false;
   if (ntgBraaseye.braa.range < stgBraaseye.braa.range){
     anchorN = true;
   } else if (ntgBraaseye.braa.range === stgBraaseye.braa.range) {
-    var ntgA:number = ntg.z.sort((a,b)=> {return b-a})[0]
-    var stgA:number = stg.z.sort((a,b)=> {return b-a})[0]
+    const ntgA:number = ntg.z.sort((a,b)=> {return b-a})[0]
+    const stgA:number = stg.z.sort((a,b)=> {return b-a})[0]
     if (ntgA > stgA){
       anchorN = true;
     } else if (ntgA === stgA) {
@@ -760,38 +760,38 @@ export const drawLeadEdge:DrawFunction = (
 
   if (!state.bluePos) { return { pic: "", groups: []} }
 
-  var lowYMult = (props.orientation ==="NS") ? 0.5 : 0.42
-  var hiYMult = (props.orientation === "NS") ? 0.6 : 0.5
-  var lowXMult = (props.orientation === "NS") ? 0.2 : 0.5
-  var hiXMult = (props.orientation === "NS") ? 0.8 : 0.6
-  var startX1: number = randomNumber(canvas.width * lowXMult, canvas.width * hiXMult);
-  var startY1: number = randomNumber(canvas.height * lowYMult, canvas.height * hiYMult);
-  var start1 = { x: props.orientation==="NS" ? undefined : startX1, y: props.orientation==="NS" ? startY1 : undefined};
+  const lowYMult = (props.orientation ==="NS") ? 0.5 : 0.42
+  const hiYMult = (props.orientation === "NS") ? 0.6 : 0.5
+  const lowXMult = (props.orientation === "NS") ? 0.2 : 0.5
+  const hiXMult = (props.orientation === "NS") ? 0.8 : 0.6
+  const startX1: number = randomNumber(canvas.width * lowXMult, canvas.width * hiXMult);
+  const startY1: number = randomNumber(canvas.height * lowYMult, canvas.height * hiYMult);
+  const start1 = { x: props.orientation==="NS" ? undefined : startX1, y: props.orientation==="NS" ? startY1 : undefined};
   return state.reDraw(canvas, context, true, start1).then((answer1: drawAnswer) => {
    
-    var lowYMult = (props.orientation ==="NS") ? 0.7 : 0.25
-    var hiYMult = (props.orientation === "NS") ? 0.9 : 0.29
-    var lowXMult = (props.orientation === "NS") ? 0.2 : 0.15
-    var hiXMult = (props.orientation === "NS") ? 0.8 : 0.25
-    var startX2 = randomNumber(canvas.width * lowXMult, canvas.width * hiXMult);
-    var startY2 = randomNumber(canvas.height * lowYMult, canvas.height * hiYMult);
-    var start2 = { x: props.orientation ==="NS" ? undefined : startX2, y: props.orientation==="NS" ? startY2 : undefined};
+    const lowYMult = (props.orientation ==="NS") ? 0.7 : 0.25
+    const hiYMult = (props.orientation === "NS") ? 0.9 : 0.29
+    const lowXMult = (props.orientation === "NS") ? 0.2 : 0.15
+    const hiXMult = (props.orientation === "NS") ? 0.8 : 0.25
+    const startX2 = randomNumber(canvas.width * lowXMult, canvas.width * hiXMult);
+    const startY2 = randomNumber(canvas.height * lowYMult, canvas.height * hiYMult);
+    const start2 = { x: props.orientation ==="NS" ? undefined : startX2, y: props.orientation==="NS" ? startY2 : undefined};
     return state.reDraw(canvas, context, true, start2).then((answer2:drawAnswer) => { 
 
       if (!state.bluePos) { return { pic: "", groups: []} }
-      var groups1 = answer1.groups;
-      var groups2 = answer2.groups;
+      let groups1 = answer1.groups;
+      let groups2 = answer2.groups;
 
       if (props.orientation==="NS"){
-        var tmp = groups1;
+        const tmp = groups1;
         groups1 = groups2;
         groups2 = tmp;
         answer1= answer2;
       }
-      var closestFollow = Math.max.apply(Math, groups2.map(function(o:Group) { return props.orientation==="NS" ? o.y : o.x;})); 
-      var closestLead = Math.min.apply(Math, groups1.map(function(o:Group) { return props.orientation==="NS" ? o.y : o.x;}));
+      const closestFollow = Math.max(...groups2.map(function(o:Group) { return props.orientation==="NS" ? o.y : o.x;})); 
+      const closestLead = Math.min(...groups1.map(function(o:Group) { return props.orientation==="NS" ? o.y : o.x;}));
 
-      var rngBack;
+      let rngBack;
       
       if (props.orientation==="EW") {
         rngBack = getBR(groups1[0].startX, closestFollow, { x: groups1[0].startX, y: closestLead });
@@ -831,9 +831,9 @@ export const drawPackage:DrawFunction = (
   start?: Bullseye|undefined ): drawAnswer => {
 
   if (!state.bluePos) { return { pic: "", groups: []} }
-  var isRange = randomNumber(0,120) < 50
+  const isRange = randomNumber(0,120) < 50
 
-  var startX1:any, startX2:any, startY1:any, startY2:any
+  let startX1:number|undefined, startX2:number|undefined, startY1:number|undefined, startY2:number|undefined
   if (props.orientation==="EW"){
     if (isRange){
       startX1 = randomNumber(canvas.width* 0.5, canvas.width*0.59);
@@ -864,19 +864,19 @@ export const drawPackage:DrawFunction = (
     return state.reDraw(canvas, context, true, { x:startX2, y: startY2 }).then((answer2:drawAnswer) =>{
   
       if (!state.bluePos) { return { pic: "", groups: []} }
-      var groups1: Group[] = answer1.groups;
-      var groups2: Group[] = answer2.groups;
+      const groups1: Group[] = answer1.groups;
+      const groups2: Group[] = answer2.groups;
     
-      var xs = 0;
-      var ys = 0;
+      let xs = 0;
+      let ys = 0;
     
-      var bullPtXL, bullPtYL, bullPtXT, bullPtYT;
-      var closestFollowx, farthestLeadx;
+      let bullPtXL, bullPtYL, bullPtXT, bullPtYT;
+      let closestFollowx, farthestLeadx;
     
       if (props.orientation==="NS"){ 
         closestFollowx = groups2[0].y;
         farthestLeadx = groups1[0].y;
-        for (var x = 0; x < groups2.length; x++) {
+        for (let x = 0; x < groups2.length; x++) {
           if (groups2[x].y < closestFollowx){
             closestFollowx  = groups2[x].y;
           }
@@ -887,7 +887,7 @@ export const drawPackage:DrawFunction = (
         bullPtXT = xs / groups2.length;
         xs = 0;
     
-        for (x = 0; x < groups1.length; x++) {
+        for (let x = 0; x < groups1.length; x++) {
           if (groups1[x].y < farthestLeadx){
             farthestLeadx = groups1[x].y;
           }
@@ -898,7 +898,7 @@ export const drawPackage:DrawFunction = (
       } else {
         closestFollowx = groups2[0].x;
         farthestLeadx = groups1[0].x;
-        for (x = 0; x < groups2.length; x++) {
+        for (let x = 0; x < groups2.length; x++) {
           if (groups2[x].x > closestFollowx){
             closestFollowx  = groups2[x].x;
           }
@@ -909,7 +909,7 @@ export const drawPackage:DrawFunction = (
         bullPtXT = closestFollowx;
         ys = 0;
     
-        for (x = 0; x < groups1.length; x++) {
+        for (let x = 0; x < groups1.length; x++) {
           if (groups1[x].x > farthestLeadx){
             farthestLeadx = groups1[x].x;
           }
@@ -918,28 +918,28 @@ export const drawPackage:DrawFunction = (
         bullPtYL = ys / groups1.length;
         bullPtXL = farthestLeadx;
       }
-      var leadPackage = getBR(bullPtXL, bullPtYL, state.bullseye);
-      var trailPackage = getBR(bullPtXT, bullPtYT, state.bullseye);
+      let leadPackage = getBR(bullPtXL, bullPtYL, state.bullseye);
+      let trailPackage = getBR(bullPtXT, bullPtYT, state.bullseye);
       
       if (props.orientation==="NS") {
-        var tmpPkg = leadPackage;
+        const tmpPkg = leadPackage;
         leadPackage = trailPackage;
         trailPackage = tmpPkg;
       }
     
-      var realAnswer: drawAnswer = {
+      const realAnswer: drawAnswer = {
         pic: "",
         groups: groups1.concat(groups2)
       }
     
-      var lLbl = !isRange ? "SOUTH": "EAST";
-      var tLbl = !isRange ? "NORTH" : "WEST";
+      let lLbl = !isRange ? "SOUTH": "EAST";
+      let tLbl = !isRange ? "NORTH" : "WEST";
       if (props.orientation==="NS"){ 
         lLbl = isRange ? "NORTH" : "EAST";
         tLbl = isRange ? "SOUTH" : "WEST"; 
       }
       if ( isRange ){
-        var rngBack = props.orientation==="NS" ? getBR(bullPtXL, bullPtYL, {x: bullPtXL, y: bullPtYT}) : getBR(bullPtXL, bullPtYL, {x: bullPtXT, y: bullPtYL}); 
+        const rngBack = props.orientation==="NS" ? getBR(bullPtXL, bullPtYL, {x: bullPtXL, y: bullPtYT}) : getBR(bullPtXL, bullPtYL, {x: bullPtXT, y: bullPtYL}); 
         if (rngBack.range < 40 ){
           context.clearRect(0, 0, canvas.width, canvas.height);
           drawBullseye(canvas, context);
@@ -951,7 +951,7 @@ export const drawPackage:DrawFunction = (
             tLbl + " PACKAGE BULLSEYE " + trailPackage.bearing + "/" + trailPackage.range;
       }
       else {
-        rngBack = props.orientation==="NS" ?  getBR(bullPtXL, bullPtYL, {x: bullPtXT, y: bullPtYL}) : getBR(bullPtXL, bullPtYL, {x: bullPtXL, y: bullPtYT});
+        const rngBack = props.orientation==="NS" ?  getBR(bullPtXL, bullPtYL, {x: bullPtXT, y: bullPtYL}) : getBR(bullPtXL, bullPtYL, {x: bullPtXL, y: bullPtYT});
         if (rngBack.range < 40) { 
           context.clearRect(0, 0, canvas.width, canvas.height);
           drawBullseye(canvas, context);

@@ -1,5 +1,5 @@
 import { getAltStack, getTrackDir, randomHeading, randomNumber } from "../../../utils/mathutilities";
-import { Bullseye, drawAnswer, DrawFunction, Group } from "../../interfaces";
+import { drawAnswer, DrawFunction, Group } from "../../interfaces";
 import { PicCanvasProps, PicCanvasState } from "../../picturecanvas";
 import { drawAltitudes, drawArrow, drawBraaseye, drawText } from "../drawutils";
 import { formatGroup } from "../formatutils";
@@ -8,16 +8,15 @@ export const drawPOD:DrawFunction = (
     canvas: HTMLCanvasElement,
     ctx:CanvasRenderingContext2D,
     props: PicCanvasProps,
-    state: PicCanvasState,
-    start?: Bullseye):drawAnswer => {
+    state: PicCanvasState):drawAnswer => {
 
     if (!state.bluePos) { return { pic: "", groups: []} }   
-    var numGrps: number = randomNumber(5,11);
+    const numGrps: number = randomNumber(5,11);
     
     drawText(canvas, ctx, '"DARKSTAR, EAGLE01, PICTURE"',state.bluePos.x-200, 20);
     
-    var groups:Group[] = [];
-    for (var x = 0; x <= numGrps; x++){
+    let groups:Group[] = [];
+    for (let x = 0; x <= numGrps; x++){
       groups.push( drawArrow(
         canvas,
         props.orientation,
@@ -52,8 +51,8 @@ export const drawPOD:DrawFunction = (
     }
     groups = groups.sort(sortFun)
     
-    var response = groups.length + " GROUPS, " 
-    for (var z = 0; z < 3; z++){
+    let response = groups.length + " GROUPS, " 
+    for (let z = 0; z < 3; z++){
       response += formatGroup("", groups[z].braaseye || { braa:{ bearing: "000", range:0}, bull: {bearing:"000", range:0}}, getAltStack(groups[z].z, props.format), groups[z].numContacts, true, getTrackDir(groups[z].heading)) + " ";
     }
   

@@ -3,13 +3,56 @@ import { toRadians, randomNumber, getBR } from '../../utils/mathutilities'
 import { BRAA, Braaseye, Bullseye, Group } from '../interfaces'
 import { formatAlt } from './formatutils';
 
+function clamp(canvas: HTMLCanvasElement, pos: Bullseye): Bullseye {
+  if (pos === null){
+      return {
+          x:0, y:0
+      }
+  }
+  return {
+      x: Math.min(Math.max(pos.x, 0), canvas.width),
+      y: Math.min(Math.max(pos.y, 0), canvas.height)}
+}
+
+export function drawLine (
+  ctx:CanvasRenderingContext2D,
+  startX: number,
+  startY: number,
+  endX: number,
+  endY: number, 
+  color="black"): void {
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(startX, startY);
+  ctx.lineTo(endX, endY);
+  ctx.stroke();
+  ctx.stroke();
+}
+
+export function drawText(
+  canvas: HTMLCanvasElement,
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  x: number,
+  y: number,
+  size = 12,
+  color = "black"): void {
+  ctx.lineWidth = 1;
+  ctx.fillStyle = color;
+  ctx.font = size + "px Arial";
+  const pos = clamp(canvas, {x,y})
+  
+  ctx.fillText(text, pos.x, pos.y);
+}
+
 export function drawAltitudes(
     canvas: HTMLCanvasElement,
     ctx:CanvasRenderingContext2D,
     startX: number,
     startY: number,
     alts: number[]): void {
-    var formattedAlts: string[] = alts.map((a:number) => {return formatAlt(a)})
+    const formattedAlts: string[] = alts.map((a:number) => {return formatAlt(a)})
     drawText(canvas, ctx, formattedAlts.join(","), startX, startY, 11, "#ff8c00");
 }
   
@@ -34,10 +77,10 @@ export function drawBraaseye(
     bullseye: Bullseye,
     showMeasurements: boolean,
     braaFirst: boolean,
-    offsetX: number = 0, offsetY = 0): Braaseye{
+    offsetX = 0, offsetY = 0): Braaseye{
     
-    var bulls: BRAA = getBR(redPos.x, redPos.y, bullseye);
-    var braa: BRAA = getBR(redPos.x, redPos.y, bluePos);
+    const bulls: BRAA = getBR(redPos.x, redPos.y, bullseye);
+    const braa: BRAA = getBR(redPos.x, redPos.y, bluePos);
 
     if (braaFirst){
       drawBR(canvas, ctx, redPos.x + 20 + offsetX, redPos.y + offsetY, braa, "blue", showMeasurements);
@@ -68,49 +111,6 @@ export function drawMeasurement(
     }
 }
 
-export function drawLine (
-    ctx:CanvasRenderingContext2D,
-    startX: number,
-    startY: number,
-    endX: number,
-    endY: number, 
-    color="black"): void {
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = color;
-    ctx.beginPath();
-    ctx.moveTo(startX, startY);
-    ctx.lineTo(endX, endY);
-    ctx.stroke();
-    ctx.stroke();
-}
-
-function clamp(canvas: HTMLCanvasElement, pos: Bullseye): Bullseye {
-    if (pos === null){
-        return {
-            x:0, y:0
-        }
-    }
-    return {
-        x: Math.min(Math.max(pos.x, 0), canvas.width),
-        y: Math.min(Math.max(pos.y, 0), canvas.height)}
-}
-
-export function drawText(
-    canvas: HTMLCanvasElement,
-    ctx: CanvasRenderingContext2D,
-    text: string,
-    x: number,
-    y: number,
-    size = 12,
-    color = "black"): void {
-    ctx.lineWidth = 1;
-    ctx.fillStyle = color;
-    ctx.font = size + "px Arial";
-    var pos = clamp(canvas, {x,y})
-    
-    ctx.fillText(text, pos.x, pos.y);
-}
-
 export function drawArrow(
     canvas: HTMLCanvasElement,
     orientation: string,
@@ -121,9 +121,9 @@ export function drawArrow(
     color = "red",
     type="ftr" ): Group {
 
-    var c = canvas.getContext("2d");
+    const c = canvas.getContext("2d");
 
-    var group: Group = {
+    let group: Group = {
         startX: 0,
         startY: 0,
         x: 0,
@@ -138,12 +138,12 @@ export function drawArrow(
     if (c !== null){
   
         if (numContacts > 1) {
-        for (var x = 1; x < numContacts; x++) {
-            var offset:number = 0;
-            var offsety:number = 0;
+        for (let x = 1; x < numContacts; x++) {
+            let offset = 0;
+            let offsety = 0;
     
-            var xMultip:number = canvas.width / (canvas.width / 3);
-            var yMultip:number = canvas.width / (canvas.height / 2);
+            const xMultip:number = canvas.width / (canvas.width / 3);
+            const yMultip:number = canvas.width / (canvas.height / 2);
     
             if ((direction >= 0 && direction < 90) || direction === 360) {
               offset = xMultip * x;
@@ -187,22 +187,22 @@ export function drawArrow(
         c.beginPath();
         c.moveTo(startx, starty);
     
-        var dist:number = canvas.width / (canvas.width / 20);
+        const dist:number = canvas.width / (canvas.width / 20);
     
-        var deg: number = 360 - (direction - 90);
+        let deg: number = 360 - (direction - 90);
         if (direction < 90) {
           deg = 90 - direction;
         } 
-        var rads:number = toRadians(deg);
+        const rads:number = toRadians(deg);
     
-        var endy: number = starty + dist * -Math.sin(rads);
-        var endx: number = startx +  dist * Math.cos(rads);
+        const endy: number = starty + dist * -Math.sin(rads);
+        const endx: number = startx +  dist * Math.cos(rads);
     
         c.moveTo(startx, starty);
         c.lineTo(endx, endy);
     
-        var yOff: number = canvas.width / (canvas.width / 6);
-        var xOff: number = canvas.width / (canvas.width / 4)
+        let yOff: number = canvas.width / (canvas.width / 6);
+        let xOff: number = canvas.width / (canvas.width / 4)
         if (direction <= 121 || direction >= 330) {
           xOff = -canvas.width / (canvas.width / 4);
         } 
@@ -217,13 +217,15 @@ export function drawArrow(
         c.stroke();
         c.stroke();
         
-        var low = 15;
-        var hi = 45;
+        let low = 15;
+        let hi = 45;
         if (type==="rpa"){
             low = 0o5;
             hi = 18;
         }
-        var alts: number[] = [...Array(numContacts)].map(_=>randomNumber(low,hi));
+        
+        // eslint-disable-next-line
+        const alts: number[] = [...Array(numContacts)].map(_=>randomNumber(low,hi));
     
         group = {
             startX: startx,
@@ -248,14 +250,13 @@ export function drawGroupCap(
   startY:number, 
   color?:string): Group{
 
-  var c = canvas.getContext("2d");
+  const c = canvas.getContext("2d");
   if (!c) { return {x:0, y:0, startX:0, startY:0, heading:0, desiredHeading:0, z:[], numContacts:1, type:"ftr"}}
 
   color = color || "red";
 
-  var alts:number[] = [];
-
-  alts = [...Array(contacts)].map(_=>randomNumber(15,45));
+  // eslint-disable-next-line
+  let alts:number[] = [...Array(contacts)].map(_=>randomNumber(15,45));
 
   c.lineWidth = 1;
   c.fillStyle = color;
@@ -263,25 +264,25 @@ export function drawGroupCap(
 
   c.beginPath();
 
-  var radius = 10;
+  let radius = 10;
   if (contacts === 1 ){
     c.arc(startX, startY, 10, 1.0*Math.PI, 0.8*Math.PI);
     c.stroke();
     drawLine(c, startX-8, startY+6, startX-6, startY+12, "red");
   } else{
-    var ratio = 2/contacts - 0.1; 
-    var startPI = 0;
-    var endPI = ratio
+    const ratio = 2/contacts - 0.1; 
+    let startPI = 0;
+    let endPI = ratio
     radius = 12;
-    for (var x = 1 ; x<= contacts; x++){
+    for (let x = 1 ; x<= contacts; x++){
       c.arc(startX,startY, radius, startPI*Math.PI, endPI*Math.PI);
       c.stroke();
 
-      var opp:number = radius * Math.sin(endPI*Math.PI);
-      var adj:number = radius * Math.cos(endPI*Math.PI);
+      const opp:number = radius * Math.sin(endPI*Math.PI);
+      const adj:number = radius * Math.cos(endPI*Math.PI);
     
-      var endy = startY + opp;
-      var endx = startX + adj;
+      const endy = startY + opp;
+      const endx = startX + adj;
     
       c.beginPath();
       c.moveTo(startX+(adj*0.6), startY+(opp*0.9));
@@ -294,10 +295,10 @@ export function drawGroupCap(
     }
   }
 
-  var angle = (orientation==="EW") ? 270 : 0;
-  var sY: number = startY + radius * Math.sin(toRadians(angle));
-  var sX: number = startX + radius * Math.cos(toRadians(angle));
-  var group = {
+  const angle = (orientation==="EW") ? 270 : 0;
+  const sY: number = startY + radius * Math.sin(toRadians(angle));
+  const sX: number = startX + radius * Math.cos(toRadians(angle));
+  const group = {
     capping: true,
     startX: sX,
     startY: sY,

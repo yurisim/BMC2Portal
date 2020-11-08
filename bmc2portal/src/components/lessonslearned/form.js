@@ -9,7 +9,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import Chips from './chips';
 
 import snackbar from '../utils/alert.js'
-import backend from '../utils/backend.js'
+import backend from '../utils/backend'
 
 export default class Form extends React.Component {
 

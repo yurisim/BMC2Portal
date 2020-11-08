@@ -8,7 +8,7 @@ type RangeBack = {
 }
 
 export function formatAlt(alt: number): string{
-    var altF = (alt*10).toString().substring(0,3);
+    const altF = (alt*10).toString().substring(0,3);
     return altF.length < 3 ? "0" + altF : altF;
 }
 
@@ -20,7 +20,7 @@ export function formatGroup(
     anchor:boolean,
     trackDir: string|undefined,
     rangeBack?: RangeBack): string {
-    var answer = label + " GROUP ";
+    let answer = label + " GROUP ";
   
     if (rangeBack !== null && rangeBack !== undefined) {
       answer += rangeBack.label + " " + rangeBack.range + " ";
@@ -43,11 +43,11 @@ export function formatGroup(
 }
 
 export function getGroupOpenClose( fg: Group, sg: Group ): string{  
-    var b1 = getBR(fg.x, fg.y, {x:sg.x, y:sg.y}).range
-    var b2 = getBR(fg.startX, fg.startY, {x:sg.x, y:sg.y}).range
+    const b1 = getBR(fg.x, fg.y, {x:sg.x, y:sg.y}).range
+    const b2 = getBR(fg.startX, fg.startY, {x:sg.x, y:sg.y}).range
   
-    var b3 = getBR(sg.x, sg.y, {x:fg.x, y: fg.y}).range
-    var b4 = getBR(sg.startX, sg.startY, {x:fg.x, y:fg.y}).range
+    const b3 = getBR(sg.x, sg.y, {x:fg.x, y: fg.y}).range
+    const b4 = getBR(sg.startX, sg.startY, {x:fg.x, y:fg.y}).range
   
     if (b1 <= b2 && b3 <= b4){
       return "CLOSING";

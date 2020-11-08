@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 
 import Canvas from './canvas'
 
@@ -21,7 +21,7 @@ export type PicCanvasProps = {
     format:string,
     showMeasurements:boolean,
     isHardMode: boolean,
-    setAnswer: Function,
+    setAnswer: {(answer:string):void},
     newPic: boolean,
     animate:boolean,
     sliderSpeed: number
@@ -30,7 +30,7 @@ export type PicCanvasProps = {
 export type PicCanvasState = {
     bullseye: Bullseye
     bluePos: Bullseye|undefined,
-    reDraw: Function,
+    reDraw: any,
     answer:drawAnswer,
     canvas?:HTMLCanvasElement,
     animateCanvas?: ImageData,
@@ -38,7 +38,7 @@ export type PicCanvasState = {
 
 export default class PictureCanvas extends React.Component<PicCanvasProps, PicCanvasState> {
 
-    constructor(props: any){
+    constructor(props: PicCanvasProps){
         super(props)
         this.state = {
             bullseye: {x:0, y:0},
@@ -48,19 +48,22 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         }
     }
 
-    componentDidUpdate = (prevProps: PicCanvasProps, prevState:PicCanvasState, snapshot:any) => {
+    componentDidUpdate = (prevProps: PicCanvasProps):void => {
+        // eslint-disable-next-line
         var {animate, ...rest} = prevProps
-        var oldAnimate = animate
+        const oldAnimate = animate
+        // eslint-disable-next-line
         var {animate, ...newrest} = this.props
-        var newAnimate = animate
-        function areEqualShallow(a:any, b:any) {
-            for(var key in a) {
+        const newAnimate = animate
+        // eslint-disable-next-line
+        function areEqualShallow(a:any, b:any):boolean {
+            for(const key in a) {
                 if(!(key in b) || a[key] !== b[key]) {
                     return false;
                 }
             }
-            for(key in b) {
-                if(!(key in a) || a[key] !== b[key]) {
+            for(const key2 in b) {
+                if(!(key2 in a) || a[key2] !== b[key2]) {
                     return false;
                 }
             }
@@ -85,27 +88,27 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         }
     }
 
-    getRandomPicType = (leadingEdge: boolean) => {
-        var numType = randomNumber(0,(leadingEdge)? 7 : 9)
-        var types = ["azimuth", "range", "vic", "wall","ladder", "champagne", "cap","leading edge","package"];
+    getRandomPicType = (leadingEdge: boolean):string => {
+        const numType = randomNumber(0,(leadingEdge)? 7 : 9)
+        const types = ["azimuth", "range", "vic", "wall","ladder", "champagne", "cap","leading edge","package"];
         return types[numType];
     }
     
-    drawPicture = async (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, forced?: boolean, start?: Bullseye) => {
+    drawPicture = async (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, forced?: boolean, start?: Bullseye):Promise<drawAnswer> => {
         
-        var isLeadEdge = (this.props.picType === "leading edge" || this.props.picType === "package" || this.props.picType==="ea")
+        const isLeadEdge = (this.props.picType === "leading edge" || this.props.picType === "package" || this.props.picType==="ea")
 
-        var type = "azimuth"
+        let type = "azimuth"
         if (forced) {
             type = this.getRandomPicType(true)
         } else {
             type = ((this.props.picType ==="random") ? this.getRandomPicType(isLeadEdge) : this.props.picType)
         }
       
-        var drawFunc:DrawFunction = this.functions[type];
+        let drawFunc:DrawFunction = this.functions[type];
         if (drawFunc === undefined) drawFunc = drawAzimuth;
       
-        var answer = await drawFunc(canvas, context, this.props, this.state, start);
+        const answer = await drawFunc(canvas, context, this.props, this.state, start);
 
         return answer
     }
@@ -125,24 +128,24 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         "package": drawPackage,
     }
 
-    draw = async (context: CanvasRenderingContext2D, frameCount: number, canvas: HTMLCanvasElement) => {
-        var bullseye = drawBullseye(canvas, context)
+    draw = async (context: CanvasRenderingContext2D, frameCount: number, canvas: HTMLCanvasElement):Promise<void> => {
+        const bullseye = drawBullseye(canvas, context)
 
-        var xPos = canvas.width-20
-        var yPos = randomNumber(canvas.height * 0.33, canvas.height *0.66)
-        var heading = 270
+        let xPos = canvas.width-20
+        let yPos = randomNumber(canvas.height * 0.33, canvas.height *0.66)
+        let heading = 270
         if (this.props.orientation === "NS"){
             xPos = randomNumber(canvas.width * 0.33, canvas.width * 0.66);
             yPos = 20;
             heading = 180;
         }
         
-        var bluePos = drawArrow(canvas, this.props.orientation, 4, xPos, yPos, heading, "blue");
+        const bluePos = drawArrow(canvas, this.props.orientation, 4, xPos, yPos, heading, "blue");
         await this.setState({bluePos, bullseye})
         
-        var blueOnly = context.getImageData(0, 0, canvas.width, canvas.height)
+        const blueOnly = context.getImageData(0, 0, canvas.width, canvas.height)
 
-        var answer: drawAnswer = await this.drawPicture(canvas, context)
+        const answer: drawAnswer = await this.drawPicture(canvas, context)
 
         this.props.setAnswer(answer.pic)
         
@@ -151,7 +154,7 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         //animateCanvas = answer.imageData;
     }
 
-    render(){
+    render(): ReactElement{
         return <Canvas 
             draw={this.draw} 
             height={this.props.height} 

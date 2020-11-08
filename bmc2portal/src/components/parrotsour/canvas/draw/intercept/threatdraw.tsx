@@ -13,7 +13,7 @@ export const drawThreat:DrawFunction = (
     
     if (!state.bluePos) { return { pic: "", groups: []} }
 
-    var offsetDeg1:number = randomNumber(-10, 10);
+    const offsetDeg1:number = randomNumber(-10, 10);
 
     if (start === undefined){
         start = {
@@ -28,13 +28,13 @@ export const drawThreat:DrawFunction = (
         start.x = randomNumber(state.bluePos.x-100, state.bluePos.x-40);
     }
 
-    var heading:number = randomHeading(props.format);
+    const heading:number = randomHeading(props.format);
 
-    var sg:Group = drawArrow(canvas, props.orientation, randomNumber(1, 4), start.x, start.y, heading + offsetDeg1);
+    const sg:Group = drawArrow(canvas, props.orientation, randomNumber(1, 4), start.x, start.y, heading + offsetDeg1);
 
     drawAltitudes(canvas, context, sg.x + 10, sg.y - 11, sg.z);
 
-    var sgAlts: AltStack = getAltStack(sg.z, props.format);
+    const sgAlts: AltStack = getAltStack(sg.z, props.format);
 
     drawBraaseye(
         canvas, 
@@ -46,17 +46,17 @@ export const drawThreat:DrawFunction = (
         props.braaFirst
     );
 
-    var br:BRAA = getBR(sg.x, sg.y, {
+    const br:BRAA = getBR(sg.x, sg.y, {
           x: state.bluePos.x,
           y: state.bluePos.y
         });
-    var closest:BRAA = br;
-    var closestGrp:Group = sg;
+    const closest:BRAA = br;
+    const closestGrp:Group = sg;
 
-    var aspectH = getAspect(state.bluePos, sg);
-    var trackDir = getTrackDir(sg.heading);
+    const aspectH = getAspect(state.bluePos, sg);
+    const trackDir = getTrackDir(sg.heading);
 
-    var answer:string = "[FTR C/S], THREAT GROUP BRAA " + closest.bearing + "/" + closest.range + " " + sgAlts.stack + " " + aspectH + " " + (aspectH !== "HOT" ? trackDir : "") + " HOSTILE "
+    let answer:string = "[FTR C/S], THREAT GROUP BRAA " + closest.bearing + "/" + closest.range + " " + sgAlts.stack + " " + aspectH + " " + (aspectH !== "HOT" ? trackDir : "") + " HOSTILE "
 
     if (closestGrp.numContacts > 1) {
         answer += (closestGrp.numContacts >= 3 ? "HEAVY " : "") + closestGrp.numContacts + " CONTACTS ";
@@ -64,7 +64,7 @@ export const drawThreat:DrawFunction = (
 
     answer += sgAlts.fillIns;
   
-    var groups = [];
+    const groups = [];
     sg.label = "SINGLE GROUP";
     groups.push(sg);
 
