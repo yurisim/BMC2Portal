@@ -51,10 +51,10 @@ export const drawAzimuth:DrawFunction = (
     const incr:number = canvas.width / (canvas.width / 10);
     let distance:number = randomNumber(3.5 * incr, 10 * incr);
 
-    let heading:number = randomHeading(props.format);
+    let heading:number = randomHeading(props.format, state.bluePos.heading);
     const ng:Group = drawArrow( canvas, props.orientation, randomNumber(1, 4), startX, startY, heading + randomNumber(-10,10));
     
-    if (props.isHardMode) heading = randomHeading(props.format);
+    if (props.isHardMode) heading = randomHeading(props.format, state.bluePos.heading);
     
     let sg:Group
 
@@ -188,7 +188,7 @@ export const drawRange:DrawFunction = (
     const incr:number = canvas.width / (canvas.width / 10);
     let distance:number = randomNumber(3.5 * incr, 10 * incr);
   
-    let heading:number = randomHeading(props.format);
+    let heading:number = randomHeading(props.format, state.bluePos.heading);
     const tg:Group = drawArrow(
         canvas,
         props.orientation,
@@ -197,7 +197,7 @@ export const drawRange:DrawFunction = (
         startY, 
         heading + randomNumber(-10, 10));
   
-    if (props.isHardMode) heading = randomHeading(props.format);
+    if (props.isHardMode) heading = randomHeading(props.format, state.bluePos.heading);
   
     let lg: Group
     const m1x:number = tg.x 
@@ -283,7 +283,7 @@ export const drawWall: DrawFunction = (
     const startY = (start && start.y) ||  randomNumber(canvas.height * lowYMult, canvas.height * hiYMult);
     const startX =(start && start.x) || randomNumber(canvas.width * lowXMult, canvas.width * hiXMult);
   
-    let heading = randomHeading(props.format);
+    let heading = randomHeading(props.format, state.bluePos.heading);
   
     const numGroups = randomNumber(3, 6);
   
@@ -297,7 +297,7 @@ export const drawWall: DrawFunction = (
       let offsetY = (x === 0) ? 0 : randomNumber(40, 60);
       totalOffset += offsetY;
   
-      if (props.isHardMode) heading = randomHeading(props.format);
+      if (props.isHardMode) heading = randomHeading(props.format, state.bluePos.heading);
       if (props.orientation==="NS"){ 
         groups.push( drawArrow(canvas, props.orientation, randomNumber(1, 5), startX + totalOffset, startY, heading + offset) );
       } else {
@@ -420,7 +420,7 @@ export const drawLadder: DrawFunction =  (
   const startY = (start && start.y) || randomNumber(canvas.height*yLowMult, canvas.height * yHiMult);
   const startX = (start && start.x) || randomNumber(canvas.width *xLowMult, canvas.width * xHiMult);
 
-  let heading = randomHeading(props.format);
+  let heading = randomHeading(props.format, state.bluePos.heading);
   const numGroups = randomNumber(3, 6);
 
   let totalOffset = 0;
@@ -429,7 +429,7 @@ export const drawLadder: DrawFunction =  (
     const offset = randomNumber(-5, 5);
     totalOffset +=(x===0 ? 0 : randomNumber(30,80)); 
 
-    heading = (!props.isHardMode) ? heading : randomHeading(props.format);
+    heading = (!props.isHardMode) ? heading : randomHeading(props.format, state.bluePos.heading);
 
     if (props.orientation==="NS"){ 
       groups.push( drawArrow(canvas, props.orientation, randomNumber(1, 5), startX, startY - totalOffset, heading + offset) );
@@ -524,10 +524,10 @@ export const drawChampagne:DrawFunction =  (
   const champWidth:number = randomNumber(3.5 * incr, 10 * incr);
   const champDepth:number = randomNumber(3.5 * incr, 10 * incr);
 
-  let heading:number = randomHeading(props.format);
+  let heading:number = randomHeading(props.format, state.bluePos.heading);
   const tg:Group = drawArrow(canvas, props.orientation, randomNumber(1, 4), startX, startY, heading + randomNumber(-10, 10));
 
-  if (props.isHardMode) heading = randomHeading(props.format);
+  if (props.isHardMode) heading = randomHeading(props.format, state.bluePos.heading);
   
   let nlg:Group
   if (props.orientation === "NS"){
@@ -536,7 +536,7 @@ export const drawChampagne:DrawFunction =  (
     nlg = drawArrow(canvas, props.orientation, randomNumber(1, 4), startX + champDepth, startY - champWidth / 2,  heading + randomNumber(-10, 10));
   }
   
-  if (props.isHardMode) heading = randomHeading(props.format);
+  if (props.isHardMode) heading = randomHeading(props.format, state.bluePos.heading);
   let slg:Group
   if (props.orientation === "NS"){
     slg = drawArrow(canvas, props.orientation, randomNumber(1, 4), startX + champWidth/2, startY - champDepth, heading + randomNumber(-10, 10));
@@ -644,10 +644,10 @@ export const drawVic:DrawFunction =  (
   const vicWidth: number = randomNumber(3.5 * incr, 10 * incr);
   const vicDepth: number = randomNumber(3.5 * incr, 10 * incr);
 
-  let heading:number = randomHeading(props.format);
+  let heading:number = randomHeading(props.format, state.bluePos.heading);
   const lg:Group = drawArrow(canvas, props.orientation, randomNumber(1, 4), startX, startY, heading + randomNumber(-10, 10));
 
-  if (props.isHardMode) heading = randomHeading(props.format);
+  if (props.isHardMode) heading = randomHeading(props.format, state.bluePos.heading);
   let stg:Group
   if (props.orientation==="NS"){
     stg = drawArrow(canvas, props.orientation, randomNumber(1, 4), startX + vicWidth/2, startY + vicDepth, heading + randomNumber(-10, 10));
@@ -655,7 +655,7 @@ export const drawVic:DrawFunction =  (
     stg = drawArrow(canvas, props.orientation, randomNumber(1, 4), startX - vicDepth, startY + vicWidth / 2, heading + randomNumber(-10, 10));
   }
 
-  if (props.isHardMode) heading = randomHeading(props.format);
+  if (props.isHardMode) heading = randomHeading(props.format, state.bluePos.heading);
   let ntg:Group
   if (props.orientation==="NS"){
     ntg = drawArrow(canvas, props.orientation, randomNumber(1, 4), startX - vicWidth/2, startY +vicDepth, heading + randomNumber(-10, 10));
