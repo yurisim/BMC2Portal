@@ -37,7 +37,6 @@ export default class ParrotSourControls extends React.Component<PSCProps, PSCSta
 
     pauseFight = ():void =>{
         this.props.pauseAnimate()
-        console.log("Fight is Paused")
     }
 
     toggleHelp = ():void => {
