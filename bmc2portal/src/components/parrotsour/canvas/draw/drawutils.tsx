@@ -111,13 +111,36 @@ export function drawMeasurement(
     }
 }
 
+function headingToDeg(heading: number){
+  let deg: number = 360 - (heading - 90);
+  if (heading < 90) {
+    deg = 90 - heading;
+  }
+
+  let offsetVector = deg-90
+  if (offsetVector < 0){
+    offsetVector = 360 + offsetVector
+  }
+
+  let arrowHead = deg - 150
+  if (arrowHead < 0)
+    arrowHead = 360 + arrowHead
+
+  return {
+    degrees: deg,
+    offset: offsetVector,
+    headAngle: arrowHead
+  }
+
+}
+
 export function drawArrow(
     canvas: HTMLCanvasElement,
     orientation: string,
     numContacts:number,
     startx:number,
     starty:number,
-    direction: number,
+    heading: number,
     color = "red",
     type="ftr" ): Group {
 
@@ -128,117 +151,73 @@ export function drawArrow(
         startY: 0,
         x: 0,
         y: 0,
-        heading: direction,
+        heading: heading,
         desiredHeading: orientation==="EW" ? 360 : 90,
         z: [0],
         numContacts: 1,
         type:type
     }
 
-    if (c !== null){
+    if (c === null) return group
+
+    c.lineWidth = 1;
+    c.fillStyle = color;
+
+    let endx = 0
+    let endy = 0
+
+    for (let x = 0; x < numContacts; x++){
+
+      const vectors = headingToDeg(heading)
+
+      const rads:number = toRadians(vectors.degrees)
+      const offsetRads: number = toRadians(vectors.offset)
+      const headRads: number = toRadians(vectors.headAngle)
+
+      startx = startx + 5*(Math.cos(offsetRads))
+      starty = starty + 5*(-Math.sin(offsetRads))
+
+      const dist:number = canvas.width / (canvas.width / 20);
   
-        if (numContacts > 1) {
-        for (let x = 1; x < numContacts; x++) {
-            let offset = 0;
-            let offsety = 0;
-    
-            const xMultip:number = canvas.width / (canvas.width / 3);
-            const yMultip:number = canvas.width / (canvas.height / 2);
-    
-            if ((direction >= 0 && direction < 90) || direction === 360) {
-              offset = xMultip * x;
-              offsety = yMultip * x;
-            }
-            if (direction >= 90 && direction < 121) {
-              offset = xMultip * x;
-              offsety = -xMultip * x;
-            }
-    
-            if (direction >= 121 && direction < 240) {
-              offset = xMultip * x;
-              offsety = -x;
-            }
-    
-            if (direction >= 240 && direction < 330) {
-              offset = 0;
-              offsety = -xMultip * x;
-            }
-    
-            if (direction >= 330 && direction < 360) {
-              offset = -x;
-              offsety = xMultip * x;
-            }
-    
-            if (direction === 90 || direction === 270) {
-              offset = 0;
-            }
-    
-            if (direction === 0 || direction === 180 || direction === 360) {
-              offsety = 0;
-            }
-    
-            drawArrow(canvas, orientation, 1, startx - offset, starty - offsety, direction, color, type);
-        }
-        }
-    
-        c.lineWidth = 1;
-        c.fillStyle = color;
-    
-        c.beginPath();
-        c.moveTo(startx, starty);
-    
-        const dist:number = canvas.width / (canvas.width / 20);
-    
-        let deg: number = 360 - (direction - 90);
-        if (direction < 90) {
-          deg = 90 - direction;
-        } 
-        const rads:number = toRadians(deg);
-    
-        const endy: number = starty + dist * -Math.sin(rads);
-        const endx: number = startx +  dist * Math.cos(rads);
-    
-        c.moveTo(startx, starty);
-        c.lineTo(endx, endy);
-    
-        let yOff: number = canvas.width / (canvas.width / 6);
-        let xOff: number = canvas.width / (canvas.width / 4)
-        if (direction <= 121 || direction >= 330) {
-          xOff = -canvas.width / (canvas.width / 4);
-        } 
-        if (direction > 300) {
-          xOff = canvas.width / (canvas.width / 8);
-          yOff = -canvas.width / (canvas.width / 4);
-        }
-    
-        c.lineTo(endx + xOff, endy - yOff);
-    
-        c.strokeStyle = color;
-        c.stroke();
-        c.stroke();
-        
-        let low = 15;
-        let hi = 45;
-        if (type==="rpa"){
-            low = 0o5;
-            hi = 18;
-        }
-        
-        // eslint-disable-next-line
-        const alts: number[] = [...Array(numContacts)].map(_=>randomNumber(low,hi));
-    
-        group = {
-            startX: startx,
-            startY: starty,
-            x: Math.floor(endx),
-            y: Math.floor(endy),
-            heading: direction,
-            desiredHeading: orientation==="EW" ? 360 : 90,
-            z: alts,
-            numContacts: numContacts,
-            type:type
-        };
+      endy = starty + dist * -Math.sin(rads);
+      endx = startx +  dist * Math.cos(rads);
+
+      c.beginPath()  
+      c.moveTo(startx, starty);
+      c.lineTo(endx, endy);
+
+      const heady:number = endy + 7 * -Math.sin(headRads)
+      const headx:number = endx + 7 * Math.cos(headRads)
+  
+      c.lineTo(headx, heady);
+  
+      c.strokeStyle = color;
+      c.stroke();
+      c.stroke();
     }
+  
+    let low = 15;
+    let hi = 45;
+    if (type==="rpa"){
+        low = 0o5;
+        hi = 18;
+    }
+    
+    // eslint-disable-next-line
+    const alts: number[] = [...Array(numContacts)].map(_=>randomNumber(low,hi));
+
+    group = {
+        startX: startx,
+        startY: starty,
+        x: Math.floor(endx),
+        y: Math.floor(endy),
+        heading,
+        desiredHeading: orientation==="EW" ? 360 : 90,
+        z: alts,
+        numContacts: numContacts,
+        type:type
+    };
+
     return group;
 }
 
