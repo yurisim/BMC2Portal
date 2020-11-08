@@ -780,7 +780,7 @@ export const drawLeadEdge:DrawFunction = (
   const startX2 = randomNumber(canvas.width * lowXMult2, canvas.width * hiXMult2);
   const startY2 = randomNumber(canvas.height * lowYMult2, canvas.height * hiYMult2);
   const start2 = { x: startX2, y: startY2 }
-  let answer2 = state.reDraw(canvas, context, true, start2)
+  const answer2 = state.reDraw(canvas, context, true, start2)
   
   if (!state.bluePos) { return { pic: "", groups: []} }
   let groups1 = answer1.groups;
@@ -866,8 +866,8 @@ export const drawPackage:DrawFunction = (
   }
 
   let finalAnswer: drawAnswer = { pic: "", groups: []}
-  let answer1 = state.reDraw(canvas, context, true, {x:startX1, y:startY1})
-  let answer2 = state.reDraw(canvas,context, true, {x:startX2, y:startY2})
+  const answer1 = state.reDraw(canvas, context, true, {x:startX1, y:startY1})
+  const answer2 = state.reDraw(canvas,context, true, {x:startX2, y:startY2})
   if (!state.bluePos) { return { pic: "", groups: []} }
   const groups1: Group[] = answer1.groups;
   const groups2: Group[] = answer2.groups;
