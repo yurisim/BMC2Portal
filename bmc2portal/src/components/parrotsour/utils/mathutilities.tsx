@@ -1,22 +1,49 @@
+/**
+ * This file holds commonly used functions for manipulation of 
+ * angles/degrees/headings, altitudes, and bearings
+ */
+
 import { AltStack, BRAA, Bullseye, Group } from '../canvas/interfaces'
 
-export function toRadians(angle: number): number {
-  return angle * (Math.PI / 180);
+/**
+ * Converts a math angle to Radians (180 is EW line)
+ * @param angleDeg - the cartesian angle to convert to radians
+ */
+export function toRadians(angleDeg: number): number {
+  return angleDeg * (Math.PI / 180);
 }
 
+/**
+ * Converts radians to cartesian degrees
+ * @param rads - radians to convert to degrees
+ */
 export function toDegrees(rads: number): number {
   return rads * (180 / Math.PI);
 }
 
+/**
+ * Left pad a string with 0s
+ * @param value - the string to pad
+ * @param padding - how long the resulting string should be
+ */
 export function lpad(value: number, padding: number): string {
   return ([...Array(padding)].join("0") + value).slice(-padding);
 }
 
+/**
+ * Get a bearing and range between {x,y} and a point {x2, y2} (bullseye)
+ * @param x - the destination point x
+ * @param y - the destination point y
+ * @param bullseye - the start point {x,y}
+ */
 export function getBR(x: number, y:number, bullseye: Bullseye): BRAA {
   const deltaX = bullseye.x - x;
   const deltaY = bullseye.y - y;
 
+  // distance formula for range
   const rng = Math.floor(Math.sqrt(deltaX * deltaX + deltaY * deltaY) / 4);
+
+  // convert cartesian direction to heading
   let brg = Math.round(270 + toDegrees(Math.atan2(bullseye.y - y, bullseye.x - x)));
   if (brg > 360) {
     brg = brg - 360;
@@ -28,10 +55,23 @@ export function getBR(x: number, y:number, bullseye: Bullseye): BRAA {
   };
 }
 
-export function getAspect(bluePos:Bullseye, group:Group):string{
-  const recipBrg:BRAA = getBR(bluePos.x, bluePos.y, {x: group.x, y:group.y});
+/**
+ * Get 'aspect' (HOT/FLANK/BEAM, etc) between groups
+ * 
+ * Aspect is calculated by taking the angle difference between
+ * other a/c heading, and the reciprocal bearing between ownship
+ * and other a/c. 
+ * 
+ * In otherwords, if "ownship" turned around, how much would
+ * other a/c have to turn to point at ownship?
+ * 
+ * @param group1 - 'ownship'  
+ * @param group2 - other aircraft
+ */
+export function getAspect(group1:Group, group2:Group):string{
+  const recipBrg:BRAA = getBR(group1.x, group1.y, {x: group2.x, y:group2.y});
 
-  let dist = (group.heading - parseInt(recipBrg.bearing) + 360) % 360;
+  let dist = (group2.heading - parseInt(recipBrg.bearing) + 360) % 360;
   if (dist > 180) dist = 360 - dist;
   const cata = dist;
 
@@ -49,63 +89,92 @@ export function getAspect(bluePos:Bullseye, group:Group):string{
   return aspectH;
 }
 
+/**
+ * Converts a heading to a cardinal direction
+ * @param heading - heading to translate to track direction
+ */
 export function getTrackDir(heading: number): string {
-  let direction = "";
-  if (heading > 0 && heading < 20) {
-    direction = "NORTH";
-  } else if (heading >= 20 && heading < 70) {
-    direction = "NORTHEAST";
-  } else if (heading >= 70 && heading < 120) {
-    direction = "EAST";
-  } else if (heading >= 120 && heading < 160) {
-    direction = "SOUTHEAST";
-  } else if (heading >= 160 && heading < 200) {
-    direction = "SOUTH";
-  } else if (heading >= 200 && heading < 250) {
-    direction = "SOUTHWEST";
-  } else if (heading >= 250 && heading < 280) {
-    direction = "WEST";
-  } else if (heading >= 280 && heading < 340) {
-    direction = "NORTHWEST";
-  } else {
-    direction = "NORTH";
-  }
-  return direction;
+  const arr = [
+    "NORTH", 
+    "NORTHEAST",
+    "NORTHEAST",
+    "NORTHEAST",
+    "EAST", 
+    "SOUTHEAST",
+    "SOUTHEAST",
+    "SOUTHEAST",
+    "SOUTH",
+    "SOUTHWEST",
+    "SOUTHWEST",
+    "SOUTHWEST",
+    "WEST",
+    "NORTHWEST",
+    "NORTHWEST",
+    "NORTHWEST"];
+  // the compass is divided every 20 degrees, so find the 'box' of degrees the
+  // current heading is in
+  const val = Math.floor((heading / (360/arr.length))+0.5);
+  return arr[(val % arr.length)];
 }
 
+/**
+ * Returns a random number between min and max (inclusive)
+ * @param min minimum value
+ * @param max maximum value
+ */
 export function randomNumber(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min) + min);
 }
   
-export function randomHeading(format: string): number {
-    if (format !== "alsa") {
-      return randomNumber(60, 120);
-    } else {
-      return randomNumber(0, 360);
-    }
+/**
+ * Return a random heading (0-360 for ALSA, HOT/FLANK blue for !ALSA) 
+ * @param format 
+ */
+export function randomHeading(format: string, blueHeading:number): number {
+  const bound = (format==="ipe" ? 45: 360)
+  const offset = randomNumber(-bound, bound)
+
+  let blueOpp = blueHeading-180
+  if (blueOpp < 0){
+    blueOpp = 360 - blueOpp
+  }
+
+  let heading:number = blueOpp + offset
+  if (heading < 0 ){
+    heading = 360 + heading
+  }
+  return heading
 }
-  
+
+/**
+ * Convert altitudes to stack formatting and fill-ins. 
+ * 
+ * A single group will be no-op (return hard alt + fillin if HIGH)
+ * A group without stacks will return single alt + fillin if HIGH)
+ * Otherwise, will return highest altitude for each "bucket" and # contacts hi/med/low
+ * 
+ * @param altitudes - group's altitudes for each contact
+ * @param format - comm format
+ */
 export function getAltStack(altitudes: number[], format: string): AltStack {
+  // convert altitudes to 3-digit flight level and sort low->high
   const formattedAlts: string[] = altitudes.map((a: number) => ("0" + a).slice(-2) + "0").sort().reverse();
   
   const stackHeights: string[] = [];
-  const stackIndexes: number[] = [];
+  let stackIndexes: number[] = [];
 
-  for (let x = 0; x < formattedAlts.length; x++) {
-    if (x + 1 < formattedAlts.length) {
-      const diff:number = parseInt(formattedAlts[x]) - parseInt(formattedAlts[x + 1]);
-      if (diff >= 100) {
-        if (stackHeights.indexOf(formattedAlts[x]) === -1) {
-          stackHeights.push(formattedAlts[x]);
-        }
-        if (stackHeights.indexOf(formattedAlts[x + 1]) === -1) {
-          stackIndexes.push(x + 1);
-          stackHeights.push(formattedAlts[x + 1]);
-        }
-      }
+  // break out into bins of 10k foot separation between contacts
+  for (let x = formattedAlts.length; x>=0; x--){
+    const diff:number = parseInt(formattedAlts[x-1]) - parseInt(formattedAlts[x])
+    if (diff >= 100){
+      stackHeights.push(formattedAlts[x])
+      stackIndexes.push(x)
     }
   }
 
+  stackIndexes = stackIndexes.reverse()
+
+  // get the highest altitude within each bucket for formatting
   const stacks: string[][] = [];
   let lastZ = 0;
   for (let z = 0; z < stackIndexes.length; z++) {
@@ -114,17 +183,30 @@ export function getAltStack(altitudes: number[], format: string): AltStack {
   }
   stacks.push(formattedAlts.slice(lastZ));
 
+  // format to "##k"
   let answer = formattedAlts[0].replace(/0$/, "k") + " ";
   let answer2 = "";
-  if (stacks.length > 1) {
-    answer = "STACK ";
+
+  // do formatting
+
+  // if no stack, look for >40k for "HIGH"
+  if (stacks.length <= 1){
+    altitudes.sort();
+    if (altitudes[altitudes.length - 1] >= 40) {
+      answer2 += " HIGH ";
+    }
+  // otherwise, print stacks
+  } else {
+    answer = "STACK "
     for (let y = 0; y < stacks.length; y++) {
-      answer +=
-        (y === stacks.length - 1 && format !== "ipe" ? " AND " : "") +
-        stacks[y][0].replace(/0$/, "k") +
-        " ";
+      // check to add "AND" for alsa, when on last stack alt
+      const AND = (y===stacks.length-1 && format!=="ipe") ? "AND " : ""
+      answer += AND + stacks[y][0].replace(/0$/, "k") + " "
     }
 
+    // format # hi/med/low when there are at least 3 contacts
+    // if there are 3 contacts and 3 altitudes, 1 hi / 1 med / 1 low is not required 
+    // (so skip this)
     if (altitudes.length > 2 && !(altitudes.length === stacks.length && stacks.length ===3)) {
       switch (stacks.length) {
         case 2:
@@ -140,13 +222,7 @@ export function getAltStack(altitudes: number[], format: string): AltStack {
     }
   }
 
-  if (stacks.length <= 1) {
-    altitudes.sort();
-    if (altitudes[altitudes.length - 1] >= 40) {
-      answer2 += " HIGH ";
-    }
-  }
-
+  // return stack and fillins
   return {
     stack: answer,
     fillIns: answer2
