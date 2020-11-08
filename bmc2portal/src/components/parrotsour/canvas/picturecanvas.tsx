@@ -10,7 +10,7 @@ import { drawThreat } from './draw/intercept/threatdraw'
 import { drawCap } from './draw/intercept/capdraw'
 import { drawEA } from './draw/intercept/eadraw'
 import { drawPOD } from './draw/intercept/poddraw'
-import { animateGroups } from './draw/intercept/animate'
+import { animateGroups, pauseFight } from './draw/intercept/animate'
 
 export type PicCanvasProps = {
     height: number,
@@ -77,13 +77,12 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         if (areEqualShallow(rest, newrest) && oldAnimate !== newAnimate){    
             if (this.props.animate){
                 console.log("initiating animation...")
-                console.log(this.state.canvas)
-                console.log(this.state.animateCanvas)
                 if (this.state.canvas && this.state.animateCanvas){
                   animateGroups(this.state.canvas, this.props, this.state, this.state.answer.groups, this.state.animateCanvas);
                 }
             } else {
                 console.log("pausing canvas")
+                pauseFight(this.props.showMeasurements)
             }
         }
     }
