@@ -18,12 +18,8 @@ function sleep(milliseconds: number):void {
 function setContinueAnimate(val: boolean) {
     continueAnimation = val;
 }
-
-// function getContinueAnimate() {
-//     return continueAnimation;
-// }
   
-function pauseFight(showMeasure: boolean) {
+export function pauseFight(showMeasure: boolean) {
     pauseShowMeasure = showMeasure;
     setContinueAnimate(false);
 }
@@ -135,7 +131,12 @@ function doAnimation(
     }
   
     if (continueAnimation) {
-      sleep(500 * ((100-props.sliderSpeed)/100));
+      let slider:HTMLInputElement = document.getElementById("speedSlider") as HTMLInputElement
+      if (slider && slider.value){
+        sleep(500 * ((100-parseInt(slider.value))/100));
+      } else {
+        sleep(500 * ((100-props.sliderSpeed)/100));
+      }
   
       const animate = function() {
         doAnimation(canvas, props, state, groups, animateCanvas);
