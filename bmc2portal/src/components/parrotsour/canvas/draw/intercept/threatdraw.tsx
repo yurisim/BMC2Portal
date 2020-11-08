@@ -28,7 +28,7 @@ export const drawThreat:DrawFunction = (
         start.x = randomNumber(state.bluePos.x-100, state.bluePos.x-40);
     }
 
-    const heading:number = randomHeading(props.format);
+    const heading:number = randomHeading(props.format, state.bluePos.heading);
 
     const sg:Group = drawArrow(canvas, props.orientation, randomNumber(1, 4), start.x, start.y, heading + offsetDeg1);
 
