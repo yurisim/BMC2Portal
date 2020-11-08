@@ -41,8 +41,8 @@ export const drawCap:DrawFunction = (
         distance = distanceY;
     }
     
-    const heading1: number = randomHeading(props.format);
-    const heading2: number = randomHeading(props.format);
+    const heading1: number = randomHeading(props.format, state.bluePos.heading);
+    const heading2: number = randomHeading(props.format, state.bluePos.heading);
     
     const nNumContacts:number = randomNumber(1, 4);
     const sNumContacts:number = randomNumber(1, 4);
