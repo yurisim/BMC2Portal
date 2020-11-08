@@ -21,8 +21,10 @@ export const drawEA:DrawFunction = (
     } else if (start.x === undefined){
       start.x = randomNumber(canvas.width * 0.6, canvas.width * 0.65)
     }
- 
-    return state.reDraw(canvas, ctx, true, start).then((answer:drawAnswer) =>{
+
+    let finalAnswer:drawAnswer = {pic:"", groups:[]}
+    //state.reDraw(canvas, ctx, true, start).then((answer:drawAnswer) =>{
+    let answer = state.reDraw(canvas, ctx,true,start)
         if (!state.bluePos) { return { pic: "", groups: []} }
         let response = "RESPONSE";
      
@@ -78,9 +80,10 @@ export const drawEA:DrawFunction = (
             response += ( altStack.fillIns ? altStack.fillIns: grp.numContacts+ " CONTACT(S)") + (grp.numContacts > 1 ? " LINE ABREAST THREE " : "") + altStack.fillIns;
             break;
         }
-        return {
+        finalAnswer= {
           pic: response,
           groups: answer.groups
         };
-    })
+    // })
+    return finalAnswer
  }

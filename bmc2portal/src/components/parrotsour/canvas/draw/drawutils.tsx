@@ -72,7 +72,7 @@ export function drawBR(
 export function drawBraaseye(
     canvas: HTMLCanvasElement,
     ctx: CanvasRenderingContext2D,
-    bluePos: Bullseye,
+    bluePos: Group,
     redPos: Bullseye,
     bullseye: Bullseye,
     showMeasurements: boolean,
@@ -80,7 +80,7 @@ export function drawBraaseye(
     offsetX = 0, offsetY = 0): Braaseye{
     
     const bulls: BRAA = getBR(redPos.x, redPos.y, bullseye);
-    const braa: BRAA = getBR(redPos.x, redPos.y, bluePos);
+    const braa: BRAA = getBR(redPos.x, redPos.y, {x:bluePos.x, y:bluePos.y});
 
     if (braaFirst){
       drawBR(canvas, ctx, redPos.x + 20 + offsetX, redPos.y + offsetY, braa, "blue", showMeasurements);

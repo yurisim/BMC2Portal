@@ -8,7 +8,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import Chips from './chips';
 
-import snackbar from '../utils/alert.js'
+import snackbar from '../utils/alert'
 import backend from '../utils/backend'
 
 export default class Form extends React.Component {

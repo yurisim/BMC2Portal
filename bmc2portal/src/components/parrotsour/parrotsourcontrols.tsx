@@ -1,39 +1,53 @@
-import React from 'react'
+import React, { ChangeEvent, ReactElement } from 'react'
 
 import {Dialog, DialogContent, DialogContentText} from '@material-ui/core'
 
-export default class ParrotSourControls extends React.Component {
+interface PSCProps {
+    handleSliderChange: {(val: number):void},
+    startAnimate: {():void}
+    pauseAnimate: {():void},
+    braaChanged: {():void},
+    modifyCanvas: {():void}
+}
 
-    constructor(){
-        super()
+interface PSCState {
+    speedSliderValue: number,
+    showHelpText: boolean
+}
+
+export default class ParrotSourControls extends React.Component<PSCProps, PSCState> {
+
+    constructor(props:PSCProps){
+        super(props)
         this.state = {
             speedSliderValue: 50,
             showHelpText: false,
         }
     }
 
-    handleSliderChange = (evt) => {
-        this.setState({speedSliderValue: evt.currentTarget.value})
-        this.props.handleSliderChange(evt.currentTarget.value)
+    handleSliderChange = (evt: ChangeEvent<HTMLInputElement>): void => {
+        const val = parseInt(evt.currentTarget.value)
+        this.setState({speedSliderValue: val})
+        this.props.handleSliderChange(val)
     }
 
-    fightsOn = () => {
+    fightsOn = ():void => {
         this.props.startAnimate()
     }
 
-    pauseFight = () =>{
+    pauseFight = ():void =>{
         this.props.pauseAnimate()
         console.log("Fight is Paused")
     }
 
-    toggleHelp = () => {
+    toggleHelp = ():void => {
         this.setState({showHelpText: !this.state.showHelpText})
     }
-    handleHelpClose = () =>{
+    handleHelpClose = ():void =>{
         this.setState({showHelpText: false})
     }
 
-    render(){
+    render(): ReactElement{
         return(
             <div>
                 <div style={{display:"inline"}}>

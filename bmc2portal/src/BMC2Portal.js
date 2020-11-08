@@ -23,7 +23,7 @@ const ResourceList = lazy(()=>import("./components/resourcelist.js"))
 const SideBar = lazy(()=> import("./components/navigation/sidebar.js"));
 const Home = lazy(()=> import("./components/home.js"))
 
-const ParrotSour = lazy(()=>import("./components/parrotsour/parrotsour.js"))
+const ParrotSour = lazy(()=>import("./components/parrotsour/parrotsour"))
 
 const ImagePane = lazy(()=>import("./components/utils/imagepane"))
 const FilePane = lazy(()=>import("./components/utils/filepane"))

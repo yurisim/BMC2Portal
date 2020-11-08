@@ -10,12 +10,10 @@ import '../../css/toggle.css'
 import InterceptQT from './quicktips/interceptQT.js'
 import AlsaHelp from './quicktips/alsahelp.js'
 import ParrotSourHeader from './parrotsourheader'
-import ParrotSourControls from './parrotsourcontrols.js'
+import ParrotSourControls from './parrotsourcontrols'
 import PictureCanvas from './canvas/picturecanvas'
 
 import VersionInfo from './versioninfo.js'
-
-//interface PSIProps {}
 
 interface CanvasConfig {
     height: number,
@@ -37,9 +35,9 @@ interface PSIState {
     animate:boolean,
     newPic: boolean
 }
-export default class ParrotSourIntercept extends React.Component<void, PSIState> {
+export default class ParrotSourIntercept extends React.Component<Record<string,unknown>, PSIState> {
 
-    constructor(props:void){
+    constructor(props:Record<string,unknown>){
         super(props)
         this.state = {
             showAlsaQT: false,
@@ -222,7 +220,6 @@ export default class ParrotSourIntercept extends React.Component<void, PSIState>
                 <ParrotSourControls 
                     handleSliderChange={this.handleSliderChange}
                     modifyCanvas={this.modifyCanvas}
-                    showNewPic={this.showNewPic}
                     braaChanged={this.braaChanged}
                     startAnimate={this.startAnimate}
                     pauseAnimate={this.pauseAnimate}

@@ -1,4 +1,4 @@
-import React, {useRef, useState, useEffect, ReactElement } from 'react'
+import React, {useRef, useState, useEffect, ReactElement, TouchEvent } from 'react'
 
 import { getBR } from '../utils/mathutilities'
 import { BRAA, Bullseye } from './interfaces'
@@ -106,15 +106,24 @@ function Canvas(props: CanvasProps):ReactElement {
         }
       }
 
+    const onMouseEnter = function(e: any) {
+        img.current = getImageData()
+    }
+
     const canvasMouseDown = function(e: any) {
         setMousePressed(true)
         const mousePos = getMousePos(canvasRef.current, e);
         setStart(mousePos)
     };
 
+    const onMouseLeave = (e:any)=>{
+        if (ctx.current && img.current) 
+            ctx.current.putImageData(img.current, 0, 0);
+    }
+
     const canvasMouseMove = (e: any) =>{
         const mousePos = getMousePos(canvasRef.current, e)
-        if (ctx.current && img.current)
+        if (ctx.current && img.current) 
             ctx.current.putImageData(img.current, 0, 0);
         drawMouse(mouseStart, mousePos, mousePressed)
     }
@@ -125,12 +134,12 @@ function Canvas(props: CanvasProps):ReactElement {
             ctx.current.putImageData(img.current, 0, 0)
     }
 
-    const canvasTouchStart = (e: any) => {
+    const canvasTouchStart = (e: TouchEvent) => {
         const touch = e.changedTouches[0]
         canvasMouseDown({clientX: touch.clientX, clientY:touch.clientY})
     }
 
-    const canvasTouchMove = (e: any) => {
+    const canvasTouchMove = (e: TouchEvent) => {
         const touch = e.changedTouches[0]
         canvasMouseMove({clientX: touch.clientX, clientY:touch.clientY})
     }
@@ -154,7 +163,10 @@ function Canvas(props: CanvasProps):ReactElement {
         onTouchStart:canvasTouchStart,
         onTouchMove:canvasTouchMove,
         onTouchEnd:canvasTouchEnd,
+        onMouseOver:onMouseEnter,
+        onMouseLeave
     }
+
     return <canvas {...moveProps} style={style} ref={canvasRef} {...rest} />
 }
 

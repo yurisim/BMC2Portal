@@ -4,7 +4,7 @@ import Canvas from './canvas'
 
 import {randomNumber } from '../utils/mathutilities'
 import { drawArrow } from './draw/drawutils'
-import { Bullseye, drawAnswer, DrawFunction } from './interfaces'
+import { Bullseye, drawAnswer, DrawFunction, Group } from './interfaces'
 import { drawAzimuth, drawBullseye, drawChampagne, drawLadder, drawLeadEdge, drawPackage, drawRange, drawVic, drawWall } from './draw/intercept/picturedraw'
 import { drawThreat } from './draw/intercept/threatdraw'
 import { drawCap } from './draw/intercept/capdraw'
@@ -27,10 +27,14 @@ export type PicCanvasProps = {
     sliderSpeed: number
 }
 
+interface iFunction {
+    (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, forced?: boolean, start?: Bullseye):drawAnswer
+}
+
 export type PicCanvasState = {
     bullseye: Bullseye
-    bluePos: Bullseye|undefined,
-    reDraw: any,
+    bluePos: Group|undefined,
+    reDraw: iFunction,
     answer:drawAnswer,
     canvas?:HTMLCanvasElement,
     animateCanvas?: ImageData,
@@ -76,11 +80,7 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
                 console.log(this.state.canvas)
                 console.log(this.state.animateCanvas)
                 if (this.state.canvas && this.state.animateCanvas){
-                //   var context: any = this.state.canvas.getContext("2d")
                   animateGroups(this.state.canvas, this.props, this.state, this.state.answer.groups, this.state.animateCanvas);
-                //   if (context !== undefined){
-                //     this.setState({animateCanvas: context.getImageData(0, 0, this.state.canvas.width, this.state.canvas.height)})
-                //   }
                 }
             } else {
                 console.log("pausing canvas")
@@ -94,7 +94,7 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         return types[numType];
     }
     
-    drawPicture = async (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, forced?: boolean, start?: Bullseye):Promise<drawAnswer> => {
+    drawPicture = (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, forced?: boolean, start?: Bullseye):drawAnswer => {
         
         const isLeadEdge = (this.props.picType === "leading edge" || this.props.picType === "package" || this.props.picType==="ea")
 
@@ -108,7 +108,7 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         let drawFunc:DrawFunction = this.functions[type];
         if (drawFunc === undefined) drawFunc = drawAzimuth;
       
-        const answer = await drawFunc(canvas, context, this.props, this.state, start);
+        const answer = drawFunc(canvas, context, this.props, this.state, start);
 
         return answer
     }
