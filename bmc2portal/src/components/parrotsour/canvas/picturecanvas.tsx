@@ -27,7 +27,7 @@ export type PicCanvasProps = {
     sliderSpeed: number
 }
 
-interface iFunction {
+export interface iFunction {
     (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, forced?: boolean, start?: Bullseye):drawAnswer
 }
 
@@ -128,7 +128,8 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         "package": drawPackage,
     }
 
-    draw = async (context: CanvasRenderingContext2D, frameCount: number, canvas: HTMLCanvasElement):Promise<void> => {
+    draw = async (context: CanvasRenderingContext2D|null|undefined, frameCount: number, canvas: HTMLCanvasElement):Promise<void> => {
+        if (context === null || context ===undefined) return
         const bullseye = drawBullseye(canvas, context)
 
         let xPos = canvas.width-20

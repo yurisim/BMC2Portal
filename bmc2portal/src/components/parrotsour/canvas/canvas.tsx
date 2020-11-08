@@ -4,8 +4,17 @@ import { getBR } from '../utils/mathutilities'
 import { BRAA, Bullseye } from './interfaces'
 import { drawText, drawLine } from './draw/drawutils'
 
+export interface CanvasDrawFunction {
+    (context: CanvasRenderingContext2D|null|undefined, frameCount: number, canvas: HTMLCanvasElement):Promise<void>
+}
+
+interface CanvasMouseEvent {
+    clientX:number,
+    clientY:number,
+}
+
 interface CanvasProps {
-    draw: any,
+    draw: CanvasDrawFunction,
     height: number,
     width: number,
     braaFirst: boolean,
@@ -62,7 +71,7 @@ function Canvas(props: CanvasProps):ReactElement {
         }
     }, [draw, height, width, braaFirst, picType, showMeasurements, newPic, isHardMode])
 
-    const getMousePos = (canvas: HTMLCanvasElement|null, evt: MouseEvent): Bullseye=> {
+    const getMousePos = (canvas: HTMLCanvasElement|null, evt: {clientX:number,clientY:number}): Bullseye=> {
         if (canvas){
             const rect = canvas.getBoundingClientRect();
             return {
@@ -106,22 +115,22 @@ function Canvas(props: CanvasProps):ReactElement {
         }
       }
 
-    const onMouseEnter = function(e: any) {
+    const onMouseEnter = function() {
         img.current = getImageData()
     }
 
-    const canvasMouseDown = function(e: any) {
+    const canvasMouseDown = function(e: CanvasMouseEvent) {
         setMousePressed(true)
         const mousePos = getMousePos(canvasRef.current, e);
         setStart(mousePos)
     };
 
-    const onMouseLeave = (e:any)=>{
+    const onMouseLeave = ()=>{
         if (ctx.current && img.current) 
             ctx.current.putImageData(img.current, 0, 0);
     }
 
-    const canvasMouseMove = (e: any) =>{
+    const canvasMouseMove = (e: CanvasMouseEvent) =>{
         const mousePos = getMousePos(canvasRef.current, e)
         if (ctx.current && img.current) 
             ctx.current.putImageData(img.current, 0, 0);
