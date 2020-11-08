@@ -19,7 +19,7 @@ function setContinueAnimate(val: boolean) {
     continueAnimation = val;
 }
   
-export function pauseFight(showMeasure: boolean) {
+export function pauseFight(showMeasure: boolean): void {
     pauseShowMeasure = showMeasure;
     setContinueAnimate(false);
 }
@@ -131,7 +131,7 @@ function doAnimation(
     }
   
     if (continueAnimation) {
-      let slider:HTMLInputElement = document.getElementById("speedSlider") as HTMLInputElement
+      const slider:HTMLInputElement = document.getElementById("speedSlider") as HTMLInputElement
       if (slider && slider.value){
         sleep(500 * ((100-parseInt(slider.value))/100));
       } else {
