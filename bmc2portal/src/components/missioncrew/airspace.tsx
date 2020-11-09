@@ -4,20 +4,29 @@ import backend from '../utils/backend';
 
 import LoaPdf from './loapdf'
 
+type ASState = {
+  name: string,
+  atcAgency: string,
+  loaLoc: string[],
+  units: JSX.Element[],
+  lessons: JSX.Element[],
+  logo: string
+}
+
 /**
  * This Component contains information on a particular airspace.
  */
-export default class Airspace extends React.Component {
+export default class Airspace extends React.Component<Record<string,unknown>, ASState> {
 
   // Initialize the state
-  constructor(){
-      super();
+  constructor(props:Record<string,unknown>){
+      super(props);
       this.state = {
           name: "Loading...",
           atcAgency: "Loading...",
-          loaLoc: "Loading...",
-          units: "Loading...",
-          lessons: "Loading...",
+          loaLoc: ["Loading..."],
+          units: [<div>"Loading..."</div>],
+          lessons: [<div>"Loading..."</div>],
           logo: "Loading..."
       }
   }
@@ -32,18 +41,9 @@ export default class Airspace extends React.Component {
     const urlParams = new URLSearchParams(queryString);
     const aspace = urlParams.get('aspace')
     
-    let aspaceInfo = {
-      name: "Failed to retrieve data from the server.",
-      atcAgency: "-",
-      loaLoc: "-",
-      units: "-",
-      lessons: "-",
-      logo: "undefined"
-    }
-    try{
-      aspaceInfo = await backend.getAirspaceInfo(aspace);
-    } catch {
-    }
+    if (aspace === null) return 
+    
+    let aspaceInfo = await backend.getAirspaceInfo(aspace);
 
     let unitSplit = aspaceInfo.units.split(",");
     let elems = [<span key="span0">Units:<br/></span>];
@@ -53,10 +53,10 @@ export default class Airspace extends React.Component {
 
     this.setState({
         name: aspaceInfo.name,
-        atcAgency: aspaceInfo.atcAgency,
+        atcAgency: aspaceInfo.atc,
         loaLoc: aspaceInfo.loaLoc,
         units: elems,
-        lessons: <a href={'/common/lessons.html?tags=' + aspaceInfo.name}> Lessons Learned </a>,
+        lessons: [<a href={'/common/lessons.html?tags=' + aspaceInfo.name}> Lessons Learned </a>],
         logo: aspaceInfo.logo
     })
   }
@@ -66,7 +66,7 @@ export default class Airspace extends React.Component {
     return (
       <div>
         <table><tbody>
-            <tr><th colSpan="2" id="aspace">{this.state.name}</th></tr>
+            <tr><th colSpan={2} id="aspace">{this.state.name}</th></tr>
             <tr><td id="atc">{this.state.atcAgency}</td>
                 {this.state.loaLoc!=="Loading..." && 
                   <td key={this.state.name}>
@@ -80,9 +80,9 @@ export default class Airspace extends React.Component {
                   </td>
                 }
             </tr>
-            <tr><td colSpan="2" id="units">{this.state.units}</td></tr>
-            <tr><td colSpan="2" id="lessons">{this.state.lessons}</td></tr>
-            <tr><td colSpan="2" height="400px" id="diagram"> {this.state.logo} </td></tr>
+            <tr><td colSpan={2} id="units">{this.state.units}</td></tr>
+            <tr><td colSpan={2} id="lessons">{this.state.lessons}</td></tr>
+            <tr><td colSpan={2} height="400px" id="diagram"> {this.state.logo} </td></tr>
         </tbody></table>
       </div>
     )}

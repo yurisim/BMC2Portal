@@ -1,3 +1,5 @@
+import { Airspace, Backend } from "./backendinterface";
+
 const baseURL=process.env.REACT_APP_SERVER_BASE_URL
 
 // FETCH GET for server API
@@ -43,10 +45,7 @@ async function _postFiles(formData:FormData, url = "/api/uploadLOA"){
     return response; //response.json();
 }
 
-// These are the actual endpoints used by the application to retrieve data
-// from the specified REACT_APP_SERVER_BASE_URL
-const serverBackend = {
-
+class sBackend implements Backend {
     // PUT a lesson learned to the server
     async postLessonLearned(title:string, author:string, content:string):Promise<Response>{
         const lesson = {
@@ -55,47 +54,49 @@ const serverBackend = {
             content: content,
         }
         return post(lesson, '/api/lessonslearned').then((data) => {return data});
-    },
+    }
 
     // UPLOAD file
     async postFiles(formData:FormData): Promise<Response>{
         return _postFiles(formData).then((data)=> {return data});
-    },
+    }
 
     // SELECT * FROM AIRSPACELIST
-    async getAirspaceList(): Promise<Response>{
+    async getAirspaceList(): Promise<Airspace[]>{
         return get('/api/airspacelist').then((data)=>{return data});
-    },
+    }
 
     // SELECT * FROM AIRSPACES WHERE NAME = aspacename
-    async getAirspaceInfo(aspacename:string): Promise<Response>{
+    async getAirspaceInfo(aspacename:string): Promise<Airspace>{
         return get('/api/airspace/'+aspacename).then((data)=>{return data});
-    },
+    }
 
     // SELECT * FROM UNITS 
     async getUnitList(): Promise<Response>{
         return get('/api/unitlist').then((data)=>{return data});
-    },
-
+    }
+    
     // SELECT * FROM UNITS WHERE NAME = name
     async getUnitInfo(unitname:string): Promise<Response>{
         return get('/api/unit/'+unitname).then((data)=>{return data});
-    },
-
+    }
+    
     // SELECT * FROM ATCAGENCIES
     async getLOAList(): Promise<Response>{
         return get('/api/loas').then((data) => {return data});
-    },
-
+    }
+    
     // SELECT * FROM LESSONS LEARNED
     async getLessonsLearned(): Promise<Response>{
         return get('/api/lessonslearned').then((data) => {return data});
-    },
+    }
 
     // SELECT DISTINCT TAGS FROM LESSONS LEARNED
     async getAllTags(): Promise<Response>{
         return get('/api/lessontags').then((data) => {return data});
     }
 }
+
+const serverBackend = new sBackend()
 
 export default serverBackend;
