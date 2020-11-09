@@ -4,7 +4,7 @@ import Canvas from './canvas'
 
 import {randomNumber } from '../utils/mathutilities'
 import { drawArrow } from './draw/drawutils'
-import { Bullseye, drawAnswer, DrawFunction, Group } from './interfaces'
+import { Bullseye, DrawAnswer, DrawFunction, Group } from './interfaces'
 import { drawAzimuth, drawBullseye, drawChampagne, drawLadder, drawLeadEdge, drawPackage, drawRange, drawVic, drawWall } from './draw/intercept/picturedraw'
 import { drawThreat } from './draw/intercept/threatdraw'
 import { drawCap } from './draw/intercept/capdraw'
@@ -27,19 +27,22 @@ export type PicCanvasProps = {
     sliderSpeed: number
 }
 
-export interface iFunction {
-    (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, forced?: boolean, start?: Bullseye):drawAnswer
+export interface ReDrawFunction {
+    (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, forced?: boolean, start?: Bullseye):DrawAnswer
 }
 
 export type PicCanvasState = {
     bullseye: Bullseye
     bluePos: Group|undefined,
-    reDraw: iFunction,
-    answer:drawAnswer,
+    reDraw: ReDrawFunction,
+    answer:DrawAnswer,
     canvas?:HTMLCanvasElement,
     animateCanvas?: ImageData,
 }
 
+/**
+ * This component is the main control for drawing pictures for intercepts
+ */
 export default class PictureCanvas extends React.Component<PicCanvasProps, PicCanvasState> {
 
     constructor(props: PicCanvasProps){
@@ -52,6 +55,12 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         }
     }
 
+    /**
+     * This lifecycle function serves as a check to make sure the only props
+     * value that changed is the animation value (i.e. button pressed) so the 
+     * animation is not re-triggered when any other prop value changes 
+     * @param prevProps - previous set of PicCanvasProps
+     */
     componentDidUpdate = (prevProps: PicCanvasProps):void => {
         // eslint-disable-next-line
         var {animate, ...rest} = prevProps
@@ -87,13 +96,25 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         }
     }
 
+    /**
+     * Pick a random picture type for drawing
+     * @param leadingEdge - true iff leading edge or packages. Set to true to avoid
+     * recursive redraw
+     */
     getRandomPicType = (leadingEdge: boolean):string => {
         const numType = randomNumber(0,(leadingEdge)? 7 : 9)
         const types = ["azimuth", "range", "vic", "wall","ladder", "champagne", "cap","leading edge","package"];
         return types[numType];
     }
     
-    drawPicture = (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, forced?: boolean, start?: Bullseye):drawAnswer => {
+    /**
+     * Perform a picture draw on the canvas using the correct DrawFunction
+     * @param canvas Canvas to draw on
+     * @param context The context of the canvas
+     * @param forced true iff picture type should be forced as random, !lead edge and !packages
+     * @param start (optional) start position for the picture
+     */
+    drawPicture = (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, forced?: boolean, start?: Bullseye):DrawAnswer => {
         
         const isLeadEdge = (this.props.picType === "leading edge" || this.props.picType === "package" || this.props.picType==="ea")
 
@@ -112,6 +133,7 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         return answer
     }
 
+    // A list of all avaiable functions
     functions: { [key:string]: DrawFunction } = {
         "azimuth": drawAzimuth,
         "range": drawRange,
@@ -127,6 +149,13 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         "package": drawPackage,
     }
 
+    /**
+     * Draw function to be called from the Canvas component - handles pre-picture logic 
+     * (i.e. blue arrows, bullseye, and image 'snap' for mouse draw)
+     * @param context the Context to draw in
+     * @param frameCount (unused) animation counter
+     * @param canvas the Canvas element to draw in
+     */
     draw = async (context: CanvasRenderingContext2D|null|undefined, frameCount: number, canvas: HTMLCanvasElement):Promise<void> => {
         if (context === null || context ===undefined) return
         const bullseye = drawBullseye(canvas, context)
@@ -145,13 +174,11 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
         
         const blueOnly = context.getImageData(0, 0, canvas.width, canvas.height)
 
-        const answer: drawAnswer = await this.drawPicture(canvas, context)
+        const answer: DrawAnswer = await this.drawPicture(canvas, context)
 
         this.props.setAnswer(answer.pic)
         
         this.setState({canvas, answer, animateCanvas: blueOnly})
-        //groups = answer.picture.groups;
-        //animateCanvas = answer.imageData;
     }
 
     render(): ReactElement{

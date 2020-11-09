@@ -1,3 +1,8 @@
+/**
+ * This file contains commonly referenced TypeScript types (interfaces)
+ * to be imported elsewhere
+ */
+
 import { PicCanvasProps, PicCanvasState } from "./picturecanvas"
 
 export type Bullseye = {
@@ -43,7 +48,7 @@ export type Group = {
     maneuvers?: boolean,
 }
 
-export type drawAnswer = {
+export type DrawAnswer = {
     pic: string,
     groups: Group[]
 }
@@ -54,5 +59,5 @@ export interface DrawFunction {
     props: PicCanvasProps,
     state: PicCanvasState,
     start?: Bullseye
-    ): drawAnswer
+    ): DrawAnswer
 }

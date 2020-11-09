@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 
 import {DialogContent, DialogContentText } from '@material-ui/core'
 
+/**
+ * This Component contains the dialog for ALSA help text
+ */
 export default class AlsaHelp extends React.Component {
 
-    render(){
+    render(): ReactElement {
         return (
             <DialogContent>
                 <DialogContentText>

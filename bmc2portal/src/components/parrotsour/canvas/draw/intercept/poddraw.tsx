@@ -1,5 +1,5 @@
 import { getAltStack, getTrackDir, randomHeading, randomNumber } from "../../../utils/mathutilities";
-import { drawAnswer, DrawFunction, Group } from "../../interfaces";
+import { DrawAnswer, DrawFunction, Group } from "../../interfaces";
 import { PicCanvasProps, PicCanvasState } from "../../picturecanvas";
 import { drawAltitudes, drawArrow, drawBraaseye, drawText } from "../drawutils";
 import { formatGroup } from "../formatutils";
@@ -8,7 +8,7 @@ export const drawPOD:DrawFunction = (
     canvas: HTMLCanvasElement,
     ctx:CanvasRenderingContext2D,
     props: PicCanvasProps,
-    state: PicCanvasState):drawAnswer => {
+    state: PicCanvasState):DrawAnswer => {
 
     if (!state.bluePos) { return { pic: "", groups: []} }   
     const numGrps: number = randomNumber(5,11);

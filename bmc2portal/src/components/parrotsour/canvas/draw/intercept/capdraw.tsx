@@ -1,5 +1,5 @@
 import { getAltStack, getTrackDir, randomHeading, randomNumber } from "../../../utils/mathutilities";
-import { AltStack, Braaseye, Bullseye, drawAnswer, DrawFunction, Group } from "../../interfaces";
+import { AltStack, Braaseye, Bullseye, DrawAnswer, DrawFunction, Group } from "../../interfaces";
 import { PicCanvasProps, PicCanvasState } from "../../picturecanvas";
 import { drawAltitudes, drawArrow, drawBraaseye, drawGroupCap, drawMeasurement } from "../drawutils";
 import { formatGroup } from "../formatutils";
@@ -10,7 +10,7 @@ export const drawCap:DrawFunction = (
     context: CanvasRenderingContext2D,
     props: PicCanvasProps,
     state: PicCanvasState,
-    start?: Bullseye|undefined ): drawAnswer => {
+    start?: Bullseye|undefined ): DrawAnswer => {
     
     if (!state.bluePos) { return { pic: "", groups: []} }
 

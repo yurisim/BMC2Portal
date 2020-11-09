@@ -1,4 +1,4 @@
-import { AltStack, Braaseye, Bullseye, drawAnswer } from '../../interfaces'
+import { AltStack, Braaseye, Bullseye, DrawAnswer } from '../../interfaces'
 
 import { randomNumber, randomHeading, getBR, getAltStack, getTrackDir } from '../../../utils/mathutilities'
 import { drawAltitudes, drawArrow, drawBraaseye, drawMeasurement } from '../drawutils'
@@ -39,7 +39,7 @@ export const drawAzimuth:DrawFunction = (
     ctx:CanvasRenderingContext2D,
     props: PicCanvasProps,
     state: PicCanvasState,
-    start?: Bullseye):drawAnswer => {
+    start?: Bullseye):DrawAnswer => {
         
     if (!state.bluePos) { return { pic: "", groups: []} }
     
@@ -174,7 +174,7 @@ export const drawRange:DrawFunction = (
     context:CanvasRenderingContext2D,
     props: PicCanvasProps,
     state: PicCanvasState,
-    start?:Bullseye): drawAnswer => {
+    start?:Bullseye): DrawAnswer => {
         
     if (!state.bluePos) { return { pic: "", groups: []} }
 
@@ -272,7 +272,7 @@ export const drawWall: DrawFunction = (
     context: CanvasRenderingContext2D,
     props: PicCanvasProps,
     state: PicCanvasState,
-    start?: Bullseye|undefined ): drawAnswer => {
+    start?: Bullseye|undefined ): DrawAnswer => {
 
     if (!state.bluePos) { return { pic: "", groups: []} }
 
@@ -405,7 +405,7 @@ export const drawLadder: DrawFunction =  (
   context: CanvasRenderingContext2D,
   props: PicCanvasProps,
   state: PicCanvasState,
-  start?: Bullseye|undefined ): drawAnswer => {
+  start?: Bullseye|undefined ): DrawAnswer => {
   
   if (!state.bluePos) { return { pic: "", groups: []} }
 
@@ -509,7 +509,7 @@ export const drawChampagne:DrawFunction =  (
   context: CanvasRenderingContext2D,
   props: PicCanvasProps,
   state: PicCanvasState,
-  start?: Bullseye|undefined ): drawAnswer => {
+  start?: Bullseye|undefined ): DrawAnswer => {
   
   if (!state.bluePos) { return { pic: "", groups: []} }
 
@@ -629,7 +629,7 @@ export const drawVic:DrawFunction =  (
   context: CanvasRenderingContext2D,
   props: PicCanvasProps,
   state: PicCanvasState,
-  start?: Bullseye|undefined ): drawAnswer => {
+  start?: Bullseye|undefined ): DrawAnswer => {
 
   if (!state.bluePos) { return { pic: "", groups: []} }
 
@@ -757,7 +757,7 @@ export const drawLeadEdge:DrawFunction = (
   context: CanvasRenderingContext2D,
   props: PicCanvasProps,
   state: PicCanvasState,
-  start?: Bullseye|undefined ): drawAnswer => {
+  start?: Bullseye|undefined ): DrawAnswer => {
 
   if (!state.bluePos) { return { pic: "", groups: []} }
 
@@ -768,7 +768,7 @@ export const drawLeadEdge:DrawFunction = (
   const startX1: number = randomNumber(canvas.width * lowXMult, canvas.width * hiXMult);
   const startY1: number = randomNumber(canvas.height * lowYMult, canvas.height * hiYMult);
   const start1 = { x: startX1, y: startY1};
-  let finalAnswer: drawAnswer = {
+  let finalAnswer: DrawAnswer = {
     pic:"", groups:[]
   }
   let answer1 = state.reDraw(canvas, context, true, start1)
@@ -833,7 +833,7 @@ export const drawPackage:DrawFunction = (
   context: CanvasRenderingContext2D,
   props: PicCanvasProps,
   state: PicCanvasState,
-  start?: Bullseye|undefined ): drawAnswer => {
+  start?: Bullseye|undefined ): DrawAnswer => {
 
   if (!state.bluePos) { return { pic: "", groups: []} }
   const isRange = randomNumber(0,120) < 50
@@ -865,7 +865,7 @@ export const drawPackage:DrawFunction = (
     }
   }
 
-  let finalAnswer: drawAnswer = { pic: "", groups: []}
+  let finalAnswer: DrawAnswer = { pic: "", groups: []}
   const answer1 = state.reDraw(canvas, context, true, {x:startX1, y:startY1})
   const answer2 = state.reDraw(canvas,context, true, {x:startX2, y:startY2})
   if (!state.bluePos) { return { pic: "", groups: []} }
@@ -932,7 +932,7 @@ export const drawPackage:DrawFunction = (
     trailPackage = tmpPkg;
   }
 
-  const realAnswer: drawAnswer = {
+  const realAnswer: DrawAnswer = {
     pic: "",
     groups: groups1.concat(groups2)
   }

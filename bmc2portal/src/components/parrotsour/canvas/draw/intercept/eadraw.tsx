@@ -1,5 +1,5 @@
 import { getAltStack, getAspect, getBR, getTrackDir, randomNumber } from "../../../utils/mathutilities";
-import { AltStack, BRAA, Bullseye, drawAnswer, DrawFunction, Group } from "../../interfaces";
+import { AltStack, BRAA, Bullseye, DrawAnswer, DrawFunction, Group } from "../../interfaces";
 import { PicCanvasProps, PicCanvasState } from "../../picturecanvas";
 import { drawText } from "../drawutils";
 
@@ -8,7 +8,7 @@ export const drawEA:DrawFunction = (
         ctx:CanvasRenderingContext2D,
         props: PicCanvasProps,
         state: PicCanvasState,
-        start?: Bullseye):drawAnswer => {
+        start?: Bullseye):DrawAnswer => {
     
     if (!state.bluePos) { return { pic: "", groups: []} }
 
@@ -22,7 +22,7 @@ export const drawEA:DrawFunction = (
       start.x = randomNumber(canvas.width * 0.6, canvas.width * 0.65)
     }
 
-    let finalAnswer:drawAnswer = {pic:"", groups:[]}
+    let finalAnswer:DrawAnswer = {pic:"", groups:[]}
     
     const answer = state.reDraw(canvas, ctx,true,start)
     if (!state.bluePos) { return { pic: "", groups: []} }
