@@ -2,9 +2,9 @@
  * This file contains utilities for group and answer formatting
  */
 
-import { Braaseye, AltStack, Group } from '../../../utils/interfaces'
+import { Braaseye, AltStack, Group, BRAA } from '../../../utils/interfaces'
 
-import { getBR } from '../../utils/mathutilities'
+import { getBR, getTrackDir } from '../../utils/mathutilities'
 
 type RangeBack = {
   label: string,
@@ -19,6 +19,63 @@ export function formatAlt(alt: number): string{
     const altF = (alt*10).toString().substring(0,3);
     return altF.length < 3 ? "0" + altF : altF;
 }
+
+/**
+ * Return a group formatted for BRAA response
+ * @param label group label
+ * @param braa bearing/range from blue
+ * @param altitudes altitude of group
+ * @param numContacts num contacts in the group
+ * @param heading heading of group
+ * @param aspect Aspect between blue and red
+ */
+export function formatBRAA(
+  label:string,
+  braa:BRAA,
+  altStack:AltStack,
+  numContacts:number,
+  heading:number,
+  aspect: string): string{
+    let response:string = label + " BRAA " + braa.bearing + "/" + braa.range + " "
+    response +=  altStack.stack + ", " + aspect+ " " + (aspect !== "HOT" ? getTrackDir(heading): "") +" HOSTILE ";
+    if (numContacts > 1) {
+      response += (numContacts >= 3 ? "HEAVY " : "") + numContacts + " CONTACTS ";
+    }
+    response += altStack.fillIns;
+    return response
+}
+
+/**
+ * Format a strobe response
+ * @param strBR BR from blue to red
+ * @param altStack Alt stack of red group
+ * @param heading Heading of red group
+ * @param aspect Aspect between blue and red
+ * @param label Red group label
+ */
+export function formatStrobe(
+  strBR: BRAA,
+  altStack:AltStack,
+  heading:number,
+  aspect:string,
+  label:string): string {
+  return "EAGLE01 STROBE RANGE " + strBR.range + ", " + altStack.stack
+   + (aspect !=="HOT" ? aspect + " "+ getTrackDir(heading) : aspect) + ", HOSTILE, " + label;
+}
+
+/**
+ * Format a music response to a given group
+ * @param grp Group for music call
+ * @param bull Bullseye of the picture
+ * @param altStack Altitude stack information for red group
+ * @param format Format of the picture
+ */
+export function formatMusic(grp:Group, bull:BRAA, altStack:AltStack, format:string):string{
+  return grp.label + " BULLSEYE " + bull.bearing +"/" + bull.range + ", " + altStack.stack
+    + (format==="ALSA" ? (grp.isCapping ? " CAP " : ", TRACK " + getTrackDir(grp.heading)) :"")
+    + ", HOSTILE, "
+    + ( altStack.fillIns ? altStack.fillIns: grp.numContacts+ " CONTACT(S)") + (grp.numContacts > 1 ? " LINE ABREAST THREE " : "") + altStack.fillIns
+} 
 
 /**
  * Return the string formatted answer for this group based on properties of the group
