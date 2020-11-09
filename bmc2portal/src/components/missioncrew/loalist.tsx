@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 
 import backend from '../utils/backend';
 
@@ -6,30 +6,40 @@ import SearchInput from '../utils/searchinput'
 import LoaPdf from './loapdf';
 
 import '../../css/search.css'
+import { ATCAgency } from '../utils/backendinterface';
+
+type LOAListState = {
+  loaList: ATCAgency[],
+  displayLOAs: ATCAgency[],
+  failed: boolean,
+  editIdx: number
+}
 
 /**
  * This Component contains a searchable/filterable table of the CONUS ATC Agencies
  * and their letters of agreement with the 552 ACW.
  */
-export default class LOAList extends React.Component {
+export default class LOAList extends React.Component<Record<string,unknown>, LOAListState> {
 
   // Set default empty state
-  constructor(){
-    super()
+  constructor(props: Record<string,unknown>){
+    super(props)
     this.state = {
       loaList:[],
-      displayLOAs:[]
+      displayLOAs:[],
+      failed: false,
+      editIdx: -1
     }
   }
 
   // Lifecycle function for after the Component has rendered
   // We load the LOAs after rendering
-  componentDidMount(){
+  componentDidMount():void{
     this.getLOAList();
   }
 
   // Retrieve the LOA list/data from the backend, and process for display
-  async getLOAList(){
+  async getLOAList():Promise<void>{
     let loas = [];
     try {
       loas = await backend.getLOAList();
@@ -43,11 +53,11 @@ export default class LOAList extends React.Component {
   }
 
   // Filter the table based on search text
-  filterLOAs = (value) => {
+  filterLOAs = (value:string):void => {
     value = value.toUpperCase();
-    let newLOAs = this.state.loaList.filter((item) => {
-      var foundMatch = false;
-      for (var i = 0; i < item.loaLoc.length; i++){
+    const newLOAs = this.state.loaList.filter((item) => {
+      let foundMatch = false;
+      for (let i = 0; i < item.loaLoc.length; i++){
         if (!foundMatch && item.loaLoc[i].toUpperCase().indexOf(value) > -1)
         foundMatch = true;
       }
@@ -59,38 +69,40 @@ export default class LOAList extends React.Component {
   }
 
   // Check if we are editing at the current index
-  isEdit(idx){
+  isEdit(idx:number):boolean{
     return this.state.editIdx === idx;
   }
 
   // Retrieve an element for a row that spans both columns
-  rowSpan(text) {
-      return <tr><td colSpan="2">{text}</td></tr>
+  rowSpan(text:string): JSX.Element {
+      return <tr key={text}><td colSpan={2}>{text}</td></tr>
   }
   
   // Set the edit index (used to display file Dropzone)
-  setEditIdx(idx){
+  setEditIdx(idx:number): (()=>void){
     return () => {this.setState({
       editIdx: idx
     })}
   }
 
   // Get a button with appropriate styling ('Update' button)
-  getButton(text, clickHandler){
+  getButton(text:string, 
+    clickHandler:((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void))
+    :JSX.Element{
     return <button style={{padding:"5px",borderRadius:"5px"}} onClick={clickHandler}>{text}</button>
   }
 
   // Create the elements for each row in the table
-  getLOATableRows(){
+  getLOATableRows(): JSX.Element[] {
     // Default to "Loading..."
-    let tableRows = this.rowSpan("Loading...")
+    let tableRows = [this.rowSpan("Loading...")]
     if (this.state){
       // Check if the server is offline, we have an empty database, 
       // or create the elements if there are no errors
       if(this.state.failed){
-        tableRows = this.rowSpan("Failed to retrieve data from the server.")
+        tableRows = [this.rowSpan("Failed to retrieve data from the server.")]
       } else if (this.state.loaList.length===0){
-        tableRows = this.rowSpan("No LOAs in the database")
+        tableRows = [this.rowSpan("No LOAs in the database")]
       } else {
         tableRows = this.state.displayLOAs.map((loa,index)=>{
           return (
@@ -101,6 +113,7 @@ export default class LOAList extends React.Component {
               <td>
                 <LoaPdf
                   loaLoc={loa.loaLoc}
+                  update={this.isEdit(index)}
                 />
               </td>
             </tr> )
@@ -111,7 +124,7 @@ export default class LOAList extends React.Component {
   }
 
   // Main react rendering
-  render(){
+  render(): ReactElement {
     return (
       <div>
         <div>

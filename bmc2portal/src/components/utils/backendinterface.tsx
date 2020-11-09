@@ -17,10 +17,11 @@ export type UnitInfo = {
 
 export type ATCAgency = {
     name: string,
-    loas: string[]
+    loaLoc: string[]
 }
 
 export interface Backend {
+    postFiles:{(data:FormData):Promise<Response>},
     postLessonLearned: {(title:string, author:string, content:string):Promise<Response>},
     getAirspaceList: {():Promise<Airspace[]>},
     getAirspaceInfo: {(name:string):Promise<Airspace>},

@@ -1,5 +1,5 @@
-import React from 'react'
-import Dropzone from 'react-dropzone'
+import React, { ReactElement } from 'react'
+import Dropzone, { FileRejection } from 'react-dropzone'
 
 import FileReject from './filereject'
 import FileAccept from './fileaccept'
@@ -8,6 +8,17 @@ import '../../css/fileuploader.css'
 
 import backend from '../utils/backend'
 
+type FUProps = {
+    maxFileCount: number,
+    accept: string
+}
+
+type FUState = {
+    acceptedFiles: File[],
+    rejectedFiles: FileRejection[],
+    uploadedFiles: File[]
+}
+
 /**
  * FileUploader provides a Component to render a File Dropzone.
  * 
@@ -15,18 +26,18 @@ import backend from '../utils/backend'
  * comma-separated string containing acceptable MIME types and/or 
  * file extensions.
  */
-export default class FileUploader extends React.Component {
+export default class FileUploader extends React.Component<FUProps, FUState> {
     
     // Callback for when a file is dropped into the Dropzone
-    onDrop =(acceptedFiles, rejectedFiles)=>{
+    onDrop =(acceptedFiles:File[], rejectedFiles:FileRejection[]):void=>{
         // if theres a limit to the number of files
         // then we adjust the list of accepted/rejected files
         if (this.props.maxFileCount){
             if (acceptedFiles.length > this.props.maxFileCount){
-                for (var i=1; i<acceptedFiles.length; i++){
+                for (let i=1; i<acceptedFiles.length; i++){
                     rejectedFiles.push({
                         file: acceptedFiles[i],
-                        errors: [{message:"Limited to upload " + this.props.maxFileCount + " at a time."}]
+                        errors: [{message:"Limited to upload " + this.props.maxFileCount + " at a time.", code:"too-many-files"}]
                     })
                 }
                 // slice after parsing files to be rejected
@@ -34,20 +45,20 @@ export default class FileUploader extends React.Component {
             }
         }
         this.setState({
-            acceptedFiles: acceptedFiles,
-            rejectedFiles: rejectedFiles
+            acceptedFiles,
+            rejectedFiles
         })
 
         this.uploadFiles();
     }
 
     // Actually perform the upload POST request
-    async uploadFiles(){
-        var formData = new FormData()
-        this.state.acceptedFiles.forEach((file)=>{
+    async uploadFiles(): Promise<void>{
+        const formData = new FormData()
+        this.state.acceptedFiles.forEach((file:File)=>{
             formData.append('file', file)
         })
-        let result = await backend.postFiles(formData)
+        const result = await backend.postFiles(formData)
 
         if (result.ok ){
             this.setState({uploadedFiles:this.state.acceptedFiles})
@@ -60,7 +71,7 @@ export default class FileUploader extends React.Component {
         WebkitTransition: "outline-offset .15s ease-in-out, background-color .15s linear",
         transition: "outline-offset .15s ease-in-out, background-color .15s linear",
         padding: "60px 0px 20px 0px",
-        textAlign: "center !important",
+        textalign: "center !important",
         margin: "0",
         backgroundColor: "white !important",
     }
@@ -74,12 +85,12 @@ export default class FileUploader extends React.Component {
     }
 
     // main Component render
-    render() {
+    render(): ReactElement {
         return (
             <Dropzone 
                 accept={this.props.accept}
                 onDrop={this.onDrop}>
-                {({getRootProps, getInputProps, isDragActive, isDragReject, rejectedFiles}) => (
+                {({getRootProps, getInputProps, isDragActive}) => (
                 <div style={{width:"-webkit-fill-available"}}>
                     <div {...getRootProps()}>
                     <div className="files">
@@ -89,10 +100,10 @@ export default class FileUploader extends React.Component {
                         : <div style={this.style}><div>Drag files here, or click <button style={this.browseStyle}>Browse</button></div> </div>}
                     </div>
                     </div>
-                    {this.state && this.state.rejectedFiles && this.state.rejectedFiles.length > 0 && this.state.rejectedFiles.map(rejectedFile => (
-                        <FileReject key={rejectedFile.name} rejectedFile={rejectedFile} />
+                    {this.state && this.state.rejectedFiles && this.state.rejectedFiles.length > 0 && this.state.rejectedFiles.map((rejectedFile:FileRejection) => (
+                        <FileReject key={rejectedFile.file.name} rejectedFile={rejectedFile.file} />
                     ))}
-                    {this.state && this.state.uploadedFiles && this.state.uploadedFiles.length > 0 && this.state.uploadedFiles.map(acceptedFile => (
+                    {this.state && this.state.uploadedFiles && this.state.uploadedFiles.length > 0 && this.state.uploadedFiles.map((acceptedFile:File) => (
                         <FileAccept key={acceptedFile.name} acceptedFile={acceptedFile} />
                     ))}
                 </div>  

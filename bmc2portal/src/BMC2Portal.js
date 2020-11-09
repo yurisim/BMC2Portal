@@ -13,7 +13,7 @@ import awacsOrbit from './resources/AWACSOrbitMap.pdf'
 import triadOrbit from './resources/IronTriadOrbitMap.pdf'
 
 const AirspaceList = lazy(()=>import("./components/missioncrew/airspacelist"))
-const LOAList = lazy(()=>import("./components/missioncrew/loalist.js"))
+const LOAList = lazy(()=>import("./components/missioncrew/loalist"))
 const UnitList = lazy(()=>import("./components/missioncrew/unitlist"))
 const Airspace = lazy(()=>import("./components/missioncrew/airspace"))
 const Unit = lazy(()=>import("./components/missioncrew/unit"))

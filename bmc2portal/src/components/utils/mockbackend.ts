@@ -22,7 +22,7 @@ class mBackend implements Backend {
     agencyMock(agency:string){
         return {
             name: agency,
-            loas: [agency+"LOA.pdf"]
+            loaLoc: [agency+"LOA.pdf"]
         }
     }
 
@@ -69,6 +69,10 @@ class mBackend implements Backend {
     // For convenience, these calls have the associated pseudo-SQL
     //
     //-----------------------------------------------------------------------------
+
+    postFiles(data:FormData): Promise<Response>{
+        return new Promise(()=>{return {data}})
+    }
 
     postLessonLearned(title:string, author:string, content: string):Promise<Response>{
         return new Promise(()=>{return {title, author, content}})
