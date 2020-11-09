@@ -1,7 +1,6 @@
 import React, { lazy, Suspense } from "react";
 
 import ReactDOM from "react-dom";
-import { GlobeProps } from "react-globe.gl";
 import BMC2Portal from "./BMC2Portal";
 
 import './military-bases.geojson';
@@ -29,10 +28,13 @@ const World = () => {
         backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
 
         labelsData={places}
+        // eslint-disable-next-line
         labelLat={(d:any) => {return d.record.fields.geo_point_2d.lat}}
+        // eslint-disable-next-line
         labelLng={(d:any) => {return d.record.fields.geo_point_2d.lon}}
-        labelText=""
+        // eslint-disable-next-line
         labelLabel={(d:any) => {return d.record.fields.site_name}}
+        labelText=""
         labelSize={0.2}
         labelDotRadius={.5}
         labelColor={() => 'rgba(165, 165, 265, 0.75)'}

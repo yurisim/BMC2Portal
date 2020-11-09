@@ -21,15 +21,15 @@ export default class NavMenuItem extends React.Component<NMIProps, Record<string
 
   
   // If this menu item has a link, navigate to that link when it is clicked
-  navigate = () => {
+  navigate = ():void => {
     if (this.props.link){
       window.location.href = this.props.link;
     }
   }
 
   // main component render
-  render(){
-    let elems:ReactElement[]= [];
+  render(): ReactElement {
+    const elems:ReactElement[]= [];
     return (
       <div className="subnav">
         <button className="subnavbtn" onClick={this.navigate}>{this.props.text}</button>

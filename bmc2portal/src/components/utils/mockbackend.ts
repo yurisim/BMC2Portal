@@ -1,4 +1,4 @@
-import { Airspace, Backend } from "./backendinterface";
+import { Airspace, ATCAgency, Backend } from "./backendinterface";
 
 class mBackend implements Backend {
     //-----------------------------------------------------------------------------
@@ -90,8 +90,8 @@ class mBackend implements Backend {
         return new Promise(()=>{return arr});
     }
     // Mock SELECT ATC, LOALOC FROM ATCAGENCIES
-    async getLOAList(): Promise<Response>{
-        let array:any[] = [];
+    async getLOAList(): Promise<ATCAgency[]>{
+        const array:ATCAgency[] = [];
         array.push(this.agencyMock("Jacksonville Center"));
         array.push(this.agencyMock("FACSFAC VACAPES"));
         array.push(this.agencyMock("Denver ARTCC"));
@@ -102,7 +102,7 @@ class mBackend implements Backend {
 
     // Mock SELECT * FROM AIRSPACES
     async getAirspaceList():Promise<Airspace[]>{
-        let array:any = [];
+        const array:Airspace[] = [];
         array.push(this.airspaceMock("W122"));
         array.push(this.airspaceMock("W133"));
         array.push(this.airspaceMock("W170"));
@@ -121,10 +121,10 @@ class mBackend implements Backend {
 
     // Mock GET ALL TAGS FROM LESSONS_LEARNED AND SPLIT ","
     async getAllTags(): Promise<Response>{
-        return new Promise(()=>{["W122", "W1","W2","W3","W4","W5","W166","W177","W155","W151","RED FLAG"]});
+        return new Promise(()=>{return ["W122", "W1","W2","W3","W4","W5","W166","W177","W155","W151","RED FLAG"]});
     }
 }
 
-let mockBackend = new mBackend()
+const mockBackend = new mBackend()
 
 export default mockBackend

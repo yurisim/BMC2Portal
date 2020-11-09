@@ -3,8 +3,8 @@ import React, { ReactElement } from 'react';
 import '../../css/search.css'
 
 interface SIProps{
-  label:string,
-  defaultValue: string,
+  label?:string,
+  defaultValue?: string,
   searchFunc(arg0:string):void
 }
 

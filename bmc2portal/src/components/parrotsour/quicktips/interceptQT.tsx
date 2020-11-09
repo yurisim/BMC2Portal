@@ -18,7 +18,7 @@ export default class InterceptQT extends React.Component {
                     - <b>Picture of the Day </b> is a random number (5-11) of groups, and gives <b>core</b> as the answer
                 </DialogContentText>
                 <DialogContentText>
-                    The "I would like to measure" option will omit BRAA and bullseye measurements, and allow you to click and drag to measure the picture.
+                    The &quot; I would like to measure &quot; option will omit BRAA and bullseye measurements, and allow you to click and drag to measure the picture.
                 </DialogContentText>
                 <DialogContentText>
                     <i>Color Code:</i> 

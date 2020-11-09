@@ -17,14 +17,14 @@ export default class IssueReport extends React.Component<Record<string,unknown>,
     /**
      * Toggle the issue form display
      */
-    toggleIssueForm = () =>{
+    toggleIssueForm = ():void =>{
         this.setState({showIssueForm: !this.state.showIssueForm})
     }
 
     /**
      * Called when the issue report form is closed
      */
-    handleIssueClose = () =>{
+    handleIssueClose = ():void =>{
         this.setState({showIssueForm:false})
     }
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 
 import backend from '../utils/backend';
 import SearchInput from '../utils/searchinput'
@@ -6,30 +6,38 @@ import SearchInput from '../utils/searchinput'
 import LoaPdf from './loapdf'
 
 import '../../css/search.css'
+import { Airspace } from '../utils/backendinterface';
+
+type ALState = {
+  airspaces: Airspace[],
+  displayAirspaces: Airspace[],
+  failed: boolean
+}
 
 /**
  * This Component contains a searchable/filterable table of the CONUS SUAs.
  */
-export default class AirspaceList extends React.Component {
+export default class AirspaceList extends React.Component<Record<string,unknown>, ALState>{
 
   // Construct Component with empty state
-  constructor(){
-    super()
+  constructor(props: Record<string,unknown>){
+    super(props)
     this.state = {
       airspaces: [],
-      displayAirspaces: []
+      displayAirspaces: [],
+      failed:false
     }
   }
 
   // Lifecycle function for after the Component has rendered
   // We load the airspaces after
-  componentDidMount(){
+  componentDidMount():void{
     this.getAirspaces();
   }
 
   // Retrieve the airspace list from the backend, and process for display
-  async getAirspaces(){
-    let aspaces = []
+  async getAirspaces():Promise<void>{
+    let aspaces:Airspace[] = []
     try {
       aspaces = await backend.getAirspaceList()
     } catch {
@@ -41,12 +49,12 @@ export default class AirspaceList extends React.Component {
   }
 
   // Filter the table based on search text
-  filterAirspaces = (value) => {
-    let searchVal = value.toUpperCase()
-    let newAspaces = this.state.airspaces.filter((aspace)=>{
-      var foundMatch = false;
+  filterAirspaces = (value:string):void => {
+    const searchVal = value.toUpperCase()
+    const newAspaces = this.state.airspaces.filter((aspace)=>{
+      let foundMatch = false;
       if (!aspace.loaLoc) return false
-      for (var i = 0; i < aspace.loaLoc.length; i++){
+      for (let i = 0; i < aspace.loaLoc.length; i++){
         if (!foundMatch && aspace.loaLoc[i].toUpperCase().indexOf(searchVal) > -1)
         foundMatch = true;  
       }
@@ -58,20 +66,20 @@ export default class AirspaceList extends React.Component {
   }
   
   // Retrieve an element for a row that spans both columns
-  rowSpan(elem) {
-    return <tr><td colSpan="2">{elem}</td></tr>
+  rowSpan(elem: JSX.Element):JSX.Element {
+    return <tr><td colSpan={2}>{elem}</td></tr>
   }
 
   // Construct all of the airspace table rows for rendering
-  getAirspaceTableRows(){
+  getAirspaceTableRows():JSX.Element[]{
     // Default to "Loading...""
-    let tableRows = this.rowSpan("Loading...")
+    let tableRows:JSX.Element[] = [this.rowSpan(<div>Loading...</div>)]
     if(this.state){
       // check if server returned data, returned [], or succeeded
       if (this.state.failed){
-        tableRows = this.rowSpan("Failed to fetch data from the server.")
+        tableRows = [this.rowSpan(<div>Failed to fetch data from the server.</div>)]
       } else if (this.state.displayAirspaces.length ===0 ){
-        tableRows = this.rowSpan("No airspaces in the database.")
+        tableRows = [this.rowSpan(<div>No airspaces in the database.</div>)]
       } else {
         tableRows = this.state.displayAirspaces.map((aspace)=>{
           return <tr key={aspace.name}>
@@ -91,7 +99,7 @@ export default class AirspaceList extends React.Component {
   }
 
   // main Component render
-  render(){
+  render(): ReactElement{
     return (
       <div>
         <div>

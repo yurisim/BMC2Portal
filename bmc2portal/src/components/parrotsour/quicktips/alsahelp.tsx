@@ -29,7 +29,7 @@ export default class AlsaHelp extends React.Component {
                     <i> GOLIATH, 2 GROUPS AZIMUTH 12, EAST GROUP BULLSEYE 069/42 TRACK NORTH, HOSTILE </i>
                 </DialogContentText>
                 <DialogContentText>
-                    <b>Stacks</b> are now voiced with an 'AND' between altitudes. Ex:<br/>
+                    <b>Stacks</b> are now voiced with an &quot; AND &quot; between altitudes. Ex:<br/>
                     <i>DARKSTAR, 2 GROUPS RANGE 13, LEAD GROUP BULLSEYE 001/30, STACK 42k <b> AND </b> 30k, HOSTILE 2 CONTACTS, TRAIL GROUP...</i><br/>
                     In addition, a 2-contact stack is not given X HIGH/X LOW fill-ins.<br/>
                     In the case of 3 separated altitudes: <br/>

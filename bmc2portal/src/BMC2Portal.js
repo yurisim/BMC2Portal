@@ -12,15 +12,15 @@ import baseMap from './resources/ktik_map.jpg'
 import awacsOrbit from './resources/AWACSOrbitMap.pdf'
 import triadOrbit from './resources/IronTriadOrbitMap.pdf'
 
-const AirspaceList = lazy(()=>import("./components/missioncrew/airspacelist.js"))
+const AirspaceList = lazy(()=>import("./components/missioncrew/airspacelist"))
 const LOAList = lazy(()=>import("./components/missioncrew/loalist.js"))
 const UnitList = lazy(()=>import("./components/missioncrew/unitlist.js"))
-const Airspace = lazy(()=>import("./components/missioncrew/airspace.js"))
+const Airspace = lazy(()=>import("./components/missioncrew/airspace"))
 const Unit = lazy(()=>import("./components/missioncrew/unit.js"))
 const LessonsLearnedList = lazy(()=>import("./components/lessonslearned/lessonslearned.js"))
 const ResourceList = lazy(()=>import("./components/resourcelist"))
 
-const SideBar = lazy(()=> import("./components/navigation/sidebar.js"));
+const SideBar = lazy(()=> import("./components/navigation/sidebar"));
 const Home = lazy(()=> import("./components/home"))
 
 const ParrotSour = lazy(()=>import("./components/parrotsour/parrotsour"))

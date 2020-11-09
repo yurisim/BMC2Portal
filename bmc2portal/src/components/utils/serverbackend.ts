@@ -1,4 +1,4 @@
-import { Airspace, Backend } from "./backendinterface";
+import { Airspace, ATCAgency, Backend } from "./backendinterface";
 
 const baseURL=process.env.REACT_APP_SERVER_BASE_URL
 
@@ -82,7 +82,7 @@ class sBackend implements Backend {
     }
     
     // SELECT * FROM ATCAGENCIES
-    async getLOAList(): Promise<Response>{
+    async getLOAList(): Promise<ATCAgency[]>{
         return get('/api/loas').then((data) => {return data});
     }
     

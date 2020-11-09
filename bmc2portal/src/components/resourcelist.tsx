@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 
 import '../css/styles.css';
 import '../css/links.css';
@@ -23,9 +23,9 @@ export default class ResourceList extends React.Component<Record<string,unknown>
   }
 
   // Handle a click on a top tab (menu item)
-  handleMenuClick = (e: React.MouseEvent<HTMLLIElement>) => {
+  handleMenuClick = (e: React.MouseEvent<HTMLLIElement>):void => {
     e.preventDefault();
-    var id = e.currentTarget.id
+    const id = e.currentTarget.id
     this.setState({
       curTab: id,
       tabClasses: [
@@ -37,7 +37,7 @@ export default class ResourceList extends React.Component<Record<string,unknown>
   }
 
   // main render
-  render(){
+  render(): ReactElement{
     return (
       <div>
         <div style={{display:"inline-flex", width:"95%"}}>

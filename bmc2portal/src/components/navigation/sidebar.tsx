@@ -1,10 +1,10 @@
 import React, { ReactElement } from "react";
-import NavMenuItem from "./navmenuitem.js";
+import NavMenuItem from "./navmenuitem";
 
 import "../../css/sidebar.css";
-import { Hyperlink } from "../utils/interfaces.js";
+import { Hyperlink } from "../utils/interfaces";
 
-let fdMenuItems:Hyperlink[] = [
+const fdMenuItems:Hyperlink[] = [
   { text: "First Link", link: "/" },
   { text: "Second Link", link: "/" },
   { text: "AR Tracks", link: "/common/artracks.html"},
@@ -12,7 +12,7 @@ let fdMenuItems:Hyperlink[] = [
   { text: "Debrief", link: "/common/debrief.html" },
 ];
 
-let mcMenuItems:Hyperlink[] = [
+const mcMenuItems:Hyperlink[] = [
   { text: "ParrotSour", link: "/msncrew/parrotsour.html" },
   { text: "Airspaces", link: "/msncrew/airspacelist.html" },
   { text: "Fighter Units", link: "/msncrew/unitlist.html" },

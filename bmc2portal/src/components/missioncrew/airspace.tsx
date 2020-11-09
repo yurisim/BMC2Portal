@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 
 import backend from '../utils/backend';
 
@@ -25,29 +25,29 @@ export default class Airspace extends React.Component<Record<string,unknown>, AS
           name: "Loading...",
           atcAgency: "Loading...",
           loaLoc: ["Loading..."],
-          units: [<div>"Loading..."</div>],
-          lessons: [<div>"Loading..."</div>],
+          units: [<div key="loadu">Loading...</div>],
+          lessons: [<div key="loadl">Loading...</div>],
           logo: "Loading..."
       }
   }
   // Lifecycle function for after the Component has rendered
-  componentDidMount(){
+  componentDidMount():void {
     this.getAirspaceInfo();
   }
 
   // Retrieve the airspace information from the backend, and process for display
-  async getAirspaceInfo(){
+  async getAirspaceInfo(): Promise<void> {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const aspace = urlParams.get('aspace')
     
     if (aspace === null) return 
     
-    let aspaceInfo = await backend.getAirspaceInfo(aspace);
+    const aspaceInfo = await backend.getAirspaceInfo(aspace);
 
-    let unitSplit = aspaceInfo.units.split(",");
-    let elems = [<span key="span0">Units:<br/></span>];
-    for (var x = 0; x < unitSplit.length; x++){
+    const unitSplit = aspaceInfo.units.split(",");
+    const elems = [<span key="span0">Units:<br/></span>];
+    for (let x = 0; x < unitSplit.length; x++){
       elems.push(<a key={unitSplit[x]} href={'/msncrew/unitpage.html?unit=' + unitSplit[x]}> {unitSplit[x]} <br/></a>)
     }
 
@@ -56,19 +56,19 @@ export default class Airspace extends React.Component<Record<string,unknown>, AS
         atcAgency: aspaceInfo.atc,
         loaLoc: aspaceInfo.loaLoc,
         units: elems,
-        lessons: [<a href={'/common/lessons.html?tags=' + aspaceInfo.name}> Lessons Learned </a>],
+        lessons: [<a key="lla" href={'/common/lessons.html?tags=' + aspaceInfo.name}> Lessons Learned </a>],
         logo: aspaceInfo.logo
     })
   }
 
   // main Component render
-  render(){
+  render(): ReactElement {
     return (
       <div>
         <table><tbody>
             <tr><th colSpan={2} id="aspace">{this.state.name}</th></tr>
             <tr><td id="atc">{this.state.atcAgency}</td>
-                {this.state.loaLoc!=="Loading..." && 
+                {this.state.loaLoc!==["Loading..."] && 
                   <td key={this.state.name}>
                     {this.state.loaLoc && 
                      <LoaPdf

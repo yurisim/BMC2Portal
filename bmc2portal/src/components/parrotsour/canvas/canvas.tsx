@@ -220,7 +220,7 @@ function Canvas(props: CanvasProps):ReactElement {
         onMouseLeave
     }
 
-    return <canvas {...moveProps} style={style} ref={canvasRef} {...rest} />
+    return <div style={{display:"block",textAlign:"center"}}><canvas {...moveProps} style={style} ref={canvasRef} {...rest} /></div>
 }
 
 export default Canvas
