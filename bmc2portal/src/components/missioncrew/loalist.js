@@ -3,7 +3,7 @@ import React from 'react';
 import backend from '../utils/backend';
 
 import SearchInput from '../utils/searchinput'
-import LoaPdf from './loapdf.js';
+import LoaPdf from './loapdf';
 
 import '../../css/search.css'
 

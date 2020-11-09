@@ -1,11 +1,21 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 
 import FileUploader from '../fileupload/fileuploader'
 
-export default class LoaPdf extends React.Component {
+type LPProps = {
+    update:boolean,
+    loaLoc: string[]
+}
 
-    constructor(props){
-        super()
+type LPState = {
+    update: boolean,
+    isEdit: string|undefined
+}
+
+export default class LoaPdf extends React.Component<LPProps, LPState> {
+
+    constructor(props:LPProps){
+        super(props)
         this.state={
             update: props.update!==undefined ? props.update : true,
             isEdit: undefined
@@ -13,24 +23,25 @@ export default class LoaPdf extends React.Component {
     }
 
     // Get a button with appropriate styling ('Update' button)
-    getButton(text, clickHandler){
+    getButton(text:string, clickHandler:(event: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>void):JSX.Element 
+    {
         return <button style={{padding:"5px",borderRadius:"5px"}} onClick={clickHandler}>{text}</button>
     }
 
-    setEdit(loa){
+    setEdit(loa:string):()=>void{
         return () => this.setState({isEdit: loa})
     }
 
-    unsetEdit = () =>{
+    unsetEdit = ():void =>{
         this.setState({isEdit: undefined})
     }
 
     // Check if we are editing at the current index
-    isEdit(loa){
+    isEdit(loa:string):boolean{
         return this.state.isEdit===loa;
     }
 
-    render(){
+    render():ReactElement{
         return <div>
             {this.props.loaLoc.map((loa) => {
             return (<div style={{marginBottom:"15px"}} key={loa}>
