@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import {DialogContent, DialogContentText} from '@material-ui/core'
 
 export default class InterceptQT extends React.Component {
 
-    render(){
+    render():ReactElement{
         return (
             <DialogContent>
                 <DialogContentText>

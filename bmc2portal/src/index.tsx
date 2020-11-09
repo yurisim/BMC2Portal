@@ -1,15 +1,16 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 
 import ReactDOM from "react-dom";
+import { GlobeProps } from "react-globe.gl";
 import BMC2Portal from "./BMC2Portal";
-
-import Globe from 'react-globe.gl';
 
 import './military-bases.geojson';
 
+const Globe = lazy(()=>import("react-globe.gl"))
+
 const { useState, useEffect } = React;
 
-// 
+//
 // A functional component to display the globe.
 //
 // Currently loads 100 active duty AF installations
@@ -21,27 +22,32 @@ const World = () => {
       .then((features) => {setPlaces(features.records);console.log(features.records)});
   }, []);
 
-  return <Globe
-    globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
-    backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Globe
+        globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
+        backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
 
-    labelsData={places}
-    labelLat={d => d.record.fields.geo_point_2d.lat}
-    labelLng={d => d.record.fields.geo_point_2d.lon}
-    labelText=""
-    labelLabel={d => <div>{d.record.fields.site_name}</div>}
-    labelSize={0.2}
-    labelDotRadius={.5}
-    labelColor={() => 'rgba(165, 165, 265, 0.75)'}
-    labelResolution={2}
-  />;
+        labelsData={places}
+        labelLat={(d:any) => {return d.record.fields.geo_point_2d.lat}}
+        labelLng={(d:any) => {return d.record.fields.geo_point_2d.lon}}
+        labelText=""
+        labelLabel={(d:any) => {return d.record.fields.site_name}}
+        labelSize={0.2}
+        labelDotRadius={.5}
+        labelColor={() => 'rgba(165, 165, 265, 0.75)'}
+        labelResolution={2}
+      />
+  </Suspense>)
 };
 
 // if we've navigated to the map, don't serve the react app - serve the globe
 if (window.location.pathname==="/common/map.html"){
   ReactDOM.render(
     <React.StrictMode>
-      <World />
+      <Suspense fallback={<div>Loading...</div>}>
+        <World />
+      </Suspense>
     </React.StrictMode>,
     document.getElementById("root")
   ); 
@@ -49,7 +55,9 @@ if (window.location.pathname==="/common/map.html"){
 } else {
   ReactDOM.render(
     <React.StrictMode>
-      <BMC2Portal />
+      <Suspense fallback={<div>Loading...</div>}>
+        <BMC2Portal />
+      </Suspense>
     </React.StrictMode>,
     document.getElementById("root")
   );

@@ -8,8 +8,8 @@ import '../../css/parrotsour.css'
 import '../../css/toggle.css'
 
 const ParrotSourHeader = lazy(()=>import('./parrotsourheader'))
-const InterceptQT = lazy(()=>import("./quicktips/interceptQT.js"))
-const AlsaHelp = lazy(()=>import("./quicktips/alsahelp.js"))
+const InterceptQT = lazy(()=>import("./quicktips/interceptQT"))
+const AlsaHelp = lazy(()=>import("./quicktips/alsahelp"))
 const ParrotSourControls = lazy(()=>import("./parrotsourcontrols"))
 
 const PictureCanvas = lazy(()=>import('./canvas/picturecanvas'))
