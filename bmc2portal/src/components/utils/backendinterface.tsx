@@ -6,6 +6,15 @@ export type Airspace = {
     logo: string
 }
 
+export type UnitInfo = {
+    name: string,
+    DSN: string,
+    airfield: string,
+    spinsLoc: string,
+    ifgLoc: string,
+    logo: string
+}
+
 export type ATCAgency = {
     name: string,
     loas: string[]
@@ -15,8 +24,8 @@ export interface Backend {
     postLessonLearned: {(title:string, author:string, content:string):Promise<Response>},
     getAirspaceList: {():Promise<Airspace[]>},
     getAirspaceInfo: {(name:string):Promise<Airspace>},
-    getUnitList: {():Promise<Response>},
-    getUnitInfo: {(name:string):Promise<Response>},
+    getUnitList: {():Promise<UnitInfo[]>},
+    getUnitInfo: {(name:string):Promise<UnitInfo>},
     getLOAList: {():Promise<ATCAgency[]>},
     getLessonsLearned: {():Promise<Response>},
     getAllTags: {():Promise<Response>}

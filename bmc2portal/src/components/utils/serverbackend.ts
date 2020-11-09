@@ -1,4 +1,4 @@
-import { Airspace, ATCAgency, Backend } from "./backendinterface";
+import { Airspace, ATCAgency, Backend, UnitInfo } from "./backendinterface";
 
 const baseURL=process.env.REACT_APP_SERVER_BASE_URL
 
@@ -72,12 +72,12 @@ class sBackend implements Backend {
     }
 
     // SELECT * FROM UNITS 
-    async getUnitList(): Promise<Response>{
+    async getUnitList(): Promise<UnitInfo[]>{
         return get('/api/unitlist').then((data)=>{return data});
     }
     
     // SELECT * FROM UNITS WHERE NAME = name
-    async getUnitInfo(unitname:string): Promise<Response>{
+    async getUnitInfo(unitname:string): Promise<UnitInfo>{
         return get('/api/unit/'+unitname).then((data)=>{return data});
     }
     

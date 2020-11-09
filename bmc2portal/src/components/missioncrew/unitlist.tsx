@@ -1,33 +1,41 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 
 import backend from '../utils/backend';
 
 import SearchInput from '../utils/searchinput'
 
 import '../../css/search.css'
+import { UnitInfo } from '../utils/backendinterface';
+
+type ULState = {
+  units: UnitInfo[],
+  displayUnits: UnitInfo[],
+  failed: boolean
+}
 
 /**
  * This Component contains a searchable/filterable table of the CONUS SUAs.
  */
-export default class UnitList extends React.Component {
+export default class UnitList extends React.Component<Record<string,unknown>,ULState> {
 
   // Initialize state
-  constructor(){
-    super()
+  constructor(props:Record<string,unknown>){
+    super(props)
     this.state= {
       units:[],
-      displayUnits:[]
+      displayUnits:[],
+      failed:false,
     }
   }
 
   // Lifecycle function for after the Component has rendered
-  componentDidMount(){
+  componentDidMount():void{
     this.getUnits();
   }
 
   // Retrieve the airspace list from the backend, and process for display
-  async getUnits(){
-    let units = [];
+  async getUnits():Promise<void>{
+    let units: UnitInfo[] = [];
 
     try {
       units = await backend.getUnitList();
@@ -40,9 +48,9 @@ export default class UnitList extends React.Component {
   }
 
   // Filter the table based on search text
-  filterUnits = (value) => {
+  filterUnits = (value:string):void => {
     value = value.toUpperCase()
-    let newDisplay = this.state.units.filter((unit) => {
+    const newDisplay = this.state.units.filter((unit) => {
       return unit.name.toUpperCase().indexOf(value) > -1 || unit.airfield.toUpperCase().indexOf(value) > -1
     })
     this.setState({
@@ -51,13 +59,13 @@ export default class UnitList extends React.Component {
   }
 
   // Create elements for each unit in the table
-  getUnitTableRows() {
-    let tableRows = <tr><td colSpan="2">Loading...</td></tr>
+  getUnitTableRows():JSX.Element[] {
+    let tableRows:JSX.Element[] = [<tr key="loadrow"><td colSpan={2}>Loading...</td></tr>]
     if (this.state){
       if (this.state.failed){
-        tableRows = <tr><td colSpan="2">Failed to retrieve data from the server.</td></tr>
+        tableRows = [<tr key="failrow"><td colSpan={2}>Failed to retrieve data from the server.</td></tr>]
       } else if (this.state.displayUnits.length ===0){
-        tableRows = <tr><td colSpan="2">No units in the database.</td></tr>
+        tableRows = [<tr key="nourow"><td colSpan={2}>No units in the database.</td></tr>]
       } else {
         tableRows = this.state.displayUnits.map((unit)=>{
           return (
@@ -72,7 +80,7 @@ export default class UnitList extends React.Component {
   }
 
   // main component render
-  render(){
+  render(): ReactElement {
     return (
       <div>
         <div>

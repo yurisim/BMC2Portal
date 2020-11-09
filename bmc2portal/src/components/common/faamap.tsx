@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 
 export default class FaaMap extends React.Component {
 
@@ -9,7 +9,7 @@ export default class FaaMap extends React.Component {
 
     src = "https://www.arcgis.com/home/webmap/viewer.html?useExisting=1&layers=dd0d1b726e504137ab3c41b21835d05b"
     //src = "https://sua.faa.gov/sua/siteFrame.app"
-    render(){
+    render(): ReactElement {
         return(
             <iframe id="faamapembed" style={this.style} src={this.src} title="FAA Map" />
         )

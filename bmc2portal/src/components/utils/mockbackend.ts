@@ -1,4 +1,4 @@
-import { Airspace, ATCAgency, Backend } from "./backendinterface";
+import { Airspace, ATCAgency, Backend, UnitInfo } from "./backendinterface";
 
 class mBackend implements Backend {
     //-----------------------------------------------------------------------------
@@ -75,13 +75,13 @@ class mBackend implements Backend {
     }
 
     // Mock SELECT * FROM UNITS WHERE NAME=unitname
-    async getUnitInfo(unitName:string):Promise<Response>{
+    async getUnitInfo(unitName:string):Promise<UnitInfo>{
         // TODO - remove this and process data from server instead
         return new Promise(()=>{return this.unitMock(unitName)});
     }
 
     // Mock SELECT UNITNAME (DISTINCT), AFLD FROM UNITS
-    async getUnitList(): Promise<Response>{
+    async getUnitList(): Promise<UnitInfo[]>{
         const subarr = Array(10).fill("").map((_,x) => this.unitMock(x + " FS"));
         let arr = subarr;
         const subarr2 = Array(10).fill("").map((_,x) => this.unitMock(x + " FW"));
