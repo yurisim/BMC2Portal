@@ -4,6 +4,20 @@ import { PicCanvasProps, PicCanvasState } from "../../picturecanvas";
 import { drawAltitudes, drawArrow, drawBraaseye, drawGroupCap, drawMeasurement } from "../drawutils";
 import { formatGroup } from "../formatutils";
 
+function checkCap(): { ngCap: boolean, sgCap: boolean } {
+    const whichCap: number = randomNumber(0,100);
+    let ngCap = false
+    let sgCap = false
+    if (whichCap < 33){
+        ngCap = true;
+    } else if (whichCap < 66) {
+        sgCap = true;
+    } else {
+        ngCap = true;
+        sgCap = true;
+    }
+    return { ngCap, sgCap }
+}
 
 export const drawCap:DrawFunction = (
     canvas: HTMLCanvasElement,
@@ -47,19 +61,9 @@ export const drawCap:DrawFunction = (
     const nNumContacts:number = randomNumber(1, 4);
     const sNumContacts:number = randomNumber(1, 4);
 
-    const whichCap: number = randomNumber(0,100);
-
-    let ngCap = false;
-    let sgCap = false;
-
-    if (whichCap < 33){
-        ngCap = true;
-    } else if (whichCap < 66) {
-        sgCap = true;
-    } else {
-        ngCap = true;
-        sgCap = true;
-    }
+    const caps = checkCap()
+    const ngCap = caps.ngCap
+    const sgCap = caps.sgCap
     
     let ntrackDir: string = getTrackDir(heading1);
     let strackDir: string = getTrackDir(heading2);
@@ -102,11 +106,10 @@ export const drawCap:DrawFunction = (
     const sgAlts: AltStack = getAltStack(sg.z, props.format);
 
     let answer = "";
-    
-    let includeBull = false;
-    if (width >= 10 && props.format !== "ipe") {
-        includeBull = true;
-    }
+   
+    // anchor cap if width > 0 for alsa
+    const includeBull = width >= 10 && props.format !== "ipe";
+   
     answer =
         "TWO GROUPS AZIMUTH " +
         width +
