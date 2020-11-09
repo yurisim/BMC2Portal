@@ -101,7 +101,7 @@ export default class FileUploader extends React.Component<FUProps, FUState> {
                     </div>
                     </div>
                     {this.state && this.state.rejectedFiles && this.state.rejectedFiles.length > 0 && this.state.rejectedFiles.map((rejectedFile:FileRejection) => (
-                        <FileReject key={rejectedFile.file.name} rejectedFile={rejectedFile.file} />
+                        <FileReject key={rejectedFile.file.name} rejectedFile={rejectedFile} />
                     ))}
                     {this.state && this.state.uploadedFiles && this.state.uploadedFiles.length > 0 && this.state.uploadedFiles.map((acceptedFile:File) => (
                         <FileAccept key={acceptedFile.name} acceptedFile={acceptedFile} />

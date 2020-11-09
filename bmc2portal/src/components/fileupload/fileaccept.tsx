@@ -1,9 +1,13 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
+
+type FAProps = {
+    acceptedFile: File
+}
 
 /**
  * FileAccept is just a stylized box for a successful upload notification.
  */
-export default class FileAccept extends React.Component {
+export default class FileAccept extends React.Component<FAProps, Record<string,unknown>> {
 
     style={
         backgroundColor: "#08AE2A",
@@ -13,7 +17,7 @@ export default class FileAccept extends React.Component {
         padding: "5px"
     }
 
-    render(){
+    render(): ReactElement{
         return (
             <div style={this.style}>
                 {this.props.acceptedFile.name}
