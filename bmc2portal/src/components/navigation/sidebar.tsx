@@ -1,9 +1,10 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import NavMenuItem from "./navmenuitem.js";
 
 import "../../css/sidebar.css";
+import { Hyperlink } from "../utils/interfaces.js";
 
-let fdMenuItems = [
+let fdMenuItems:Hyperlink[] = [
   { text: "First Link", link: "/" },
   { text: "Second Link", link: "/" },
   { text: "AR Tracks", link: "/common/artracks.html"},
@@ -11,7 +12,7 @@ let fdMenuItems = [
   { text: "Debrief", link: "/common/debrief.html" },
 ];
 
-let mcMenuItems = [
+let mcMenuItems:Hyperlink[] = [
   { text: "ParrotSour", link: "/msncrew/parrotsour.html" },
   { text: "Airspaces", link: "/msncrew/airspacelist.html" },
   { text: "Fighter Units", link: "/msncrew/unitlist.html" },
@@ -29,11 +30,11 @@ let mcMenuItems = [
  * See <NavMenuItem> for options.
  */
 export default class SideBar extends React.PureComponent {
-  render() {
+  render(): ReactElement {
     return (
       <div className="navbar">
-        <NavMenuItem text="Flight Deck" menuitems={fdMenuItems} />
-        <NavMenuItem text="Mission Crew" menuitems={mcMenuItems} />
+        <NavMenuItem text="Flight Deck" menuItems={fdMenuItems} />
+        <NavMenuItem text="Mission Crew" menuItems={mcMenuItems} />
         <NavMenuItem text="Lessons Learned" link = "/common/lessons.html" />
         <NavMenuItem text="FAA Map" link="/common/faamap.html"/>
         <NavMenuItem text="Links & Resources" link = "/resources.html" />

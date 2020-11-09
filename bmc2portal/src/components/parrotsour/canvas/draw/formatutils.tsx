@@ -2,7 +2,7 @@
  * This file contains utilities for group and answer formatting
  */
 
-import { Braaseye, AltStack, Group } from '../interfaces'
+import { Braaseye, AltStack, Group } from '../../../utils/interfaces'
 
 import { getBR } from '../../utils/mathutilities'
 

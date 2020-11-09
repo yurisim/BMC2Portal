@@ -1,7 +1,7 @@
 import React, {useRef, useState, useEffect, ReactElement, TouchEvent } from 'react'
 
 import { getBR } from '../utils/mathutilities'
-import { BRAA, Bullseye } from './interfaces'
+import { BRAA, Bullseye } from '../../utils/interfaces'
 import { drawLine, drawBR } from './draw/drawutils'
 
 export interface CanvasDrawFunction {

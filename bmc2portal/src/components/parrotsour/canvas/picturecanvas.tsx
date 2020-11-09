@@ -4,7 +4,7 @@ import Canvas from './canvas'
 
 import {randomNumber } from '../utils/mathutilities'
 import { drawArrow } from './draw/drawutils'
-import { Bullseye, DrawAnswer, DrawFunction, Group } from './interfaces'
+import { Bullseye, DrawAnswer, DrawFunction, Group } from '../../utils/interfaces'
 import { drawAzimuth, drawBullseye, drawChampagne, drawLadder, drawLeadEdge, drawPackage, drawRange, drawVic, drawWall } from './draw/intercept/picturedraw'
 import { drawThreat } from './draw/intercept/threatdraw'
 import { drawCap } from './draw/intercept/capdraw'

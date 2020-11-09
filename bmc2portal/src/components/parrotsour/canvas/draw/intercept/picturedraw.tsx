@@ -1,8 +1,8 @@
-import { AltStack, Braaseye, Bullseye, DrawAnswer } from '../../interfaces'
+import { AltStack, Braaseye, Bullseye, DrawAnswer } from '../../../../utils/interfaces'
 
 import { randomNumber, randomHeading, getBR, getAltStack, getTrackDir } from '../../../utils/mathutilities'
 import { drawAltitudes, drawArrow, drawBraaseye, drawMeasurement } from '../drawutils'
-import { DrawFunction, Group } from '../../interfaces'
+import { DrawFunction, Group } from '../../../../utils/interfaces'
 import { PicCanvasProps, PicCanvasState } from '../../picturecanvas';
 import { formatGroup, getGroupOpenClose } from '../formatutils';
 

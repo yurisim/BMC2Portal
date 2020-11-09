@@ -1,5 +1,5 @@
 import { getBR, randomNumber, toRadians } from "../../../utils/mathutilities";
-import { BRAA, Group } from "../../interfaces";
+import { BRAA, Group } from "../../../../utils/interfaces";
 import { PicCanvasProps, PicCanvasState } from "../../picturecanvas";
 import { drawAltitudes, drawArrow, drawBraaseye } from "../drawutils";
 

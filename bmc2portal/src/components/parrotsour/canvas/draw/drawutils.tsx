@@ -5,7 +5,7 @@
 
 import { toRadians, randomNumber, getBR } from '../../utils/mathutilities'
 
-import { BRAA, Braaseye, Bullseye, Group } from '../interfaces'
+import { BRAA, Braaseye, Bullseye, Group } from '../../../utils/interfaces'
 import { formatAlt } from './formatutils';
 
 /**

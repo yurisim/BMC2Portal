@@ -1,5 +1,5 @@
 import { getAltStack, getAspect, getBR, getTrackDir, randomNumber } from "../../../utils/mathutilities";
-import { AltStack, BRAA, Bullseye, DrawAnswer, DrawFunction, Group } from "../../interfaces";
+import { AltStack, BRAA, Bullseye, DrawAnswer, DrawFunction, Group } from "../../../../utils/interfaces";
 import { PicCanvasProps, PicCanvasState } from "../../picturecanvas";
 import { drawText } from "../drawutils";
 

@@ -3,7 +3,7 @@
  * angles/degrees/headings, altitudes, and bearings
  */
 
-import { AltStack, BRAA, Bullseye, Group } from '../canvas/interfaces'
+import { AltStack, BRAA, Bullseye, Group } from '../../utils/interfaces'
 
 /**
  * Converts a math angle to Radians (180 is EW line)

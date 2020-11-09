@@ -3,7 +3,7 @@
  * to be imported elsewhere
  */
 
-import { PicCanvasProps, PicCanvasState } from "./picturecanvas"
+import { PicCanvasProps, PicCanvasState } from "../parrotsour/canvas/picturecanvas"
 
 export type Bullseye = {
     x: number,
@@ -46,6 +46,11 @@ export type Group = {
     isCapping?: boolean,
     braaseye?: Braaseye,
     maneuvers?: boolean,
+}
+
+export type Hyperlink = {
+    link: string,
+    text: string
 }
 
 export type DrawAnswer = {
