@@ -1,7 +1,24 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 
 import '../../css/styles.css'
 import '../../css/chips.css'
+import { CSSProperties } from 'react';
+
+type ChipProps = {
+    allTags: string[],
+    defaultText: string,
+    setTags: {(tags: string[]):void},
+    style?: CSSProperties,
+    title?: string,
+    tags:string[],
+    hasRemove:boolean,
+    isEdit:boolean
+}
+
+type ChipState = {
+    searchTags: string[],
+    suggestedTags: string[]
+}
 
 /**
  * A Component that renders a container for entering/selecting 'tags'
@@ -12,10 +29,11 @@ import '../../css/chips.css'
  * 
  * @TODO - navigate dropdown using up/down arrows on keyboard
  */
-export default class Chips extends React.Component {
+export default class Chips extends React.Component<ChipProps, ChipState> {
 
-    constructor(){
-        super()
+    inputElem: HTMLInputElement|null = null
+    constructor(props:ChipProps){
+        super(props)
         this.state = {
             searchTags: [],
             suggestedTags: [],
@@ -23,9 +41,9 @@ export default class Chips extends React.Component {
     }
     
     // Suggest tags to the user from existing tags
-    autoSuggest = async (e) =>{
-        var numSuggestions = 5; // change this to allow users to see XX suggested tags
-        var showTags = [];
+    autoSuggest = async (e: React.FormEvent<HTMLInputElement>): Promise<void> =>{
+        const numSuggestions = 5; // change this to allow users to see XX suggested tags
+        let showTags:string[] = [];
         if (e.currentTarget.value !== "" || e.currentTarget.value === this.props.defaultText) {
             showTags = this.props.allTags.filter((t) => t.indexOf(e.currentTarget.value.toUpperCase()) !== -1).slice(0, numSuggestions);
         }
@@ -33,32 +51,35 @@ export default class Chips extends React.Component {
     }
 
     // Add a tag from the list of user's entered tags
-    addTag = (tag) =>{
+    addTag = (tag: string):()=>void =>{
         return () => {
-            let sTags = this.state.searchTags;
+            const sTags = this.state.searchTags;
             sTags.push(tag);
-            this.setState({ searchTags: sTags, suggestedTags: [] });         
-            this.inputElem.value = ""
+            this.setState({ searchTags: sTags, suggestedTags: [] });  
+            if (this.inputElem )      
+                this.inputElem.value = ""
             this.props.setTags(this.state.searchTags)
         }
     }
 
     // Remove a tag from the list of user's entered tags
-    removeTag = (index) =>{
-        let sTags = this.state.searchTags;
-        sTags.splice(index,1);
-        this.setState({ searchTags: sTags });
-        this.props.setTags(this.state.searchTags)
+    removeTag = (index:number):()=> void =>{
+        return () => {
+            const sTags = this.state.searchTags;
+            sTags.splice(index,1);
+            this.setState({ searchTags: sTags });
+            this.props.setTags(this.state.searchTags)
+        }
     }
 
     // binding to 'this' to allow enter key to clear when autosuggest option is clicked
-    handleKeyPress = (e) =>{
-        if (e.charCode === 13) {
+    handleKeyPress = (e:React.KeyboardEvent<HTMLInputElement>):void =>{
+        if (e.key === "Enter") {
             e.preventDefault()
-            let val = e.currentTarget.value;
+            const val = e.currentTarget.value;
             if (val !== '') {
                 if (this.state.searchTags.indexOf(val.toUpperCase()) < 0){
-                    let tags = this.state.searchTags
+                    const tags = this.state.searchTags
                     tags.push(val.toUpperCase());
                     this.setState({ 
                         searchTags: tags, 
@@ -68,15 +89,16 @@ export default class Chips extends React.Component {
                     this.props.setTags(this.state.searchTags)
                }
             }
-            this.inputElem.value = ""
+            if (this.inputElem && this.inputElem)
+                this.inputElem.value = ""
         }
     }
 
     // On search, check for a backspace key
     // when the input is empty, this will start deleting existing search tags
-    checkBack = (e) =>{
+    checkBack = (e:React.KeyboardEvent<HTMLInputElement>):void =>{
         if (e.key==="Backspace" && e.currentTarget.value===""){
-            let sTags = this.state.searchTags
+            const sTags = this.state.searchTags
             sTags.splice(sTags.length-1,1);
             this.setState({
                 searchTags: sTags,
@@ -87,14 +109,14 @@ export default class Chips extends React.Component {
     }
 
     // main Component render
-    render(){
-        let asTagElems=[]
+    render(): ReactElement{
+        const asTagElems: JSX.Element[]=[]
         return (
             <div className="chips-container" style={this.props.style}>
               {this.props.title && <h1>{this.props.title}</h1>}
               <div className="chips-list" id="list" >
                 {this.props.tags.map((item,index)=>{
-                    return <li key={item+"-"+index}><span>{item}</span>{this.props.hasRemove && <button className="chip-remove" onClick={this.removeTag}>X</button>}</li>
+                    return <li key={item+"-"+index}><span>{item}</span>{this.props.hasRemove && <button className="chip-remove" onClick={this.removeTag(index)}>X</button>}</li>
                 })}
               </div>
               {this.props.isEdit && <div>

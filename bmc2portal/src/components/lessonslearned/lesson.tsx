@@ -1,11 +1,11 @@
 import React, { ReactElement } from 'react';
 
-import Chips from './chips.js'
+import Chips from './chips'
 
 import '../../css/styles.css'
 import '../../css/chips.css'
 import '../../css/lesson.css'
-import { LessonLearned } from '../utils/backendinterface.js';
+import { LessonLearned } from '../utils/backendinterface';
 
 type LessonProps = {
     lesson: LessonLearned
@@ -31,6 +31,9 @@ export default class Lesson extends React.Component<LessonProps, Record<string,u
                 <div>
                 <div style={{float:"left", paddingRight:"10px"}}>Tags:  </div>
                 <Chips 
+                    allTags={this.props.lesson.tags}
+                    defaultText=""
+                    setTags={()=>{ /* do nothing */ }}
                     style={{ textAlign:"left", width:"100%", backgroundColor:"unset",padding:"unset" }}
                     tags={this.props.lesson.tags}
                     isEdit={false}
