@@ -16,7 +16,7 @@ type ULState = {
 /**
  * This Component contains a searchable/filterable table of the CONUS SUAs.
  */
-export default class UnitList extends React.Component<Record<string,unknown>,ULState> {
+export default class UnitList extends React.PureComponent<Record<string,unknown>,ULState> {
 
   // Initialize state
   constructor(props:Record<string,unknown>){
@@ -49,8 +49,9 @@ export default class UnitList extends React.Component<Record<string,unknown>,ULS
 
   // Filter the table based on search text
   filterUnits = (value:string):void => {
+    const {units} = this.state 
     value = value.toUpperCase()
-    const newDisplay = this.state.units.filter((unit) => {
+    const newDisplay = units.filter((unit) => {
       return unit.name.toUpperCase().indexOf(value) > -1 || unit.airfield.toUpperCase().indexOf(value) > -1
     })
     this.setState({
@@ -60,14 +61,15 @@ export default class UnitList extends React.Component<Record<string,unknown>,ULS
 
   // Create elements for each unit in the table
   getUnitTableRows():JSX.Element[] {
+    const {failed, displayUnits } = this.state
     let tableRows:JSX.Element[] = [<tr key="loadrow"><td colSpan={2}>Loading...</td></tr>]
     if (this.state){
-      if (this.state.failed){
+      if (failed){
         tableRows = [<tr key="failrow"><td colSpan={2}>Failed to retrieve data from the server.</td></tr>]
-      } else if (this.state.displayUnits.length ===0){
+      } else if (displayUnits.length ===0){
         tableRows = [<tr key="nourow"><td colSpan={2}>No units in the database.</td></tr>]
       } else {
-        tableRows = this.state.displayUnits.map((unit)=>{
+        tableRows = displayUnits.map((unit)=>{
           return (
             <tr key={unit.name}>
               <td><a href={"/msncrew/unitpage.html?unit="+unit.name}>{unit.name}</a></td>

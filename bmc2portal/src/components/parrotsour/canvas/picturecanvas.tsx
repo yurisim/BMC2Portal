@@ -43,7 +43,7 @@ export type PicCanvasState = {
 /**
  * This component is the main control for drawing pictures for intercepts
  */
-export default class PictureCanvas extends React.Component<PicCanvasProps, PicCanvasState> {
+export default class PictureCanvas extends React.PureComponent<PicCanvasProps, PicCanvasState> {
 
     constructor(props: PicCanvasProps){
         super(props)
@@ -182,7 +182,7 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
     }
 
     render(): ReactElement{
-        return <Canvas 
+        return (<Canvas 
             draw={this.draw} 
             height={this.props.height} 
             width={this.props.width} 
@@ -192,6 +192,6 @@ export default class PictureCanvas extends React.Component<PicCanvasProps, PicCa
             showMeasurements={this.props.showMeasurements}
             isHardMode={this.props.isHardMode}
             newPic={this.props.newPic}
-        />
+        />)
     }
 }

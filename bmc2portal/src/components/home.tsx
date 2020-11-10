@@ -1,6 +1,6 @@
-import React, { ReactElement } from 'react';
+import React, { lazy, ReactElement } from 'react';
 
-import ImagePane from './utils/imagepane'
+const ImagePane = lazy(()=>import('./utils/imagepane'))
 
 /**
  * The Home Component is the default comonent to render on main entry Route

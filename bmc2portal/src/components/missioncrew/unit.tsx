@@ -13,7 +13,7 @@ type UnitState = {
 /**
  * This Component contains information on a particular unit.
  */
-export default class Unit extends React.Component<Record<string,unknown>, UnitState>{
+export default class Unit extends React.PureComponent<Record<string,unknown>, UnitState>{
 
   // Initialize the state
   constructor(props: Record<string,unknown>){
@@ -43,7 +43,7 @@ export default class Unit extends React.Component<Record<string,unknown>, UnitSt
     const unit = urlParams.get('unit')
     const unitQuery = unit ? unit : ""
 
-    let unitInfo = this.state.unitInfo; 
+    let {unitInfo} = this.state
     
     try {
       unitInfo = await backend.getUnitInfo(unitQuery);
@@ -59,20 +59,25 @@ export default class Unit extends React.Component<Record<string,unknown>, UnitSt
 
   // main component render
   render(): ReactElement {
+    const {
+      failed,
+      unitInfo,
+      lessons
+    } = this.state
     return (
       <div>
         <table>
-          {this.state && !this.state.failed && 
+          {this.state && !failed && 
             <tbody>
-            <tr><th colSpan={2} id="unitDesig">{this.state.unitInfo.name}</th></tr>
-            <tr><td>DSN: </td><td id="unitPhone">{this.state.unitInfo.DSN}</td></tr>
-            <tr><td>SPINs:</td><td id="unitSpins">{this.state.unitInfo.spinsLoc}</td></tr>
-            <tr><td>IFG:</td><td id="unitIFG">{this.state.unitInfo.ifgLoc}</td></tr>
-            <tr><td colSpan={2} id="unitLogo">{this.state.lessons}</td></tr>
-            <tr><td colSpan={2} height="400px" id="unitLogo">{this.state.unitInfo.logo}</td></tr>
+            <tr><th colSpan={2} id="unitDesig">{unitInfo.name}</th></tr>
+            <tr><td>DSN: </td><td id="unitPhone">{unitInfo.DSN}</td></tr>
+            <tr><td>SPINs:</td><td id="unitSpins">{unitInfo.spinsLoc}</td></tr>
+            <tr><td>IFG:</td><td id="unitIFG">{unitInfo.ifgLoc}</td></tr>
+            <tr><td colSpan={2} id="unitLogo">{lessons}</td></tr>
+            <tr><td colSpan={2} height="400px" id="unitLogo">{unitInfo.logo}</td></tr>
             </tbody>
           }
-          {this.state && this.state.failed &&
+          {this.state && failed &&
             <tbody>
             <tr><th colSpan={2} id="unitDesig">Failed to retrieve data from the server.</th></tr>
             </tbody>

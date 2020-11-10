@@ -29,17 +29,17 @@ const mcMenuItems:Hyperlink[] = [
  * 
  * See <NavMenuItem> for options.
  */
-export default class SideBar extends React.PureComponent {
-  render(): ReactElement {
-    return (
-      <div className="navbar">
-        <NavMenuItem text="Flight Deck" menuItems={fdMenuItems} />
-        <NavMenuItem text="Mission Crew" menuItems={mcMenuItems} />
-        <NavMenuItem text="Lessons Learned" link = "/common/lessons.html" />
-        <NavMenuItem text="FAA Map" link="/common/faamap.html"/>
-        <NavMenuItem text="Links & Resources" link = "/resources.html" />
-        <NavMenuItem text="Contact" link = "/contact.html" />
-      </div>
-    );
-  }
+const SideBar = ():ReactElement => {
+  return (
+    <div className="navbar">
+      <NavMenuItem text="Flight Deck" menuItems={fdMenuItems} />
+      <NavMenuItem text="Mission Crew" menuItems={mcMenuItems} />
+      <NavMenuItem text="Lessons Learned" link = "/common/lessons.html" />
+      <NavMenuItem text="FAA Map" link="/common/faamap.html"/>
+      <NavMenuItem text="Links & Resources" link = "/resources.html" />
+      <NavMenuItem text="Contact" link = "/contact.html" />
+    </div>
+  );
 }
+
+export default SideBar

@@ -67,7 +67,7 @@ export default class AirspaceList extends React.Component<Record<string,unknown>
   
   // Retrieve an element for a row that spans both columns
   rowSpan(elem: JSX.Element):JSX.Element {
-    return <tr><td colSpan={2}>{elem}</td></tr>
+    return <tr key={elem.key}><td colSpan={2}>{elem}</td></tr>
   }
 
   // Construct all of the airspace table rows for rendering

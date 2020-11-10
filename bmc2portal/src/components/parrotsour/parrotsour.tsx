@@ -9,10 +9,12 @@ const ParrotSourIntercept = lazy(()=>import("./parrotsourintercept"))
  * when procedural is done/converted to React & Typescript
  */
 //export default class ParrotSour extends React.Component {
-export const ParrotSour = ():ReactElement => {
+const ParrotSour = ():ReactElement => {
     return(
         <Suspense fallback={<div>Loading...</div>} >
             <ParrotSourIntercept/>
         </Suspense>            
     )
 }
+
+export default ParrotSour

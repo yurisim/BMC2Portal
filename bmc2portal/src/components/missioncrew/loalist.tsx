@@ -19,7 +19,7 @@ type LOAListState = {
  * This Component contains a searchable/filterable table of the CONUS ATC Agencies
  * and their letters of agreement with the 552 ACW.
  */
-export default class LOAList extends React.Component<Record<string,unknown>, LOAListState> {
+export default class LOAList extends React.PureComponent<Record<string,unknown>, LOAListState> {
 
   // Set default empty state
   constructor(props: Record<string,unknown>){
@@ -55,7 +55,8 @@ export default class LOAList extends React.Component<Record<string,unknown>, LOA
   // Filter the table based on search text
   filterLOAs = (value:string):void => {
     value = value.toUpperCase();
-    const newLOAs = this.state.loaList.filter((item) => {
+    const { loaList } = this.state
+    const newLOAs = loaList.filter((item) => {
       let foundMatch = false;
       for (let i = 0; i < item.loaLoc.length; i++){
         if (!foundMatch && item.loaLoc[i].toUpperCase().indexOf(value) > -1)
@@ -70,7 +71,8 @@ export default class LOAList extends React.Component<Record<string,unknown>, LOA
 
   // Check if we are editing at the current index
   isEdit(idx:number):boolean{
-    return this.state.editIdx === idx;
+    const {editIdx} = this.state
+    return editIdx === idx;
   }
 
   // Retrieve an element for a row that spans both columns
@@ -89,24 +91,25 @@ export default class LOAList extends React.Component<Record<string,unknown>, LOA
   getButton(text:string, 
     clickHandler:((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void))
     :JSX.Element{
-    return <button style={{padding:"5px",borderRadius:"5px"}} onClick={clickHandler}>{text}</button>
+    return <button type="button" style={{padding:"5px",borderRadius:"5px"}} onClick={clickHandler}>{text}</button>
   }
 
   // Create the elements for each row in the table
   getLOATableRows(): JSX.Element[] {
+    const {failed, displayLOAs, loaList} = this.state
     // Default to "Loading..."
     let tableRows = [this.rowSpan("Loading...")]
     if (this.state){
       // Check if the server is offline, we have an empty database, 
       // or create the elements if there are no errors
-      if(this.state.failed){
+      if(failed){
         tableRows = [this.rowSpan("Failed to retrieve data from the server.")]
-      } else if (this.state.loaList.length===0){
+      } else if (loaList.length===0){
         tableRows = [this.rowSpan("No LOAs in the database")]
       } else {
-        tableRows = this.state.displayLOAs.map((loa,index)=>{
+        tableRows = displayLOAs.map((loa,index)=>{
           return (
-            <tr key={loa.name+index}>
+            <tr key={loa.name}>
               <td>
                 {loa.name}
               </td>
@@ -137,7 +140,7 @@ export default class LOAList extends React.Component<Record<string,unknown>, LOA
             <tbody>
             <tr><th>ATC Agency</th><th>LOA</th></tr>
             {this.getLOATableRows()}
-            <tr><td><button>+</button></td><td></td></tr>
+            <tr><td><button type="button">+</button></td><td/></tr>
             </tbody>
           </table>
         </div>

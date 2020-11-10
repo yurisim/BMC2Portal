@@ -12,7 +12,7 @@ type LPState = {
     isEdit: string|undefined
 }
 
-export default class LoaPdf extends React.Component<LPProps, LPState> {
+export default class LoaPdf extends React.PureComponent<LPProps, LPState> {
 
     constructor(props:LPProps){
         super(props)
@@ -25,7 +25,7 @@ export default class LoaPdf extends React.Component<LPProps, LPState> {
     // Get a button with appropriate styling ('Update' button)
     getButton(text:string, clickHandler:(event: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>void):JSX.Element 
     {
-        return <button style={{padding:"5px",borderRadius:"5px"}} onClick={clickHandler}>{text}</button>
+        return <button type="button" style={{padding:"5px",borderRadius:"5px"}} onClick={clickHandler}>{text}</button>
     }
 
     setEdit(loa:string):()=>void{
@@ -38,12 +38,15 @@ export default class LoaPdf extends React.Component<LPProps, LPState> {
 
     // Check if we are editing at the current index
     isEdit(loa:string):boolean{
-        return this.state.isEdit===loa;
+        const { isEdit } = this.state
+        return isEdit===loa;
     }
 
     render():ReactElement{
-        return <div>
-            {this.props.loaLoc.map((loa) => {
+        const {loaLoc} = this.props
+        const {update} = this.state
+        return (<div>
+            {loaLoc.map((loa) => {
             return (<div style={{marginBottom:"15px"}} key={loa}>
                 <a href={"/loas/"+loa}>{loa}</a>
                 {this.isEdit(loa) &&  // we're editing, so provide the file uploader
@@ -54,12 +57,12 @@ export default class LoaPdf extends React.Component<LPProps, LPState> {
                     }
                     
                 </div>}
-                {!this.isEdit(loa) && this.state.update && // we're not editing, so render the update button
+                {!this.isEdit(loa) && update && // we're not editing, so render the update button
                     <div style={{float:"right"}}>
                         {this.getButton("Update", this.setEdit(loa))}
                     </div>}
             </div>)
             })}
-        </div>
+        </div>)
     }
 }
