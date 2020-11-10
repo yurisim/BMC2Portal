@@ -24,7 +24,7 @@ interface PSCState {
  * - Orientation toggle
  * - BRAA/Bull first toggle
  */
-export default class ParrotSourControls extends React.Component<PSCProps, PSCState> {
+export default class ParrotSourControls extends React.PureComponent<PSCProps, PSCState> {
 
     constructor(props:PSCProps){
         super(props)
@@ -41,28 +41,32 @@ export default class ParrotSourControls extends React.Component<PSCProps, PSCSta
     handleSliderChange = (evt: ChangeEvent<HTMLInputElement>): void => {
         const val = parseInt(evt.currentTarget.value)
         this.setState({speedSliderValue: val})
-        this.props.handleSliderChange(val)
+
+        const {handleSliderChange} = this.props
+        handleSliderChange(val)
     }
 
     /**
      * Called to start the animation
      */
-    fightsOn = ():void => {
-        this.props.startAnimate()
+    handleFightsOn = ():void => {
+        const {startAnimate} = this.props
+        startAnimate()
     }
 
     /**
      * Called to stop the animation
      */
-    pauseFight = ():void =>{
-        this.props.pauseAnimate()
+    handlePauseFight = ():void =>{
+        const {pauseAnimate} = this.props
+        pauseAnimate()
     }
 
     /**
      * Toggle display of help text
      */
-    toggleHelp = ():void => {
-        this.setState({showHelpText: !this.state.showHelpText})
+    handleToggleHelp = ():void => {
+        this.setState(prevState=>({showHelpText: !prevState.showHelpText}))
     }
 
     /**
@@ -73,13 +77,15 @@ export default class ParrotSourControls extends React.Component<PSCProps, PSCSta
     }
 
     render(): ReactElement{
+        const {speedSliderValue, showHelpText} = this.state
+        const {modifyCanvas, braaChanged} = this.props
         return(
             <div>
                 <div style={{display:"inline"}}>
-                    <button id="fightsOn" style={{marginBottom:"20px",width:"100px", marginRight:"10px"}} onClick={this.fightsOn} >
+                    <button type="button" id="fightsOn" style={{marginBottom:"20px",width:"100px", marginRight:"10px"}} onClick={this.handleFightsOn} >
                         Fights On
                     </button>
-                    <button id="pause" style={{marginBottom:"20px", width:"100px"}} onClick={this.pauseFight}>
+                    <button type="button" id="pause" style={{marginBottom:"20px", width:"100px"}} onClick={this.handlePauseFight}>
                         Pause
                     </button>
                     <div style={{display:"inline", marginLeft:"50px"}} className="slidecontainer">
@@ -88,7 +94,7 @@ export default class ParrotSourControls extends React.Component<PSCProps, PSCSta
                             type="range"
                             min="1"
                             max="100"
-                            value={this.state.speedSliderValue}
+                            value={speedSliderValue}
                             className="slider-color"
                             id="speedSlider"
                             onChange={this.handleSliderChange} />
@@ -101,7 +107,7 @@ export default class ParrotSourControls extends React.Component<PSCProps, PSCSta
                             Orientation: 
                         </label>
                         <label className="switch">
-                            <input type="checkbox" id="orientation" onChange={this.props.modifyCanvas} />
+                            <input type="checkbox" id="orientation" onChange={modifyCanvas} />
                             <span className="slider round"><span className="on">N/S</span><span className="off">E/W</span></span>
                         </label>
                     </div>
@@ -110,7 +116,7 @@ export default class ParrotSourControls extends React.Component<PSCProps, PSCSta
                             Display first: 
                         </label>
                         <label className="switch">
-                            <input type="checkbox" id="cursordisp" defaultChecked onChange={this.props.braaChanged} />
+                            <input type="checkbox" id="cursordisp" defaultChecked onChange={braaChanged} />
                             <span className="slider round"><span className="on"> BRAA </span><span className="off"> BULL </span></span>
                         </label>
                         <button 
@@ -118,11 +124,11 @@ export default class ParrotSourControls extends React.Component<PSCProps, PSCSta
                             className="helpicon"
                             id="btnDisplayAlert"
                             type="button"
-                            onClick={this.toggleHelp}>
+                            onClick={this.handleToggleHelp}>
                                 ?
                         </button>                
                         <Dialog
-                            open={this.state.showHelpText}
+                            open={showHelpText}
                             onClose={this.handleHelpClose} >
                             <DialogContent>
                                 <DialogContentText>
