@@ -8,7 +8,7 @@ type FRProps = {
 /**
  * FileReject is just a stylized box for a successful upload notification.
  */
-export default class FileReject extends React.Component<FRProps, Record<string,unknown>> {
+export default class FileReject extends React.PureComponent<FRProps, Record<string,unknown>> {
 
     style={
         backgroundColor: "#EC3C3C",
@@ -19,9 +19,10 @@ export default class FileReject extends React.Component<FRProps, Record<string,u
     }
 
     render(): ReactElement {
+        const { rejectedFile } = this.props
         return (
             <div style={this.style}>
-                {this.props.rejectedFile.file.name} - {this.props.rejectedFile.errors[0].message}
+                {rejectedFile.file.name} - {rejectedFile.errors[0].message}
             </div>
         )
     }

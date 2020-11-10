@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 
-export default class FaaMap extends React.Component {
+export default class FaaMap extends React.PureComponent {
 
     style = {
         width: "100%",

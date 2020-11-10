@@ -7,7 +7,7 @@ type FAProps = {
 /**
  * FileAccept is just a stylized box for a successful upload notification.
  */
-export default class FileAccept extends React.Component<FAProps, Record<string,unknown>> {
+export default class FileAccept extends React.PureComponent<FAProps, Record<string,unknown>> {
 
     style={
         backgroundColor: "#08AE2A",
@@ -18,9 +18,10 @@ export default class FileAccept extends React.Component<FAProps, Record<string,u
     }
 
     render(): ReactElement{
+        const { acceptedFile } = this.props
         return (
             <div style={this.style}>
-                {this.props.acceptedFile.name}
+                {acceptedFile.name}
             </div>
         )
     }
