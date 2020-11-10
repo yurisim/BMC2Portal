@@ -12,7 +12,8 @@ type ChipProps = {
     title?: string,
     tags:string[],
     hasRemove:boolean,
-    isEdit:boolean
+    isEdit:boolean,
+    className?: string
 }
 
 type ChipState = {
@@ -108,11 +109,20 @@ export default class Chips extends React.Component<ChipProps, ChipState> {
         }
     }
 
+    styleReadOnly = {
+        textAlign:"left",
+        width:"100%",
+        backgroundColor:"unset",
+        padding:"unset" 
+    }
+    styleContainer = {}
+
     // main Component render
     render(): ReactElement{
         const asTagElems: JSX.Element[]=[]
+        const { isEdit } = this.props
         return (
-            <div className="chips-container" style={this.props.style}>
+            <div className="chips-container" style={isEdit? this.styleContainer : this.styleReadOnly}>
               {this.props.title && <h1>{this.props.title}</h1>}
               <div className="chips-list" id="list" >
                 {this.props.tags.map((item,index)=>{

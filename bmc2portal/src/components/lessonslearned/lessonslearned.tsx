@@ -27,7 +27,7 @@ type LLLState = {
 /**
  * A Component to render a (optionally filtered) list of Lessons Learned.
  */
-export default class LessonsLearnedList extends React.Component<Record<string,unknown>, LLLState> {
+export default class LessonsLearnedList extends React.PureComponent<Record<string,unknown>, LLLState> {
 
     // construct component with empty state
     constructor(props:Record<string,unknown>){
@@ -55,7 +55,8 @@ export default class LessonsLearnedList extends React.Component<Record<string,un
 
     // Filter lessons learned by tags
     filterLessons(lessons:LessonLearned[], tags:string[]):LessonLearned[]{
-        let filteredLsns:LessonLearned[] = this.state.allLessons;
+        const {allLessons} = this.state
+        let filteredLsns:LessonLearned[] = allLessons;
 
         if (tags) {
             // a lesson matches if the lesson's tags are a superset of desired tags
@@ -105,7 +106,8 @@ export default class LessonsLearnedList extends React.Component<Record<string,un
 
     // Chips will call this function to handle when chips change
     setSearchTags = (tags:string[]):void => {
-        const newDisplay = this.filterLessons(this.state.allLessons, tags);
+        const {allLessons} = this.state
+        const newDisplay = this.filterLessons(allLessons, tags);
         this.setState({searchTags: tags, displayLessons:newDisplay})
     } 
 
@@ -116,15 +118,16 @@ export default class LessonsLearnedList extends React.Component<Record<string,un
 
     // Create the rows in the table based on lessons to be displayed
     getLessonsLearnedTableRows(): JSX.Element[]{
+        const { failed, searchTags, displayLessons } = this.state
         let tableRows:JSX.Element[] = [this.rowSpan("Loading")]
         if (this.state){
-            if (this.state.failed){
+            if (failed){
                 tableRows = [this.rowSpan("Failed to retrieve data from the server.")]
-            } else if(this.state.displayLessons.length<=0){
+            } else if(displayLessons.length<=0){
                 tableRows = [this.rowSpan("No lessons learned with tags: " + 
-                    (this.state.searchTags.length > 0 ? this.state.searchTags : " no tags."))]
+                    (searchTags.length > 0 ? searchTags : " no tags."))]
             } else {
-                tableRows = this.state.displayLessons.map((lesson)=>{
+                tableRows = displayLessons.map((lesson)=>{
                     return <Lesson key={lesson.date+Math.random()} lesson={lesson}/>
                 })
             } 
@@ -137,29 +140,31 @@ export default class LessonsLearnedList extends React.Component<Record<string,un
     // TODO - replace with contextual API call for "I think you wanted..."
     filterLessonsLearned = (value:string):void =>{
         const text = value.toUpperCase()
+        const { allLessons } = this.state
         if (this.state){
-            const dLessons = this.state.allLessons.filter((lesson)=>{
+            const dLessons = allLessons.filter((lesson)=>{
                 return lesson.title.toUpperCase().indexOf(text) > -1 || lesson.content.toUpperCase().indexOf(text) > -1
             })
             this.setState({displayLessons: dLessons})
         }
     }
 
-    toggleEdit = ():void =>{
-        this.setState({isEdit:!this.state.isEdit})
+    handleToggleEdit = ():void =>{
+        this.setState(prevState=>({isEdit:!prevState.isEdit}))
     }
 
     // main Component render
     render(): ReactElement {
+        const { searchTags, allTags, isEdit } = this.state
         return (
         <div>
             <Chips 
-                isEdit={true}
-                hasRemove={true}
+                isEdit
+                hasRemove
                 title="Search by lessons learned with Tags:"
                 setTags={this.setSearchTags}
-                tags={this.state.searchTags}
-                allTags={this.state.allTags}
+                tags={searchTags}
+                allTags={allTags}
                 defaultText={defaultText}
             />
             <br/>
@@ -172,13 +177,13 @@ export default class LessonsLearnedList extends React.Component<Record<string,un
 
             <br/>
             <div style={{textAlign:"center"}}> Lessons Learned 
-            <button onClick={this.toggleEdit} style={{marginLeft:"2em", borderRadius:"10px", width:"auto"}}>
+            <button type="button" onClick={this.handleToggleEdit} style={{marginLeft:"2em", borderRadius:"10px", width:"auto"}}>
                 Add New
             </button>
             </div>
-            {this.state.isEdit &&
+            {isEdit &&
                 <Form
-                    onClose={this.toggleEdit}
+                    onClose={this.handleToggleEdit}
                 />
             }
             <table id="lessonsLearnedTable" className="lessonsTable" style={{width:"100%"}}><tbody>

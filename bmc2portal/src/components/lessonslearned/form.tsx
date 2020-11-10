@@ -24,7 +24,7 @@ type FormState = {
     content:string
 }
 
-export default class Form extends React.Component<FormProps, FormState> {
+export default class Form extends React.PureComponent<FormProps, FormState> {
 
     constructor(props:FormProps){
         super(props)
@@ -43,7 +43,8 @@ export default class Form extends React.Component<FormProps, FormState> {
     }
 
     isOpen():boolean{
-        return this.state.open
+        const { open } = this.state
+        return open
     }
 
     setOpen(val:boolean):void{
@@ -58,16 +59,18 @@ export default class Form extends React.Component<FormProps, FormState> {
 
     handleClose = ():void => {
         this.setOpen(false)
-        this.props.onClose()
+        const {onClose } = this.props
+        onClose()
     }
 
     // eslint-disable-next-line
     handleSubmit = async (e:any):Promise<void> => {
+        const {title, author, content} = this.state
         const goodForm = e.currentTarget.form.reportValidity()
         e.preventDefault();
         if (goodForm) {
-            console.log("submit to server", this.state.title, this.state.author, this.state.content)
-            const res = await backend.postLessonLearned(this.state.title, this.state.author, this.state.content)
+            console.log("submit to server", title, author, content)
+            const res = await backend.postLessonLearned(title, author, content)
             if (res === "OK"){
                 snackbar.alert("Submitted!", 5000, "green")
                 this.handleClose()
@@ -91,10 +94,11 @@ export default class Form extends React.Component<FormProps, FormState> {
         const date = new Date()
         const dateStr = date.getFullYear() +"-" + date.getMonth() + "-" + date.getDay();
 
-        return <Dialog 
-            style={{marginLeft:"25%"}}
+        const {open, searchTags, allTags} = this.state
+        return (<Dialog 
+            /*style={{marginLeft:"25%"}}*/
             fullScreen={false}
-            open={this.state.open}
+            open={open}
             onClose={this.handleClose}>
                 <form onSubmit={this.handleSubmit}>
                 <DialogContent>
@@ -123,15 +127,15 @@ export default class Form extends React.Component<FormProps, FormState> {
                         fullWidth
                         type="text"
                         onChange={this.handleAuthorChange}/>
-                    <button hidden onClick={this.handleSubmit}></button>
+                    <button type="button" hidden onClick={this.handleSubmit} />
                     <br/><br/>
                     <Chips 
-                        isEdit={true}
-                        hasRemove={true}
+                        isEdit
+                        hasRemove
                         title="Tags:"
                         setTags={this.setSearchTags}
-                        tags={this.state.searchTags}
-                        allTags={this.state.allTags}
+                        tags={searchTags}
+                        allTags={allTags}
                         defaultText="Enter tags..."
                     />
                 </DialogContent> 
@@ -144,6 +148,6 @@ export default class Form extends React.Component<FormProps, FormState> {
                     </Button>
                 </DialogActions>    
                 </form>
-            </Dialog>
+            </Dialog>)
     }
 }
