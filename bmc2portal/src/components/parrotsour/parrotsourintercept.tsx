@@ -7,9 +7,10 @@ import '../../css/slider.css'
 import '../../css/parrotsour.css'
 import '../../css/toggle.css'
 
+import { InterceptQT } from './quicktips/interceptQT'
+import { AlsaHelp } from './quicktips/alsahelp'
+
 const ParrotSourHeader = lazy(()=>import('./parrotsourheader'))
-const InterceptQT = lazy(()=>import("./quicktips/interceptQT"))
-const AlsaHelp = lazy(()=>import("./quicktips/alsahelp"))
 const ParrotSourControls = lazy(()=>import("./parrotsourcontrols"))
 
 const PictureCanvas = lazy(()=>import('./canvas/picturecanvas'))
@@ -40,7 +41,7 @@ interface PSIState {
 /**
  * A Component to display intercept pictures on an HTML5 canvas
  */
-export default class ParrotSourIntercept extends React.Component<Record<string,unknown>, PSIState> {
+export default class ParrotSourIntercept extends React.PureComponent<Record<string,unknown>, PSIState> {
 
     constructor(props:Record<string,unknown>){
         super(props)
@@ -67,8 +68,8 @@ export default class ParrotSourIntercept extends React.Component<Record<string,u
     /**
      * Toggle the quick tips dialog for ALSA help
      */
-    toggleAlsaQT = ():void =>{
-        this.setState({showAlsaQT: !this.state.showAlsaQT})
+    handleToggleAlsaQT = ():void =>{
+        this.setState(prevState=>({showAlsaQT: !prevState.showAlsaQT}))
     }
 
     /**
@@ -82,7 +83,7 @@ export default class ParrotSourIntercept extends React.Component<Record<string,u
      * Called when the PSControls slider value is changed
      * @param value - new speed of the slider
      */
-    handleSliderChange = (value: number):void => {
+    onSliderChange = (value: number):void => {
         this.setState({speedSliderValue: value})
     }
 
@@ -93,43 +94,43 @@ export default class ParrotSourIntercept extends React.Component<Record<string,u
     formatSelChange = (fmt: string) => {
         return ():void => {
             this.setState({format: fmt})
-            this.showNewPic()
+            this.handleNewPic()
         }
     }
 
     /**
      * Called to display a new Picture
      */
-    showNewPic = ():void =>{
-        this.setState({newPic:!this.state.newPic})
+    handleNewPic = ():void =>{
+        this.setState(prevState=>({newPic:!prevState.newPic}))
     }
 
     /**
      * Toggle the answer collapsible
      */
-    revealPic = ():void => {
-        this.setState({showAnswer: !this.state.showAnswer})
+    handleRevealPic = ():void => {
+        this.setState(prevState=>({showAnswer: !prevState.showAnswer}))
     }
 
     /**
      * Called when the BRAAFirst option is changed
      */
     braaChanged = ():void =>{
-        this.setState({braaFirst: !this.state.braaFirst})
+        this.setState(prevState=>({braaFirst: !prevState.braaFirst}))
     }
 
     /**
      * Called when the "Show Measurements" check box changes values
      */
-    toggleMeasurements = ():void => {
-        this.setState({showMeasurements: !this.state.showMeasurements})
+    handleToggleMeasurements = ():void => {
+        this.setState(prevState=>({showMeasurements: !prevState.showMeasurements}))
     }
 
     /**
      * Called when the hard mode check box changes values
      */
-    toggleHardMode = ():void => {
-        this.setState({isHardMode: !this.state.isHardMode})
+    handleToggleHardMode = ():void => {
+        this.setState(prevState=>({isHardMode: !prevState.isHardMode}))
     }
 
     /**
@@ -158,12 +159,15 @@ export default class ParrotSourIntercept extends React.Component<Record<string,u
      * Called when the orienation is changed, to modify the canvas dimensions
      */
     modifyCanvas = ():void => {
+        const { canvasConfig } = this.state
+        const { orient } = canvasConfig
+
         let newConfig = {
             height:700,
             width:600,
             orient:"NS"
         }
-        if (this.state.canvasConfig.orient==="NS"){
+        if (orient==="NS"){
             newConfig = {
                 height:400,
                 width:800,
@@ -177,20 +181,21 @@ export default class ParrotSourIntercept extends React.Component<Record<string,u
      * Called when the picture type selector changes values
      * @param e - ChangeEvent for the Select element
      */
-    changePicType = (e: ChangeEvent<{name?:string|undefined, value:unknown}>):void => {
+    handleChangePicType = (e: ChangeEvent<{name?:string|undefined, value:unknown}>):void => {
         if (typeof e.target.value === "string")
             this.setState({picType:e.target.value})
     }
 
     render():ReactElement {
+        const { showAlsaQT, showAnswer, answer, picType } = this.state
         return (
             <div>
                 <Suspense fallback={<div>Loading...</div>} >
                     <ParrotSourHeader comp={<InterceptQT/>} />
-                </Suspense>  
+                </Suspense>   
 
                 <Dialog
-                    open={this.state.showAlsaQT}
+                    open={showAlsaQT}
                     onClose={this.handleAlsaQTClose} >
                     <AlsaHelp />
                 </Dialog>
@@ -209,7 +214,7 @@ export default class ParrotSourIntercept extends React.Component<Record<string,u
                                 onChange={this.formatSelChange("ipe")}
                             />
                             <label htmlFor="ipe">3-3 IPE</label>
-                            <div className="check"></div>
+                            <div className="check" />
                         </li>
 
                         <li>
@@ -222,8 +227,8 @@ export default class ParrotSourIntercept extends React.Component<Record<string,u
                                 onChange={this.formatSelChange("alsa")}
                             />
                             <label htmlFor="alsa">ALSA ACC </label> 
-                            <div className="check"></div>
-                            <button style={{padding:"0px"}} className="helpicon" id="btnAlert" type="button" onClick={this.toggleAlsaQT}>?</button>
+                            <div className="check" />
+                            <button style={{padding:"0px"}} className="helpicon" id="btnAlert" type="button" onClick={this.handleToggleAlsaQT}>?</button>
                         </li>
                     </ul>
                 </div>
@@ -235,8 +240,8 @@ export default class ParrotSourIntercept extends React.Component<Record<string,u
                             style={{width:"100%",height:"100%"}} 
                             labelId="picSelLabel" 
                             id="pictureType" 
-                            value={this.state.picType}
-                            onChange={this.changePicType}>
+                            value={picType}
+                            onChange={this.handleChangePicType}>
                             <MenuItem value="random">Select Picture</MenuItem>
                             <MenuItem value="random">RANDOM</MenuItem>
                             <MenuItem value="azimuth">AZIMUTH</MenuItem>
@@ -253,19 +258,19 @@ export default class ParrotSourIntercept extends React.Component<Record<string,u
                             <MenuItem value="pod">PICTURE OF THE DAY</MenuItem>
                         </Select>
                     </div>
-                    <button style={{height:"min-content", width:"25%",marginBottom:"20px"}} onClick={this.showNewPic}>New Pic</button>
+                    <button type="button" style={{height:"min-content", width:"25%",marginBottom:"20px"}} onClick={this.handleNewPic}>New Pic</button>
                     
                     <div className="check-container" style={{paddingTop:"0px",paddingBottom:"0px"}}>
                         <ul style={{display:"inline-flex"}}>
                             <li>
-                            <input type="checkbox" id="measureMyself" onChange={this.toggleMeasurements} />
+                            <input type="checkbox" id="measureMyself" onChange={this.handleToggleMeasurements} />
                             <label style={{width:"max-content", paddingRight:"10px"}} htmlFor="measureMyself">I want to measure</label>
-                            <div className="box"></div>
+                            <div className="box" />
                             </li>
                             <li>
-                            <input type="checkbox" id="hardMode" onChange={this.toggleHardMode}/>
+                            <input type="checkbox" id="hardMode" onChange={this.handleToggleHardMode}/>
                             <label style={{paddingRight:"10px"}} htmlFor="hardMode"> Hard Mode</label>
-                            <div className='box'></div>
+                            <div className='box'/>
                             </li>
                         </ul>
                     </div>
@@ -274,7 +279,7 @@ export default class ParrotSourIntercept extends React.Component<Record<string,u
 
                 <Suspense fallback={<div>Loading...</div>} >    
                     <ParrotSourControls 
-                        handleSliderChange={this.handleSliderChange}
+                        handleSliderChange={this.onSliderChange}
                         modifyCanvas={this.modifyCanvas}
                         braaChanged={this.braaChanged}
                         startAnimate={this.startAnimate}
@@ -284,10 +289,10 @@ export default class ParrotSourIntercept extends React.Component<Record<string,u
 
                 <br/>
                 
-                <button type="button" className={this.state.showAnswer ? "collapsible active":"collapsible"} onClick={this.revealPic}>Reveal Pic</button>
-                {this.state.showAnswer && 
+                <button type="button" className={showAnswer ? "collapsible active":"collapsible"} onClick={this.handleRevealPic}>Reveal Pic</button>
+                {showAnswer && 
                     <div className="content" id="answerDiv" style={{color:"black", padding:"20px"}}>
-                        {this.state.answer ? this.state.answer : <div/>}
+                        {answer ? answer : <div/>}
                     </div>
                 }  
                 <br/><br/><br/>

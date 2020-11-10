@@ -5,7 +5,7 @@ import {Dialog, DialogContent} from '@material-ui/core'
 type IRState = {
     showIssueForm: boolean
 }
-export default class IssueReport extends React.Component<Record<string,unknown>, IRState> {
+export default class IssueReport extends React.PureComponent<Record<string,unknown>, IRState> {
 
     constructor(props: Record<string, unknown>){
         super(props)
@@ -17,8 +17,8 @@ export default class IssueReport extends React.Component<Record<string,unknown>,
     /**
      * Toggle the issue form display
      */
-    toggleIssueForm = ():void =>{
-        this.setState({showIssueForm: !this.state.showIssueForm})
+    handleToggleIssueForm = ():void =>{
+        this.setState(prevState=>({showIssueForm: !prevState.showIssueForm}))
     }
 
     /**
@@ -29,11 +29,12 @@ export default class IssueReport extends React.Component<Record<string,unknown>,
     }
 
     render(): ReactElement {
+        const {showIssueForm} = this.state
         return (
         <div style={{width:"25%"}}>
-            <button type="button" style={{marginLeft:"5%", top:"5px"}} onClick={this.toggleIssueForm}> Report Issue </button>     
+            <button type="button" style={{marginLeft:"5%", top:"5px"}} onClick={this.handleToggleIssueForm}> Report Issue </button>     
             <Dialog
-                open={this.state.showIssueForm}
+                open={showIssueForm}
                 onClose={this.handleIssueClose} >
                 <DialogContent>
                     Hello world -- Replace with Form Content
