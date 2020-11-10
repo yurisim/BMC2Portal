@@ -31,8 +31,8 @@
     "rules":{
         "no-use-before-define": "off",
         "@typescript-eslint/no-use-before-define": ["error"],
-        "complexity": ["error", 15],
-        "max-depth": ["error", 4],
+        "complexity": ["warn", 15],
+        "max-depth": ["warn", 4],
 
         /** react rules */
         "react/jsx-uses-react": "error",

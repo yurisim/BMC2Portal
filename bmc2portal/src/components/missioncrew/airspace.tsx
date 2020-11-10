@@ -16,7 +16,7 @@ type ASState = {
 /**
  * This Component contains information on a particular airspace.
  */
-export default class Airspace extends React.Component<Record<string,unknown>, ASState> {
+export default class Airspace extends React.PureComponent<Record<string,unknown>, ASState> {
 
   // Initialize the state
   constructor(props:Record<string,unknown>){
@@ -63,26 +63,34 @@ export default class Airspace extends React.Component<Record<string,unknown>, AS
 
   // main Component render
   render(): ReactElement {
+    const { 
+      name,
+      loaLoc,
+      atcAgency,
+      units,
+      lessons,
+      logo
+     } = this.state
     return (
       <div>
         <table><tbody>
-            <tr><th colSpan={2} id="aspace">{this.state.name}</th></tr>
-            <tr><td id="atc">{this.state.atcAgency}</td>
-                {this.state.loaLoc!==["Loading..."] && 
-                  <td key={this.state.name}>
-                    {this.state.loaLoc && 
+            <tr><th colSpan={2} id="aspace">{name}</th></tr>
+            <tr><td id="atc">{atcAgency}</td>
+                {loaLoc!==["Loading..."] && 
+                  <td key={name}>
+                    {loaLoc && 
                      <LoaPdf
                       update={false}
-                      loaLoc={this.state.loaLoc}
+                      loaLoc={loaLoc}
                     />}
-                    {!this.state.loaLoc && 
+                    {!loaLoc && 
                     <div>No LOA associated with this airspace.</div>}
                   </td>
                 }
             </tr>
-            <tr><td colSpan={2} id="units">{this.state.units}</td></tr>
-            <tr><td colSpan={2} id="lessons">{this.state.lessons}</td></tr>
-            <tr><td colSpan={2} height="400px" id="diagram"> {this.state.logo} </td></tr>
+            <tr><td colSpan={2} id="units">{units}</td></tr>
+            <tr><td colSpan={2} id="lessons">{lessons}</td></tr>
+            <tr><td colSpan={2} height="400px" id="diagram"> {logo} </td></tr>
         </tbody></table>
       </div>
     )}

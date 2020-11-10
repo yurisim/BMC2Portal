@@ -236,8 +236,8 @@ export default class ParrotSourIntercept extends React.PureComponent<Record<stri
                 <div style={{display:"flex"}}>
                     <div className="custom-sel-div">
                         <Select 
+                            className="parrotsoursel"
                             disableUnderline 
-                            style={{width:"100%",height:"100%"}} 
                             labelId="picSelLabel" 
                             id="pictureType" 
                             value={picType}

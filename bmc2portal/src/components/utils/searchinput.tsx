@@ -35,6 +35,24 @@ export default class SearchInput extends React.PureComponent<SIProps> {
     }
   }
 
+  /**
+   * Apply watermark for blur
+   * @param itm The FocusEvent that occured
+   */
+  handleBlur = (itm: React.FocusEvent<HTMLInputElement>): void => {
+    const { defaultValue = "Enter search text..." } = this.props
+    this.waterMark(itm,"blur", defaultValue)
+  }
+
+  /**
+   * Apply watermark for focus
+   * @param itm The FocusEvent that occured
+   */
+  handleFocus = (itm: React.FocusEvent<HTMLInputElement>): void => {
+    const { defaultValue = "Enter search text..." } = this.props
+    this.waterMark(itm, "focus", defaultValue)
+  }
+
   // main Component render function
   render(): ReactElement{
     const { 
@@ -52,8 +70,8 @@ export default class SearchInput extends React.PureComponent<SIProps> {
           defaultValue = { defaultValue }
           style = { {color:"gray"} }
           onInput = { this.handleSearch }
-          onBlur = { (itm) => this.waterMark(itm,"blur", defaultValue) }
-          onFocus = { (itm) => this.waterMark(itm,"focus", defaultValue) } />
+          onBlur = { this.handleBlur }
+          onFocus = { this.handleFocus } />
       </div>
     )}
 }

@@ -17,7 +17,7 @@ type ALState = {
 /**
  * This Component contains a searchable/filterable table of the CONUS SUAs.
  */
-export default class AirspaceList extends React.Component<Record<string,unknown>, ALState>{
+export default class AirspaceList extends React.PureComponent<Record<string,unknown>, ALState>{
 
   // Construct Component with empty state
   constructor(props: Record<string,unknown>){
@@ -51,7 +51,9 @@ export default class AirspaceList extends React.Component<Record<string,unknown>
   // Filter the table based on search text
   filterAirspaces = (value:string):void => {
     const searchVal = value.toUpperCase()
-    const newAspaces = this.state.airspaces.filter((aspace)=>{
+    const { airspaces } = this.state
+
+    const newAspaces = airspaces.filter((aspace)=>{
       let foundMatch = false;
       if (!aspace.loaLoc) return false
       for (let i = 0; i < aspace.loaLoc.length; i++){
@@ -72,17 +74,18 @@ export default class AirspaceList extends React.Component<Record<string,unknown>
 
   // Construct all of the airspace table rows for rendering
   getAirspaceTableRows():JSX.Element[]{
+    const {failed, displayAirspaces} = this.state
     // Default to "Loading...""
     let tableRows:JSX.Element[] = [this.rowSpan(<div>Loading...</div>)]
     if(this.state){
       // check if server returned data, returned [], or succeeded
-      if (this.state.failed){
+      if (failed){
         tableRows = [this.rowSpan(<div>Failed to fetch data from the server.</div>)]
-      } else if (this.state.displayAirspaces.length ===0 ){
+      } else if (displayAirspaces.length ===0 ){
         tableRows = [this.rowSpan(<div>No airspaces in the database.</div>)]
       } else {
-        tableRows = this.state.displayAirspaces.map((aspace)=>{
-          return <tr key={aspace.name}>
+        tableRows = displayAirspaces.map((aspace)=>{
+          return (<tr key={aspace.name}>
             <td><a href={"/msncrew/airspacepage.html?aspace="+aspace.name}>{aspace.name}</a></td>
             <td>
             {aspace.loaLoc && <LoaPdf 
@@ -91,7 +94,7 @@ export default class AirspaceList extends React.Component<Record<string,unknown>
             />}
             {!aspace.loaLoc && <div>No LOA for this airspace.</div>}
             </td>
-          </tr>
+          </tr>)
         })
       }
     }
