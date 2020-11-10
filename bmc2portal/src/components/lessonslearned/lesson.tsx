@@ -1,17 +1,22 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 
 import Chips from './chips.js'
 
 import '../../css/styles.css'
 import '../../css/chips.css'
 import '../../css/lesson.css'
+import { LessonLearned } from '../utils/backendinterface.js';
+
+type LessonProps = {
+    lesson: LessonLearned
+}
 
 /**
  * A Component to render a lesson learned
  */
-export default class Lesson extends React.Component {
+export default class Lesson extends React.Component<LessonProps, Record<string,unknown>> {
 
-    render(){
+    render(): ReactElement {
         return (
             <tr>
             <td className="lessonTd">
@@ -30,7 +35,7 @@ export default class Lesson extends React.Component {
                     tags={this.props.lesson.tags}
                     isEdit={false}
                     hasRemove={false}
-                    onClick={()=>{}} /></div>
+                /></div>
             </td>
             </tr>)
     }

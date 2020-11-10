@@ -1,4 +1,4 @@
-import { Airspace, ATCAgency, Backend, UnitInfo } from "./backendinterface";
+import { Airspace, ATCAgency, Backend, LessonLearned, UnitInfo } from "./backendinterface";
 
 class mBackend implements Backend {
     //-----------------------------------------------------------------------------
@@ -74,8 +74,9 @@ class mBackend implements Backend {
         return new Promise(()=>{return {data}})
     }
 
-    postLessonLearned(title:string, author:string, content: string):Promise<Response>{
-        return new Promise(()=>{return {title, author, content}})
+    // eslint-disable-next-line
+    postLessonLearned(title:string, author:string, content: string):Promise<string>{
+        return new Promise(()=>{return "OK"})
     }
 
     // Mock SELECT * FROM UNITS WHERE NAME=unitname
@@ -119,12 +120,12 @@ class mBackend implements Backend {
     }
 
     // Mock SELECT * FROM LESSONS_LEARNED
-    async getLessonsLearned():Promise<Response>{
+    async getLessonsLearned():Promise<LessonLearned[]>{
         return new Promise(()=>{return this.lessonsMock()})
     }
 
     // Mock GET ALL TAGS FROM LESSONS_LEARNED AND SPLIT ","
-    async getAllTags(): Promise<Response>{
+    async getAllTags(): Promise<string[]>{
         return new Promise(()=>{return ["W122", "W1","W2","W3","W4","W5","W166","W177","W155","W151","RED FLAG"]});
     }
 }

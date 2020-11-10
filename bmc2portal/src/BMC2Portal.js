@@ -17,7 +17,7 @@ const LOAList = lazy(()=>import("./components/missioncrew/loalist"))
 const UnitList = lazy(()=>import("./components/missioncrew/unitlist"))
 const Airspace = lazy(()=>import("./components/missioncrew/airspace"))
 const Unit = lazy(()=>import("./components/missioncrew/unit"))
-const LessonsLearnedList = lazy(()=>import("./components/lessonslearned/lessonslearned.js"))
+const LessonsLearnedList = lazy(()=>import("./components/lessonslearned/lessonslearned"))
 const ResourceList = lazy(()=>import("./components/resourcelist"))
 
 const SideBar = lazy(()=> import("./components/navigation/sidebar"));

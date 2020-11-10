@@ -1,4 +1,4 @@
-import { Airspace, ATCAgency, Backend, UnitInfo } from "./backendinterface";
+import { Airspace, ATCAgency, Backend, LessonLearned, UnitInfo } from "./backendinterface";
 
 const baseURL=process.env.REACT_APP_SERVER_BASE_URL
 
@@ -47,13 +47,13 @@ async function _postFiles(formData:FormData, url = "/api/uploadLOA"){
 
 class sBackend implements Backend {
     // PUT a lesson learned to the server
-    async postLessonLearned(title:string, author:string, content:string):Promise<Response>{
+    async postLessonLearned(title:string, author:string, content:string):Promise<string>{
         const lesson = {
             title: title,
             author: author,
             content: content,
         }
-        return post(lesson, '/api/lessonslearned').then((data) => {return data});
+        return post(lesson, '/api/lessonslearned').then((res) => {return (res.ok ? "OK" : "FAIL")});
     }
 
     // UPLOAD file
@@ -87,12 +87,12 @@ class sBackend implements Backend {
     }
     
     // SELECT * FROM LESSONS LEARNED
-    async getLessonsLearned(): Promise<Response>{
+    async getLessonsLearned(): Promise<LessonLearned[]>{
         return get('/api/lessonslearned').then((data) => {return data});
     }
 
     // SELECT DISTINCT TAGS FROM LESSONS LEARNED
-    async getAllTags(): Promise<Response>{
+    async getAllTags(): Promise<string[]>{
         return get('/api/lessontags').then((data) => {return data});
     }
 }

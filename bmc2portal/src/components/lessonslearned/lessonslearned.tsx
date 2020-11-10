@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 
 import backend from '../utils/backend'
 
@@ -11,39 +11,51 @@ import '../../css/styles.css'
 import '../../css/chips.css'
 import '../../css/lesson.css'
 import '../../css/search.css'
+import { LessonLearned } from '../utils/backendinterface';
 
 const defaultText = "type and enter tag...";
+
+type LLLState = {
+    allLessons: LessonLearned[],
+    allTags: string[],
+    searchTags: string[],
+    displayLessons: LessonLearned[],
+    failed:boolean,
+    isEdit:boolean,
+}
 
 /**
  * A Component to render a (optionally filtered) list of Lessons Learned.
  */
-export default class LessonsLearnedList extends React.Component {
+export default class LessonsLearnedList extends React.Component<Record<string,unknown>, LLLState> {
 
     // construct component with empty state
-    constructor(){
-        super();
+    constructor(props:Record<string,unknown>){
+        super(props);
         this.state = {
             allTags: [],
             searchTags: [],
             allLessons: [],
             displayLessons: [],
+            failed: false,
+            isEdit: false
         }
     }
 
     // Lifecycle - load lessons from server after the component has loaded
-    componentDidMount(){
+    componentDidMount():void{
         this.loadLessons();
     }
 
     // isSuper returns if arr1 is a superset of arr2
     // i.e. all of arr2 is in arr1
-    isSuper(arr1, arr2){
+    isSuper(arr1:string[], arr2:string[]): boolean{
         return arr2.every(function(val) { return arr1.indexOf(val.toUpperCase()) >= 0; });
     }
 
     // Filter lessons learned by tags
-    filterLessons(lessons, tags){
-        let filteredLsns = this.state.allLessons;
+    filterLessons(lessons:LessonLearned[], tags:string[]):LessonLearned[]{
+        let filteredLsns:LessonLearned[] = this.state.allLessons;
 
         if (tags) {
             // a lesson matches if the lesson's tags are a superset of desired tags
@@ -58,13 +70,13 @@ export default class LessonsLearnedList extends React.Component {
       }
   
     // load the lessons learned from the server with (optional) initial search tags
-    async loadLessons(){
+    async loadLessons(): Promise<void>{
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const tags = urlParams.get('tags')
   
-        let lessons = []
-        let allTags = []
+        let lessons:LessonLearned[] = []
+        let allTags:string[] = []
         try {
             lessons = await backend.getLessonsLearned();
             allTags = await backend.getAllTags(); // for autosuggest
@@ -72,8 +84,8 @@ export default class LessonsLearnedList extends React.Component {
             this.setState({failed:true})
         }
 
-        let items = [];
-        let tagSplit = [];
+        const items:string[] = [];
+        let tagSplit:string[] = [];
         if (tags){
             tagSplit = tags.split(',');
             tags.split(",").forEach((itm) => {
@@ -81,7 +93,7 @@ export default class LessonsLearnedList extends React.Component {
             })
         }
 
-        let filteredLessons = this.filterLessons(lessons, tagSplit);
+        const filteredLessons = this.filterLessons(lessons, tagSplit);
 
         this.setState({
             searchTags: items,
@@ -92,25 +104,25 @@ export default class LessonsLearnedList extends React.Component {
     }
 
     // Chips will call this function to handle when chips change
-    setSearchTags = (tags) => {
-        let newDisplay = this.filterLessons(this.state.allLessons, tags);
+    setSearchTags = (tags:string[]):void => {
+        const newDisplay = this.filterLessons(this.state.allLessons, tags);
         this.setState({searchTags: tags, displayLessons:newDisplay})
     } 
 
     // Return a row that spans the whole table
-    rowSpan(elem) {
-        return <tr><td colSpan="2">{elem}</td></tr>
+    rowSpan(elem:JSX.Element|string):JSX.Element {
+        return <tr><td colSpan={2}>{elem}</td></tr>
     }
 
     // Create the rows in the table based on lessons to be displayed
-    getLessonsLearnedTableRows(){
-        let tableRows = this.rowSpan("Loading")
+    getLessonsLearnedTableRows(): JSX.Element[]{
+        let tableRows:JSX.Element[] = [this.rowSpan("Loading")]
         if (this.state){
             if (this.state.failed){
-                tableRows = this.rowSpan("Failed to retrieve data from the server.")
+                tableRows = [this.rowSpan("Failed to retrieve data from the server.")]
             } else if(this.state.displayLessons.length<=0){
-                tableRows = this.rowSpan("No lessons learned with tags: " + 
-                    (this.state.searchTags.length > 0 ? this.state.searchTags : " no tags."))
+                tableRows = [this.rowSpan("No lessons learned with tags: " + 
+                    (this.state.searchTags.length > 0 ? this.state.searchTags : " no tags."))]
             } else {
                 tableRows = this.state.displayLessons.map((lesson)=>{
                     return <Lesson key={lesson.date+Math.random()} lesson={lesson}/>
@@ -123,22 +135,22 @@ export default class LessonsLearnedList extends React.Component {
     // Filter lessons learned based on the user entered search value
     // It will look for users keywords in the title or content
     // TODO - replace with contextual API call for "I think you wanted..."
-    filterLessonsLearned = (value) =>{
-        let text = value.toUpperCase()
+    filterLessonsLearned = (value:string):void =>{
+        const text = value.toUpperCase()
         if (this.state){
-            let dLessons = this.state.allLessons.filter((lesson)=>{
+            const dLessons = this.state.allLessons.filter((lesson)=>{
                 return lesson.title.toUpperCase().indexOf(text) > -1 || lesson.content.toUpperCase().indexOf(text) > -1
             })
             this.setState({displayLessons: dLessons})
         }
     }
 
-    toggleEdit = () =>{
+    toggleEdit = ():void =>{
         this.setState({isEdit:!this.state.isEdit})
     }
 
     // main Component render
-    render() {
+    render(): ReactElement {
         return (
         <div>
             <Chips 
