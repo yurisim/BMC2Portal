@@ -3,7 +3,7 @@ const snackbar = {
     async alert(text:string, timeout: number, color = "#4caf50"): Promise<void> {
       const x: HTMLElement|null = document.getElementById("snackbar");
       if (x){
-        x.innerHTML = text;
+        x.innerText = text;
         x.className = "show";
         x.style.backgroundColor = color;
         timeout = (timeout === undefined) ? 3000 : timeout;
