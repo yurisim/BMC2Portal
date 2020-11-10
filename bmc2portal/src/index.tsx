@@ -22,23 +22,26 @@ const World = () => {
   }, []);
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={
+      <div>
+        Loading...
+      </div>}
+    >
       <Globe
-        globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
-        backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
-
-        labelsData={places}
-        // eslint-disable-next-line
-        labelLat={(d:any) => {return d.record.fields.geo_point_2d.lat}}
-        // eslint-disable-next-line
-        labelLng={(d:any) => {return d.record.fields.geo_point_2d.lon}}
-        // eslint-disable-next-line
-        labelLabel={(d:any) => {return d.record.fields.site_name}}
-        labelText=""
-        labelSize={0.2}
-        labelDotRadius={.5}
-        labelColor={() => 'rgba(165, 165, 265, 0.75)'}
-        labelResolution={2}
+          globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
+          backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
+          labelsData={places}
+          // eslint-disable-next-line
+          labelLat={(d:any) => {return d.record.fields.geo_point_2d.lat}}
+          // eslint-disable-next-line
+          labelLng={(d:any) => {return d.record.fields.geo_point_2d.lon}}
+          // eslint-disable-next-line
+          labelLabel={(d:any) => {return d.record.fields.site_name}}
+          labelText=""
+          labelSize={0.2}
+          labelDotRadius={.5}
+          labelColor={() => 'rgba(165, 165, 265, 0.75)'}
+          labelResolution={2}
       />
   </Suspense>)
 };
