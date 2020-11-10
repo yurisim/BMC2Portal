@@ -11,11 +11,13 @@ interface SIProps{
 /**
  * This Component renders a search input box.
  */
-export default class SearchInput extends React.Component<SIProps> {
+export default class SearchInput extends React.PureComponent<SIProps> {
+
 
   // perform the parent search with search input from user
-  search = (e:React.FormEvent<HTMLInputElement>):void => {
-    this.props.searchFunc(e.currentTarget.value)
+  handleSearch = (e:React.FormEvent<HTMLInputElement>):void => {
+    const { searchFunc } = this.props;
+    searchFunc(e.currentTarget.value)
   }
 
   // blur/focus input
@@ -35,20 +37,23 @@ export default class SearchInput extends React.Component<SIProps> {
 
   // main Component render function
   render(): ReactElement{
-    const defaultText = this.props.defaultValue ? this.props.defaultValue : "Enter search text...";
+    const { 
+      defaultValue = "Enter search text...",
+      label
+    } = this.props
     return (
       <div className="searchDiv">
-        {this.props.label && 
-          <label style={{paddingRight:"5px"}} htmlFor="searchText">{this.props.label}</label>}  
+        {label && 
+          <label style={{paddingRight:"5px"}} htmlFor="searchText">{label}</label>}  
         <input 
           className="searchInput"
           type="text"
           id="searchText"
-          defaultValue = { defaultText }
+          defaultValue = { defaultValue }
           style = { {color:"gray"} }
-          onInput = { this.search }
-          onBlur = { (itm) => this.waterMark(itm,"blur", defaultText) }
-          onFocus = { (itm) => this.waterMark(itm,"focus", defaultText) } />
+          onInput = { this.handleSearch }
+          onBlur = { (itm) => this.waterMark(itm,"blur", defaultValue) }
+          onFocus = { (itm) => this.waterMark(itm,"focus", defaultValue) } />
       </div>
     )}
 }

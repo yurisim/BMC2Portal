@@ -18,13 +18,7 @@ interface PSHeaderState{
  * - Issue Report
  * - 552 Logos
  */
-export default class ParrotSourHeader extends React.Component<PSHeaderProps, PSHeaderState> {
-
-    imgStyle:CSSProperties = {
-        position:"absolute",
-        height: "60px",
-        top: "5px", 
-    }
+export default class ParrotSourHeader extends React.PureComponent<PSHeaderProps, PSHeaderState> {
 
     constructor(props: PSHeaderProps){
         super(props)
@@ -33,11 +27,18 @@ export default class ParrotSourHeader extends React.Component<PSHeaderProps, PSH
         }
     }
 
+    imgStyle:CSSProperties = {
+        position:"absolute",
+        height: "60px",
+        top: "5px", 
+    }
+
     /**
      * Toggle display of the QuickTips Dialog Element (component passed in props)
      */
-    toggleQuickTips = ():void =>{
-        this.setState({showQT: !this.state.showQT})
+    handleToggleQT = ():void =>{
+        const { showQT } = this.state
+        this.setState({showQT: !showQT})
     }
     
     /**
@@ -48,21 +49,22 @@ export default class ParrotSourHeader extends React.Component<PSHeaderProps, PSH
     }
     
     render():ReactElement{
+        const { showQT } = this.state
+        const { comp } = this.props
         return (
             <div>
                 <img src="/icon/552trans.png" style={{...this.imgStyle, right:"5%"}} id="acwlogo" alt="552Logo" />
                 <img src="/icon/panthertrans.png" style={{...this.imgStyle, right:"15%"}} id="pantherlogo" alt="968Logo" />
 
                 <div style={{display:"flex"}}>
-                    <button type="button" style={{width:"25%",top:"5px"}} onClick={this.toggleQuickTips}>Quick Tips</button>
-                    {this.state.showQT && 
+                    <button type="button" style={{width:"25%",top:"5px"}} onClick={this.handleToggleQT}>Quick Tips</button>
+                    {showQT && 
                         <Dialog
-                            open={this.state.showQT}
+                            open={showQT}
                             onClose={this.handleQTClose}>
-                            {this.props.comp}
+                            {comp}
                         </Dialog>
                     }
-                    
                     <IssueReport />
                 </div>
             </div>

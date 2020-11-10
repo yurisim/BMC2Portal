@@ -7,12 +7,13 @@ interface IPProps {
 /**
  * This Component should render an image.
  */
-export default class ImagePane extends React.Component<IPProps> {
-
-  render(): ReactElement{
-    return (
+//export default class ImagePane extends React.PureComponent<IPProps> {
+export const ImagePane = (props: IPProps):ReactElement => 
+{
+  const { imageSrc } = props
+  return (
       <div style={{textAlign:"center"}}>
-        <img alt={this.props.imageSrc} src={this.props.imageSrc}></img>
+        <img alt={imageSrc} src={imageSrc} />
       </div>
-    )}
+  )
 }

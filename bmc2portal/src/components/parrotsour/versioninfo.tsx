@@ -3,7 +3,7 @@ import React, { ReactElement } from 'react'
 /**
  * Component to display versioning information at the bottom of PS sites
  */
-export default class VersionInfo extends React.Component {
+export default class VersionInfo extends React.PureComponent {
 
     vStyle = {
         color:"lightblue"
