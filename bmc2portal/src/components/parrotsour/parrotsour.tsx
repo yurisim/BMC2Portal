@@ -1,6 +1,6 @@
 import React, { lazy, ReactElement, Suspense } from 'react'
 
-const ParrotSourIntercept = lazy(()=>import("./parrotsourintercept"))
+const ParrotSourIntercept = lazy(()=>import("./intercept/parrotsourintercept"))
 
 /**
  * The main entry class for a ParrotSour component
@@ -13,7 +13,7 @@ const ParrotSour = ():ReactElement => {
     return(
         <Suspense fallback={<div>Loading...</div>} >
             <ParrotSourIntercept/>
-        </Suspense>            
+        </Suspense>
     )
 }
 
