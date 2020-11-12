@@ -83,15 +83,17 @@ export default class PictureCanvas extends React.PureComponent<PicCanvasProps, P
             return true;
         }
     
-        if (areEqualShallow(rest, newrest) && oldAnimate !== newAnimate){    
-            if (this.props.animate){
+        if (areEqualShallow(rest, newrest) && oldAnimate !== newAnimate){   
+            const { animate, showMeasurements } = this.props 
+            const { canvas, animateCanvas, answer } = this.state
+            if (animate){
                 console.log("initiating animation...")
-                if (this.state.canvas && this.state.animateCanvas){
-                  animateGroups(this.state.canvas, this.props, this.state, this.state.answer.groups, this.state.animateCanvas);
+                if (canvas && animateCanvas){
+                  animateGroups(canvas, this.props, this.state, answer.groups, animateCanvas);
                 }
             } else {
                 console.log("pausing canvas")
-                pauseFight(this.props.showMeasurements)
+                pauseFight(showMeasurements)
             }
         }
     }
@@ -115,14 +117,15 @@ export default class PictureCanvas extends React.PureComponent<PicCanvasProps, P
      * @param start (optional) start position for the picture
      */
     drawPicture = (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, forced?: boolean, start?: Bullseye):DrawAnswer => {
-        
-        const isLeadEdge = (this.props.picType === "leading edge" || this.props.picType === "package" || this.props.picType==="ea")
+        const { picType } = this.props
+
+        const isLeadEdge = (picType === "leading edge" || picType === "package" || picType==="ea")
 
         let type = "azimuth"
         if (forced) {
             type = this.getRandomPicType(true)
         } else {
-            type = ((this.props.picType ==="random") ? this.getRandomPicType(isLeadEdge) : this.props.picType)
+            type = ((picType ==="random") ? this.getRandomPicType(isLeadEdge) : picType)
         }
       
         let drawFunc:DrawFunction = this.functions[type];
@@ -163,35 +166,42 @@ export default class PictureCanvas extends React.PureComponent<PicCanvasProps, P
         let xPos = canvas.width-20
         let yPos = randomNumber(canvas.height * 0.33, canvas.height *0.66)
         let heading = 270
-        if (this.props.orientation === "NS"){
+
+        const { orientation } = this.props 
+
+        if (orientation === "NS"){
             xPos = randomNumber(canvas.width * 0.33, canvas.width * 0.66);
             yPos = 20;
             heading = 180;
         }
         
-        const bluePos = drawArrow(canvas, this.props.orientation, 4, xPos, yPos, heading, "blue");
+        const bluePos = drawArrow(canvas, orientation, 4, xPos, yPos, heading, "blue");
         await this.setState({bluePos, bullseye})
         
         const blueOnly = context.getImageData(0, 0, canvas.width, canvas.height)
 
         const answer: DrawAnswer = await this.drawPicture(canvas, context)
 
-        this.props.setAnswer(answer.pic)
+        const { setAnswer } = this.props
+        setAnswer(answer.pic)
         
         this.setState({canvas, answer, animateCanvas: blueOnly})
     }
 
     render(): ReactElement{
+        const { height, width, braaFirst, 
+            picType, showMeasurements, isHardMode, newPic } = this.props
+        const { bullseye } = this.state
         return (<Canvas 
             draw={this.draw} 
-            height={this.props.height} 
-            width={this.props.width} 
-            braaFirst={this.props.braaFirst}
-            bullseye={this.state.bullseye}
-            picType={this.props.picType}
-            showMeasurements={this.props.showMeasurements}
-            isHardMode={this.props.isHardMode}
-            newPic={this.props.newPic}
+            height={height} 
+            width={width} 
+            braaFirst={braaFirst}
+            bullseye={bullseye}
+            picType={picType}
+            showMeasurements={showMeasurements}
+            isHardMode={isHardMode}
+            newPic={newPic}
         />)
     }
 }
