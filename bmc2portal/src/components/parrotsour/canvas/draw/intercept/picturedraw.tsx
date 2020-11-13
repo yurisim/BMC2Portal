@@ -656,8 +656,13 @@ export const drawVic:DrawFunction =  (
     ntg = drawArrow(canvas, props.orientation, randomNumber(1, 4), startX - vicDepth, startY - vicWidth / 2, heading + randomNumber(-10, 10));
   }
 
-  drawMeasurement(canvas, context, lg.x, lg.y, lg.x, stg.y, depth, props.showMeasurements);
-  drawMeasurement(canvas, context, stg.x, stg.y, ntg.x, ntg.y, width, props.showMeasurements);
+  if (props.orientation === "NS"){
+    drawMeasurement(canvas, context, lg.x, lg.y, lg.x, stg.y, depth, props.showMeasurements);
+    drawMeasurement(canvas, context, stg.x, stg.y, ntg.x, stg.y, width, props.showMeasurements);
+  } else {
+    drawMeasurement(canvas, context, lg.x, lg.y, stg.x, lg.y, depth, props.showMeasurements)
+    drawMeasurement(canvas, context, stg.x, stg.y, stg.x, ntg.y, width, props.showMeasurements);
+  }
 
   drawAltitudes(canvas, context, lg.x + 20, lg.y - 11, lg.z);
   drawAltitudes(canvas, context, stg.x + 20, stg.y - 11, stg.z);
@@ -713,27 +718,29 @@ export const drawLeadEdge:DrawFunction = (
   state: PicCanvasState,
   start?: Bullseye|undefined ): DrawAnswer => {
 
-  if (!state.bluePos) { return { pic: "", groups: []} }
+  const boundaries: Bounds = {
+    tall: { lowX: 0.2, hiX: 0.8, lowY: 0.5, hiY: 0.6 },
+    wide: { lowX: 0.5, hiX: 0.6, lowY: 0.42, hiY: 0.5 }
+  }
 
-  const lowYMult = (props.orientation ==="NS") ? 0.5 : 0.42
-  const hiYMult = (props.orientation === "NS") ? 0.6 : 0.5
-  const lowXMult = (props.orientation === "NS") ? 0.2 : 0.5
-  const hiXMult = (props.orientation === "NS") ? 0.8 : 0.6
-  const startX1: number = randomNumber(canvas.width * lowXMult, canvas.width * hiXMult);
-  const startY1: number = randomNumber(canvas.height * lowYMult, canvas.height * hiYMult);
+  const startPos = getStartPos(canvas, props.orientation, boundaries, start)
+  const startX1 = startPos.x
+  const startY1 = startPos.y
   const start1 = { x: startX1, y: startY1};
   let finalAnswer: DrawAnswer = {
     pic:"", groups:[]
   }
   let answer1 = state.reDraw(canvas, context, true, start1)
    
-  const lowYMult2 = (props.orientation ==="NS") ? 0.7 : 0.25
-  const hiYMult2 = (props.orientation === "NS") ? 0.9 : 0.29
-  const lowXMult2 = (props.orientation === "NS") ? 0.2 : 0.15
-  const hiXMult2 = (props.orientation === "NS") ? 0.8 : 0.25
-  const startX2 = randomNumber(canvas.width * lowXMult2, canvas.width * hiXMult2);
-  const startY2 = randomNumber(canvas.height * lowYMult2, canvas.height * hiYMult2);
-  const start2 = { x: startX2, y: startY2 }
+  const boundaries2: Bounds = {
+    tall: { lowX: 0.2, hiX: 0.8, lowY: 0.7, hiY: 0.9 },
+    wide: { lowX: 0.15, hiX: 0.25, lowY: 0.25, hiY: 0.29 }
+  }
+
+  const startPos2 = getStartPos(canvas, props.orientation, boundaries2, start)
+  const startX2 = startPos2.x
+  const startY2 = startPos2.y
+  const start2 = { x: startX2, y: startY2};
   const answer2 = state.reDraw(canvas, context, true, start2)
   
   if (!state.bluePos) { return { pic: "", groups: []} }
