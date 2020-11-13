@@ -50,7 +50,7 @@ export default class ParrotSourIntercept extends React.PureComponent<Record<stri
             format:"alsa",
             speedSliderValue: 50,
             canvasConfig: {
-                height: 400,
+                height: 500,
                 width:800,
                 orient:"EW"
             },
@@ -152,7 +152,7 @@ export default class ParrotSourIntercept extends React.PureComponent<Record<stri
         }
         if (orient==="NS"){
             newConfig = {
-                height:400,
+                height:500,
                 width:800,
                 orient:"EW"
             }

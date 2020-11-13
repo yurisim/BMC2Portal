@@ -560,8 +560,14 @@ export const drawChampagne:DrawFunction =  (
     slg = drawArrow(canvas, props.orientation, randomNumber(1, 4), startX + champDepth, startY + champWidth / 2, heading + randomNumber(-10, 10)); 
     offsetX = -70;
   }
-  drawMeasurement(canvas, context, nlg.x, slg.y, nlg.x, nlg.y, width, props.showMeasurements);
-  drawMeasurement(canvas, context, tg.x, tg.y, nlg.x, tg.y, depth, props.showMeasurements);
+  
+  if (props.orientation === "EW"){
+    drawMeasurement(canvas, context, nlg.x, slg.y, nlg.x, nlg.y, width, props.showMeasurements);
+    drawMeasurement(canvas, context, tg.x, tg.y, nlg.x, tg.y, depth, props.showMeasurements);
+  } else {
+    drawMeasurement(canvas, context, nlg.x, nlg.y, slg.x, nlg.y, width, props.showMeasurements);
+    drawMeasurement(canvas, context, tg.x, tg.y, tg.x, nlg.y, depth, props.showMeasurements);  
+  }
 
   drawAltitudes(canvas, context, tg.x +20 + offsetX, tg.y - 11, tg.z);
   drawAltitudes(canvas, context, slg.x + 20, slg.y - 11, slg.z);
@@ -789,6 +795,38 @@ export const drawLeadEdge:DrawFunction = (
   return finalAnswer;
 }
 
+const getPicBull = (isRange:boolean, orientation:string, bluePos:Group, groups:Group[]): Bullseye => {
+  let closestGroup = groups[0]
+
+  let closestRng = 9999
+  let sum = 0
+  for ( let x = 0; x < groups.length; x++){
+    const BRAA = getBR(groups[x].x, groups[x].y, { x: bluePos.x, y:bluePos.y})
+    if (BRAA.range < closestRng ) {
+      closestGroup = groups[x]
+      closestRng = BRAA.range
+    }
+
+    if (orientation === "NS"){
+      sum += groups[x].x
+    } else {
+      sum += groups[x].y
+    }
+  }
+
+  let retVal = {
+    x: sum/groups.length,
+    y: closestGroup.y
+  }
+  if ((orientation === "EW" && !isRange) || (orientation === "NS" && isRange)){
+    retVal = {
+      x: closestGroup.x,
+      y: sum/groups.length
+    }
+  }
+  return retVal
+}
+
 export const drawPackage:DrawFunction = (
   canvas: HTMLCanvasElement,
   context: CanvasRenderingContext2D,
@@ -796,17 +834,22 @@ export const drawPackage:DrawFunction = (
   state: PicCanvasState,
   start?: Bullseye|undefined ): DrawAnswer => {
 
-  if (!state.bluePos) { return { pic: "", groups: []} }
-  const isRange = randomNumber(0,120) < 50
+  //const isRange = randomNumber(0,120) < 50
+    const isRange = false
 
   let startX1:number, startX2:number, startY1:number, startY2:number
+  let lLbl = "EAST"
+  let tLbl = "WEST"
+  
   if (props.orientation==="EW"){
     if (isRange){
       startX1 = randomNumber(canvas.width* 0.5, canvas.width*0.59);
       startX2 = randomNumber(canvas.width * 0.2, canvas.width*0.35);
       startY1 = randomNumber(canvas.height* 0.2, canvas.width*0.4);
-      startY2 = randomNumber(canvas.height* 0.6, canvas.width*0.8);
+      startY2 = startY1;
     } else {
+      tLbl = "NORTH"
+      lLbl = "SOUTH"
       startX1 =  randomNumber(canvas.width * 0.25, canvas.width * 0.5);
       startX2 = startX1;
       startY1 =  randomNumber(canvas.height * 0.60, canvas.height * 0.70);
@@ -814,14 +857,16 @@ export const drawPackage:DrawFunction = (
     }
   } else {
     if (isRange){
-      startX1 = randomNumber(canvas.width * 0.2, canvas.width * 0.4);
-      startX2 = randomNumber(canvas.width * 0.6, canvas.width * 0.8);
+      lLbl = "NORTH"
+      tLbl = "SOUTH"
+      startX1 = randomNumber(canvas.width * 0.2, canvas.width * 0.8);
+      startX2 = startX1;
       startY1 = randomNumber(canvas.height*0.5, canvas.height *0.59);
-      startY2 = randomNumber(canvas.height * 0.3, canvas.height *0.35);
+      startY2 = randomNumber(canvas.height * 0.70, canvas.height *0.8);
     } else {
       startX1 = randomNumber(canvas.width * 0.2, canvas.width*0.3);
       startX2 = randomNumber(canvas.width * 0.7, canvas.width*0.8);
-      startY1 = randomNumber(canvas.height * 0.25, canvas.height*0.50);
+      startY1 = randomNumber(canvas.height * 0.5, canvas.height*0.80);
       startY2 = startY1;
     }
   }
@@ -832,103 +877,45 @@ export const drawPackage:DrawFunction = (
   if (!state.bluePos) { return { pic: "", groups: []} }
   const groups1: Group[] = answer1.groups;
   const groups2: Group[] = answer2.groups;
-
-  let xs = 0;
-  let ys = 0;
-
-  let bullPtXL, bullPtYL, bullPtXT, bullPtYT;
-  let closestFollowx, farthestLeadx;
-
-  if (props.orientation==="NS"){ 
-    closestFollowx = groups2[0].y;
-    farthestLeadx = groups1[0].y;
-    for (let x = 0; x < groups2.length; x++) {
-      if (groups2[x].y < closestFollowx){
-        closestFollowx  = groups2[x].y;
-      }
-      xs += groups2[x].x;
-    }
-
-    bullPtYT = closestFollowx;
-    bullPtXT = xs / groups2.length;
-    xs = 0;
-
-    for (let x = 0; x < groups1.length; x++) {
-      if (groups1[x].y < farthestLeadx){
-        farthestLeadx = groups1[x].y;
-      }
-      xs += groups1[x].x;
-    }
-    bullPtXL = xs / groups1.length;
-    bullPtYL = farthestLeadx;
-  } else {
-    closestFollowx = groups2[0].x;
-    farthestLeadx = groups1[0].x;
-    for (let x = 0; x < groups2.length; x++) {
-      if (groups2[x].x > closestFollowx){
-        closestFollowx  = groups2[x].x;
-      }
-      ys += groups2[x].y;
-    }
-
-    bullPtYT = ys / groups2.length;
-    bullPtXT = closestFollowx;
-    ys = 0;
-
-    for (let x = 0; x < groups1.length; x++) {
-      if (groups1[x].x > farthestLeadx){
-        farthestLeadx = groups1[x].x;
-      }
-      ys += groups1[x].y;
-    }
-    bullPtYL = ys / groups1.length;
-    bullPtXL = farthestLeadx;
-  }
-  let leadPackage = getBR(bullPtXL, bullPtYL, state.bullseye);
-  let trailPackage = getBR(bullPtXT, bullPtYT, state.bullseye);
   
-  if (props.orientation==="NS") {
-    const tmpPkg = leadPackage;
-    leadPackage = trailPackage;
-    trailPackage = tmpPkg;
-  }
+  const bull1 = getPicBull(isRange, props.orientation, state.bluePos, groups1)
+  const bull2 = getPicBull(isRange, props.orientation, state.bluePos, groups2)
+  
+  const leadPackage = getBR(bull1.x, bull1.y, state.bullseye);
+  const trailPackage = getBR(bull2.x, bull2.y, state.bullseye);
 
   const realAnswer: DrawAnswer = {
     pic: "",
     groups: groups1.concat(groups2)
   }
 
-  let lLbl = !isRange ? "SOUTH": "EAST";
-  let tLbl = !isRange ? "NORTH" : "WEST";
-  if (props.orientation==="NS"){ 
-    lLbl = isRange ? "NORTH" : "EAST";
-    tLbl = isRange ? "SOUTH" : "WEST"; 
-  }
   if ( isRange ){
-    const rngBack = props.orientation==="NS" ? getBR(bullPtXL, bullPtYL, {x: bullPtXL, y: bullPtYT}) : getBR(bullPtXL, bullPtYL, {x: bullPtXT, y: bullPtYL}); 
+    const rngBack = props.orientation === "NS" ? getBR(bull1.x, bull1.y, {x: bull1.x, y: bull2.y}) : getBR(bull1.x, bull1.y, {x: bull2.x, y: bull1.y}); 
     if (rngBack.range < 40 ){
       context.clearRect(0, 0, canvas.width, canvas.height);
       drawBullseye(canvas, context, state.bullseye);
       drawArrow(canvas, props.orientation, 4, state.bluePos.x, state.bluePos.y, (props.orientation==="NS"? 180 : 270), "blue");
       finalAnswer = drawPackage(canvas, context, props, state, start);
+    } else {
+      realAnswer.pic = " 2 PACKAGES RANGE " + rngBack.range + " "+ 
+          lLbl + " PACKAGE BULLSEYE " + leadPackage.bearing + "/" + leadPackage.range + " " +
+          tLbl + " PACKAGE BULLSEYE " + trailPackage.bearing + "/" + trailPackage.range;
+      finalAnswer = realAnswer
     }
-    realAnswer.pic = " 2 PACKAGES RANGE " + rngBack.range + " "+ 
-        lLbl + " PACKAGE BULLSEYE " + leadPackage.bearing + "/" + leadPackage.range + " " +
-        tLbl + " PACKAGE BULLSEYE " + trailPackage.bearing + "/" + trailPackage.range;
-    finalAnswer = realAnswer
   }
   else {
-    const rngBack = props.orientation==="NS" ?  getBR(bullPtXL, bullPtYL, {x: bullPtXT, y: bullPtYL}) : getBR(bullPtXL, bullPtYL, {x: bullPtXL, y: bullPtYT});
+    const rngBack = props.orientation==="NS" ? getBR(bull1.x, bull1.y, {x: bull2.x, y: bull1.y}) : getBR(bull1.x, bull1.y, {x: bull1.x, y: bull2.y}); 
     if (rngBack.range < 40) { 
       context.clearRect(0, 0, canvas.width, canvas.height);
       drawBullseye(canvas, context, state.bullseye);
       drawArrow(canvas, props.orientation, 4, state.bluePos.startX, state.bluePos.startY, (props.orientation==="NS") ? 180 : 270, "blue");
       finalAnswer= drawPackage(canvas, context, props, state, start);
+    } else {
+      realAnswer.pic = " 2 PACKAGES AZIMUTH " + rngBack.range + " " +
+          tLbl + " PACKAGE BULLSEYE " + trailPackage.bearing + "/" + trailPackage.range + " "+
+          lLbl +" PACKAGE BULLSEYE " + leadPackage.bearing + "/" + leadPackage.range;
+      finalAnswer = realAnswer
     }
-    realAnswer.pic = " 2 PACKAGES AZIMUTH " + rngBack.range + " " +
-        tLbl + " PACKAGE BULLSEYE " + trailPackage.bearing + "/" + trailPackage.range + " "+
-        lLbl +" PACKAGE BULLSEYE " + leadPackage.bearing + "/" + leadPackage.range;
-    finalAnswer = realAnswer
   }
   return finalAnswer
 }
