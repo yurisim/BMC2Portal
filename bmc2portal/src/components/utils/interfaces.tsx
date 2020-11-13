@@ -46,6 +46,7 @@ export type Group = {
     isCapping?: boolean,
     braaseye?: Braaseye,
     maneuvers?: boolean,
+    trackDir?: string
 }
 
 export type Hyperlink = {

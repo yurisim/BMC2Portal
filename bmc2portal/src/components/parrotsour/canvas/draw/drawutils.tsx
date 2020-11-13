@@ -177,7 +177,7 @@ export function drawMeasurement(
     showMeasurements:boolean): void {
     if (showMeasurements) {
       drawLine(ctx, startX, startY, endX, endY);
-      drawText(canvas, ctx, Math.floor(distance / 4).toString(), (startX + endX) / 2, (startY + endY) / 2 - 3);
+      drawText(canvas, ctx, Math.floor(distance).toString(), (startX + endX) / 2, (startY + endY) / 2 - 3);
     }
 }
 

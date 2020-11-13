@@ -33,7 +33,7 @@ export interface ReDrawFunction {
 
 export type PicCanvasState = {
     bullseye: Bullseye
-    bluePos: Group|undefined,
+    bluePos: Group,
     reDraw: ReDrawFunction,
     answer:DrawAnswer,
     canvas?:HTMLCanvasElement,
@@ -49,7 +49,7 @@ export default class PictureCanvas extends React.PureComponent<PicCanvasProps, P
         super(props)
         this.state = {
             bullseye: {x:0, y:0},
-            bluePos: undefined,
+            bluePos: {x:0, y:0, startX:0, startY:0, heading:270, desiredHeading: 270, numContacts:4, z:[100], type:"ftr"},
             reDraw: this.drawPicture,
             answer: {pic:"", groups:[]}
         }
