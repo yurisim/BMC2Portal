@@ -24,7 +24,9 @@ export type PicCanvasProps = {
     setAnswer: {(answer:string):void},
     newPic: boolean,
     animate:boolean,
-    sliderSpeed: number
+    sliderSpeed: number,
+    resetCallback: ()=>void,
+    animateCallback: ()=>void
 }
 
 export interface ReDrawFunction {
@@ -84,12 +86,12 @@ export default class PictureCanvas extends React.PureComponent<PicCanvasProps, P
         }
     
         if (areEqualShallow(rest, newrest) && oldAnimate !== newAnimate){   
-            const { animate, showMeasurements } = this.props 
+            const { animate, showMeasurements, resetCallback } = this.props 
             const { canvas, animateCanvas, answer } = this.state
             if (animate){
                 console.log("initiating animation...")
                 if (canvas && animateCanvas){
-                  animateGroups(canvas, this.props, this.state, answer.groups, animateCanvas);
+                  animateGroups(canvas, this.props, this.state, answer.groups, animateCanvas, resetCallback);
                 }
             } else {
                 console.log("pausing canvas")
@@ -190,7 +192,8 @@ export default class PictureCanvas extends React.PureComponent<PicCanvasProps, P
 
     render(): ReactElement{
         const { height, width, braaFirst, 
-            picType, showMeasurements, isHardMode, newPic } = this.props
+            picType, showMeasurements, isHardMode, 
+            newPic,resetCallback,animateCallback  } = this.props
         const { bullseye } = this.state
         return (<Canvas 
             draw={this.draw} 
@@ -202,6 +205,8 @@ export default class PictureCanvas extends React.PureComponent<PicCanvasProps, P
             showMeasurements={showMeasurements}
             isHardMode={isHardMode}
             newPic={newPic}
+            resetCallback={resetCallback}
+            animateCallback={animateCallback}
         />)
     }
 }

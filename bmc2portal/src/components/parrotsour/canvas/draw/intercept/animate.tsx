@@ -1,9 +1,9 @@
 import { getBR, randomNumber, toRadians } from "../../../utils/mathutilities";
 import { BRAA, Group } from "../../../../utils/interfaces";
 import { PicCanvasProps, PicCanvasState } from "../../picturecanvas";
-import { drawAltitudes, drawArrow, drawBraaseye } from "../drawutils";
+import { drawAltitudes, drawArrow, drawBraaseye, headingToDeg } from "../drawutils";
 
-let continueAnimation = true;
+let continueAnimation = false;
 let pauseShowMeasure = true
   
 function sleep(milliseconds: number):void {
@@ -13,6 +13,10 @@ function sleep(milliseconds: number):void {
         break;
       }
     }
+}
+
+export function getContinueAnimate(): boolean{
+  return continueAnimation
 }
   
 function setContinueAnimate(val: boolean) {
@@ -24,12 +28,19 @@ export function pauseFight(showMeasure: boolean): void {
     setContinueAnimate(false);
 }
   
+function isNearBounds(canvas:HTMLCanvasElement, group:Group){
+  const buffer = 40
+  return group.startX < buffer || group.startX > canvas.width-buffer || group.startY < buffer || group.startY > canvas.height-buffer
+}
+
+// eslint-disable-next-line complexity
 function doAnimation(
     canvas: HTMLCanvasElement,
     props: PicCanvasProps,
     state: PicCanvasState,
     groups:Group[],
-    animateCanvas: ImageData):void {
+    animateCanvas: ImageData,
+    resetCallback: (showMeasure:boolean)=>void):void {
 
     const context = canvas.getContext("2d");
 
@@ -37,56 +48,72 @@ function doAnimation(
     
     context.putImageData(animateCanvas, 0, 0);
   
-    let br: BRAA
-    let doManeuvers = false;
+    // let doManeuvers = false;
 
+    let br: BRAA
     for (let x = 0; x < groups.length; x++) {
-  
-      if (groups[x].startY > (canvas.height*0.95) || groups[x].startY <= canvas.height* 0.05){
-        console.log("too far north, setting new heading")
-        groups[x].desiredHeading = parseInt(getBR(state.bluePos.x, state.bluePos.y, { x: groups[x].startX, y: groups[x].startY }).bearing);
-      }
+      
       drawArrow(canvas,props.orientation, groups[x].numContacts, groups[x].startX, groups[x].startY, groups[x].heading );
   
-      let xyDeg: number = groups[x].heading - 90;
-      if (xyDeg < 0) xyDeg += 360;
-  
+      const xyDeg = headingToDeg(groups[x].heading).degrees
+
       const rads: number = toRadians(xyDeg);
   
       let offsetX: number = 7 * Math.cos(rads);
-      const offsetY: number = 7 * Math.sin(rads);
+      let offsetY: number = -7 * Math.sin(rads);
   
-      if (groups[x].startX >= canvas.width * 0.8) {
-        offsetX = 0;
+      if (isNearBounds(canvas, groups[x])){
+        offsetX = 0
+        offsetY = 0
       }
+
       groups[x].startX = groups[x].startX + offsetX;
       groups[x].startY = groups[x].startY + offsetY;
-  
-      const deltaA = groups[x].desiredHeading - groups[x].heading;
-  
-      let offset = 0;
-      let newHeading = groups[x].desiredHeading;
-      if (Math.abs(deltaA) > 90) {
-        offset = deltaA / 15;
-        if (groups[x].heading > 300) {
-          offset = -offset;
-        }
-        if (groups[x].heading + offset > 360) {
-          newHeading = groups[x].heading + offset - 360;
-        } else {
-          newHeading = groups[x].heading + offset;
-        }
-      } else if (Math.abs(deltaA) > 7) {
-        offset = deltaA / 7;
-        newHeading = groups[x].heading + offset;
+
+      groups[x].desiredHeading = parseInt(getBR(state.bluePos.x, state.bluePos.y, {x:groups[x].startX, y: groups[x].startY}).bearing)
+      let deltaA: number
+
+      const LH = (groups[x].heading - groups[x].desiredHeading + 360) % 360
+      const RH = (groups[x].desiredHeading - groups[x].heading + 360) % 360
+      
+      if (LH < RH) {
+        deltaA = -LH
       } else {
-        if (
-          groups[x].maneuvers &&
-          groups[x].heading !== 90 &&
-          groups[x].heading !== 360 &&
-          groups[x].heading === groups[x].desiredHeading
-        ) {
-        //   var aspectH = getAspect(state.bluePos, groups[x]);
+        deltaA = RH
+      }
+
+      let divisor = 7
+      const absDelt = Math.abs(deltaA)
+      if (absDelt > 90 ){
+        divisor = 15
+      } else if (absDelt < 7 ) {
+        divisor = 1
+      }
+      const newHeading = groups[x].heading + deltaA / divisor
+      groups[x].heading = newHeading
+      // let offset = 0;
+      // let newHeading = groups[x].desiredHeading;
+      // if (Math.abs(deltaA) > 90) {
+      //   offset = deltaA / 15;
+      //   if (groups[x].heading > 300) {
+      //     offset = -offset;
+      //   }
+      //   if (groups[x].heading + offset > 360) {
+      //     newHeading = groups[x].heading + offset - 360;
+      //   } else {
+      //     newHeading = groups[x].heading + offset;
+      //   }
+      // } else if (Math.abs(deltaA) > 7) {
+      //   offset = deltaA / 7;
+      //   newHeading = groups[x].heading + offset;
+      // } else {
+      //   if (
+      //     groups[x].maneuvers &&
+      //     groups[x].heading !== 90 &&
+      //     groups[x].heading !== 360 &&
+      //     groups[x].heading === groups[x].desiredHeading
+      //   ) {
+      //   //   var aspectH = getAspect(state.bluePos, groups[x]);
         //   var mxUpdate =
         //     groups[x].label +
         //     " MANEUVER, " +
@@ -99,38 +126,46 @@ function doAnimation(
         //   if (!mxCommDiv.innerHTML.includes(mxUpdate)) {
         //     mxCommDiv.innerHTML = mxCommDiv.innerHTML + "<br/>" + mxUpdate;
         //   }
-        }
-      }
+      //   }
+      // }
   
-      groups[x].heading = newHeading;
+      // groups[x].heading = newHeading;
   
       if (groups[x].maneuvers) {
-        br = getBR(state.bluePos.x, state.bluePos.y, { x: groups[x].startX, y: groups[x].startY});
+        // br = getBR(state.bluePos.x, state.bluePos.y, { x: groups[x].startX, y: groups[x].startY});
   
-        if ((groups[x].desiredHeading === 90 || groups[x].desiredHeading === 360) && br.range < 70) {
-          groups[x].desiredHeading = randomNumber(45, 270);
-        //   document.getElementById("maneuverComm").innerHTML =
-        //     document.getElementById("maneuverComm").innerHTML +
-        //     groups[x].label +
-        //     " MANEUVER <br/>";
-        }
-        if (groups[x].desiredHeading !==90 && groups[x].desiredHeading !== 360 && br.range > 70) {
-          groups[x].desiredHeading = parseInt(br.bearing);
-        }
-        if ((Math.abs(groups[x].desiredHeading - parseInt(br.bearing)) >=45 && br.range < 40) || (Math.abs(groups[x].desiredHeading - parseInt(br.bearing)) > 45 && br.range > 70) ){
-          groups[x].maneuvers=  false;
-          groups[x].desiredHeading = props.orientation === "NS" ? 360 : 90;
-          groups[x].heading = props.orientation === "NS" ? 360 : 90; 
-        }
-        doManeuvers = true;
+        // if ((groups[x].desiredHeading === 90 || groups[x].desiredHeading === 360) && br.range < 70) {
+        //   groups[x].desiredHeading = randomNumber(45, 270);
+        // //   document.getElementById("maneuverComm").innerHTML =
+        // //     document.getElementById("maneuverComm").innerHTML +
+        // //     groups[x].label +
+        // //     " MANEUVER <br/>";
+        // }
+        // if (groups[x].desiredHeading !==90 && groups[x].desiredHeading !== 360 && br.range > 70) {
+        //   groups[x].desiredHeading = parseInt(br.bearing);
+        // }
+        // if ((Math.abs(groups[x].desiredHeading - parseInt(br.bearing)) >=45 && br.range < 40) || (Math.abs(groups[x].desiredHeading - parseInt(br.bearing)) > 45 && br.range > 70) ){
+        //   groups[x].maneuvers=  false;
+        //   groups[x].desiredHeading = props.orientation === "NS" ? 360 : 90;
+        //   groups[x].heading = props.orientation === "NS" ? 360 : 90; 
+        // }
+        // doManeuvers = true;
       }
     }
-  
-    if (!doManeuvers && (groups[groups.length - 1].startX > canvas.width * 0.8 || groups[groups.length - 1].startY < canvas.height * 0.2) ) {
-      continueAnimation = false;
-    }
+
+    groups.map((grp) => {
+      if (getBR(state.bluePos.x, state.bluePos.y, {x:grp.startX, y:grp.startY}).range < 30 ){
+        console.log('range met')
+        continueAnimation = false
+        resetCallback(true)
+      }
+    })
+    // if (!doManeuvers && (groups[groups.length - 1].startX > canvas.width * 0.8 || groups[groups.length - 1].startY < canvas.height * 0.2) ) {
+    //   continueAnimation = false;
+    // }
   
     if (continueAnimation) {
+      //setCurImageData(context.getImageData(0,0,canvas.width,canvas.height))
       const slider:HTMLInputElement = document.getElementById("speedSlider") as HTMLInputElement
       if (slider && slider.value){
         sleep(500 * ((100-parseInt(slider.value))/100));
@@ -139,7 +174,7 @@ function doAnimation(
       }
   
       const animate = function() {
-        doAnimation(canvas, props, state, groups, animateCanvas);
+        doAnimation(canvas, props, state, groups, animateCanvas, resetCallback);
       };
       window.requestAnimationFrame(animate);
   
@@ -198,15 +233,19 @@ export function animateGroups(
   props: PicCanvasProps, 
   state: PicCanvasState,
   groups: Group[],
-  animateCanvas: ImageData):void {
+  animateCanvas: ImageData,
+  resetCallback: (showMeasure:boolean)=>void):void {
   console.log("doing animation....")
   for (let x = 0; x < groups.length; x++) {
     if (randomNumber(0, 10) <= 2) {
       groups[x].maneuvers = true;
     }
+    const BRAA = getBR(state.bluePos.x, state.bluePos.y, {x:groups[x].x, y:groups[x].y})
+    groups[x].desiredHeading = parseInt(BRAA.bearing)
+    console.log(BRAA.bearing)
   }
   continueAnimation = true;
-  doAnimation(canvas, props, state, groups, animateCanvas);
+  doAnimation(canvas, props, state, groups, animateCanvas, resetCallback);
 }
   
   

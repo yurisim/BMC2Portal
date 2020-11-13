@@ -3,6 +3,7 @@ import React, {useRef, useState, useEffect, ReactElement, TouchEvent } from 'rea
 import { getBR } from '../utils/mathutilities'
 import { BRAA, Bullseye } from '../../utils/interfaces'
 import { drawLine, drawBR } from './draw/drawutils'
+import { getContinueAnimate } from './draw/intercept/animate'
 
 export interface CanvasDrawFunction {
     (context: CanvasRenderingContext2D|null|undefined, frameCount: number, canvas: HTMLCanvasElement):Promise<void>
@@ -22,7 +23,9 @@ interface CanvasProps {
     picType: string,
     showMeasurements: boolean,
     isHardMode: boolean,
-    newPic: boolean
+    newPic: boolean,
+    resetCallback: () => void
+    animateCallback: () => void
 }
 
 /**
@@ -38,6 +41,7 @@ function Canvas(props: CanvasProps):ReactElement {
     // These state variables are used to track mouse position
     const [mouseStart, setStart] = useState({x:0,y:0})
     const [mousePressed, setMousePressed] = useState(false)
+    const [wasAnimate, setWasAnimate] = useState(false)
    
     // Get the ImageData from the canvas context
     const getImageData = () =>{
@@ -146,6 +150,15 @@ function Canvas(props: CanvasProps):ReactElement {
      */
     const canvasMouseDown = function(e: CanvasMouseEvent) {
         setMousePressed(true)
+        const { resetCallback } = props
+        if (resetCallback) { 
+            resetCallback()
+        }
+
+        if (getContinueAnimate()){
+            img.current = getImageData()
+            setWasAnimate(true)
+        }
         const mousePos = getMousePos(canvasRef.current, e);
         setStart(mousePos)
     };
@@ -179,6 +192,10 @@ function Canvas(props: CanvasProps):ReactElement {
         setMousePressed(false)
         if (ctx.current && img.current)
             ctx.current.putImageData(img.current, 0, 0)
+        const { animateCallback } = props
+        if (wasAnimate){
+            animateCallback()
+        }
     }
 
     /**

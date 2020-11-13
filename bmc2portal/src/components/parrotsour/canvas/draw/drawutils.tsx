@@ -185,7 +185,9 @@ export function drawMeasurement(
  * Convert a aeronautical heading to Cartesian degrees
  * @param heading Heading to convert to degrees
  */
-function headingToDeg(heading: number){
+export function headingToDeg(heading: number):
+ {degrees:number, offset:number, headAngle:number}
+{
   let deg: number = 360 - (heading - 90);
   if (heading < 90) {
     deg = 90 - heading;
@@ -205,7 +207,6 @@ function headingToDeg(heading: number){
     offset: offsetVector,
     headAngle: arrowHead
   }
-
 }
 
 /**
@@ -251,6 +252,8 @@ export function drawArrow(
     let endx = 0
     let endy = 0
 
+    const iStartX = startx
+    const iStartY = starty
     for (let x = 0; x < numContacts; x++){
 
       const vectors = headingToDeg(heading)
@@ -265,7 +268,7 @@ export function drawArrow(
       const dist:number = canvas.width / (canvas.width / 20);
   
       endy = starty + dist * -Math.sin(rads);
-      endx = startx +  dist * Math.cos(rads);
+      endx = startx + dist * Math.cos(rads);
 
       c.beginPath()  
       c.moveTo(startx, starty);
@@ -292,8 +295,8 @@ export function drawArrow(
     const alts: number[] = [...Array(numContacts)].map(_=>randomNumber(low,hi));
 
     group = {
-        startX: startx,
-        startY: starty,
+        startX: iStartX,
+        startY: iStartY,
         x: Math.floor(endx),
         y: Math.floor(endy),
         heading,

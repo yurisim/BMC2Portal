@@ -231,6 +231,8 @@ export default class ParrotSourIntercept extends React.PureComponent<Record<stri
                         newPic={newPic}
                         animate={animate}
                         sliderSpeed={speedSliderValue}
+                        resetCallback={this.pauseAnimate}
+                        animateCallback={this.startAnimate}
                     />
                 </Suspense>  
 
