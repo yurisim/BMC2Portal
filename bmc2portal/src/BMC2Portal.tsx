@@ -1,6 +1,6 @@
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, ReactElement } from "react";
 
-import { Router, Route } from "react-router";
+import { Router, Route, RouteComponentProps, StaticContext } from "react-router";
 import { createBrowserHistory } from "history";
 
 import "./css/snackbar.css";
@@ -30,7 +30,7 @@ const ImagePane = lazy(()=>import("./components/utils/imagepane"))
 const FilePane = lazy(()=>import("./components/utils/filepane"))
 const FaaMap = lazy(()=>import("./components/common/faamap"))
 
-let browserHistory = createBrowserHistory();
+const browserHistory = createBrowserHistory();
 
 /**
  * This is the main application. 
@@ -55,41 +55,56 @@ let browserHistory = createBrowserHistory();
  *               it isn't in the navigation pane but the AirspaceList component links to it
  * - Design/implement your Component
  */
-export default class BMC2Portal extends React.PureComponent {
+//export default class BMC2Portal extends React.PureComponent {
+const BMC2Portal = ():ReactElement => {
 
-  render(){
-    return (
-      <div className="app">
+  function getARTracks (props:RouteComponentProps<string, StaticContext, unknown>): JSX.Element {
+    return <ImagePane {...props} imageSrc="UR IMG HURR" />
+  }
+  
+  function getBaseMap ( props:RouteComponentProps<string, StaticContext, unknown>): JSX.Element {
+    return <ImagePane {...props} imageSrc={baseMap} />
+  }
+
+  function getIronTriad ( props: RouteComponentProps<string, StaticContext, unknown>): JSX.Element {
+    return <FilePane {...props} title="Iron Triad Map" src={triadOrbit} />
+  }
+
+  function getOrbits ( props: RouteComponentProps<string, StaticContext, unknown>) : JSX.Element{
+    return <FilePane {...props} title="AWACS Orbits" src={awacsOrbit} />
+  }
+
+  return (
+    <div className="app">
+    <Suspense fallback={<div>Loading...</div>} >
+      <SideBar />
+    </Suspense>
+    <div className="body-content">
+      <Router history={browserHistory}>
         <Suspense fallback={<div>Loading...</div>} >
-          <SideBar />
-        </Suspense>
-        <div className="body-content">
-          <Router history={browserHistory}>
-            <Suspense fallback={<div>Loading...</div>} >
-            <Route exact path="/" component={Home} />
-            <Route path="/msncrew/loalist.html" component={LOAList} />
-            <Route path="/msncrew/airspacelist.html" component={AirspaceList} />
-            <Route path="/msncrew/airspacepage.html" component={Airspace} />
-            <Route path="/msncrew/unitlist.html" component={UnitList} />
-            <Route path="/msncrew/unitpage.html" component={Unit} />
-            <Route path="/msncrew/parrotsour.html" component={ParrotSour} />
-            <Route path="/resources.html" component={ResourceList} />
-            
-            <Route path="/loas" component={FilePane} />
-            <Route path="/common/faamap.html" component={FaaMap} />
-            <Route path="/common/lessons.html" component={LessonsLearnedList}/>
-            <Route path="/common/artracks.html" render={(props) => (<ImagePane {...props} imageSrc="UR IMG HURR" /> )}/>
-            <Route path="/common/orbits.html" render={(props) => (<FilePane {...props} src={awacsOrbit} /> )}/>
-            <Route path="/common/triadorbits.html" render={(props) => (<FilePane {...props} src={triadOrbit} /> )}/>
+        <Route exact path="/" component={Home} />
+        <Route path="/msncrew/loalist.html" component={LOAList} />
+        <Route path="/msncrew/airspacelist.html" component={AirspaceList} />
+        <Route path="/msncrew/airspacepage.html" component={Airspace} />
+        <Route path="/msncrew/unitlist.html" component={UnitList} />
+        <Route path="/msncrew/unitpage.html" component={Unit} />
+        <Route path="/msncrew/parrotsour.html" component={ParrotSour} />
+        <Route path="/resources.html" component={ResourceList} />
+        
+        <Route path="/loas" component={FilePane} />
+        <Route path="/common/faamap.html" component={FaaMap} />
+        <Route path="/common/lessons.html" component={LessonsLearnedList}/>
+        <Route path="/common/artracks.html" render={getARTracks}/>
+        <Route path="/common/orbits.html" render={getOrbits}/>
+        <Route path="/common/triadorbits.html" render={getIronTriad} />
 
-            <Route path="/common/basemap.html" render={(props) => (<ImagePane {...props} imageSrc={baseMap} /> )}/>
-            </Suspense>
-          </Router>
-        </div>
-        <div id="snackbar"></div>
-        <header>
-          {/* <img src={logo} className="App-logo" alt="logo" /> */}
-        </header>
-      </div>
-    )}
+        <Route path="/common/basemap.html" render={getBaseMap} />
+        </Suspense>
+      </Router>
+    </div>
+    <div id="snackbar" />
+  </div>
+  )
 }
+
+export default BMC2Portal

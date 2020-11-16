@@ -56,9 +56,7 @@ function doAnimation(
       drawArrow(canvas,props.orientation, groups[x].numContacts, groups[x].startX, groups[x].startY, groups[x].heading );
   
       const xyDeg = headingToDeg(groups[x].heading).degrees
-
       const rads: number = toRadians(xyDeg);
-  
       let offsetX: number = 7 * Math.cos(rads);
       let offsetY: number = -7 * Math.sin(rads);
   
@@ -70,7 +68,9 @@ function doAnimation(
       groups[x].startX = groups[x].startX + offsetX;
       groups[x].startY = groups[x].startY + offsetY;
 
-      groups[x].desiredHeading = parseInt(getBR(state.bluePos.x, state.bluePos.y, {x:groups[x].startX, y: groups[x].startY}).bearing)
+      if (!groups[x].maneuvers)
+        groups[x].desiredHeading = parseInt(getBR(state.bluePos.x, state.bluePos.y, {x:groups[x].startX, y: groups[x].startY}).bearing)
+      
       let deltaA: number
 
       const LH = (groups[x].heading - groups[x].desiredHeading + 360) % 360
@@ -132,9 +132,14 @@ function doAnimation(
       // groups[x].heading = newHeading;
   
       if (groups[x].maneuvers) {
-        // br = getBR(state.bluePos.x, state.bluePos.y, { x: groups[x].startX, y: groups[x].startY});
+        br = getBR(state.bluePos.x, state.bluePos.y, { x: groups[x].startX, y: groups[x].startY});
   
-        // if ((groups[x].desiredHeading === 90 || groups[x].desiredHeading === 360) && br.range < 70) {
+        if (br.range < 70) {
+          console.log("maneuver")
+          groups[x].desiredHeading = randomNumber(45,330)
+          // do nothing
+        }
+
         //   groups[x].desiredHeading = randomNumber(45, 270);
         // //   document.getElementById("maneuverComm").innerHTML =
         // //     document.getElementById("maneuverComm").innerHTML +
@@ -238,6 +243,7 @@ export function animateGroups(
   console.log("doing animation....")
   for (let x = 0; x < groups.length; x++) {
     if (randomNumber(0, 10) <= 2) {
+      console.log(groups[x].label + " should maneuver")
       groups[x].maneuvers = true;
     }
     const BRAA = getBR(state.bluePos.x, state.bluePos.y, {x:groups[x].x, y:groups[x].y})
