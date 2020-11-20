@@ -1,17 +1,16 @@
+## BMC2Portal
 /bmc2portal/node_modules/*
 /bmc2portal/node_modules/
-/flask-server/static/*
-/flask-server/templates/*
+bmc2portal/debug.log
+
+## BMC2Server
 bmc2server/src/.env
 bmc2server/src/main.exe
 bmc2server/src/bmc2server.exe
 bmc2server/pkg/*
 bmc2server/src/.env.development.local
-.vscode/settings.json
 bmc2server/src/loas.index/index_meta.json
 bmc2server/src/loas.index/store
 
-/ParrotSour/*
-/ParrotSour
-
-bmc2portal/debug.log
+## Misc
+.vscode/settings.json
