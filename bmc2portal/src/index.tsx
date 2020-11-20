@@ -18,7 +18,7 @@ const World = () => {
 
   useEffect(() => {
     fetch("https://public.opendatasoft.com/api/v2/catalog/datasets/military-bases/records?refine=component%3AAF%20Active&rows=-1&select=site_name&select=geo_point_2d&pretty=false&timezone=UTC").then(res => res.json())
-      .then((features) => {setPlaces(features.records);console.log(features.records)});
+      .then((features) => {setPlaces(features.records)});
   }, [])
 
   return (

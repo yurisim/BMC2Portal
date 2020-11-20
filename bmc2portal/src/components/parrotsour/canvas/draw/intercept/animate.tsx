@@ -47,8 +47,6 @@ function doAnimation(
     if (!context || !state.bluePos) return 
     
     context.putImageData(animateCanvas, 0, 0);
-  
-    // let doManeuvers = false;
 
     let br: BRAA
     for (let x = 0; x < groups.length; x++) {
@@ -57,18 +55,22 @@ function doAnimation(
   
       const xyDeg = headingToDeg(groups[x].heading).degrees
       const rads: number = toRadians(xyDeg);
-      let offsetX: number = 7 * Math.cos(rads);
-      let offsetY: number = -7 * Math.sin(rads);
+      const offsetX: number = 7 * Math.cos(rads);
+      const offsetY: number = -7 * Math.sin(rads);
   
-      if (isNearBounds(canvas, groups[x])){
-        offsetX = 0
-        offsetY = 0
-      }
+      // TODO - better handling for running into walls
+      // should readjust heading to be towards blue air
+      // if (isNearBounds(canvas, groups[x])){
+      //   // offsetX = 0
+      //   // offsetY = 0
+        
+      //   groups[x].desiredHeading = parseInt(getBR(state.bluePos.x, state.bluePos.y, {x:groups[x].startX, y: groups[x].startY}).bearing)
+      // }
 
       groups[x].startX = groups[x].startX + offsetX;
       groups[x].startY = groups[x].startY + offsetY;
 
-      if (!groups[x].maneuvers)
+      if (!groups[x].maneuvers || isNearBounds(canvas, groups[x]))
         groups[x].desiredHeading = parseInt(getBR(state.bluePos.x, state.bluePos.y, {x:groups[x].startX, y: groups[x].startY}).bearing)
       
       let deltaA: number
@@ -90,87 +92,34 @@ function doAnimation(
         divisor = 1
       }
       const newHeading = groups[x].heading + deltaA / divisor
-      groups[x].heading = newHeading
-      // let offset = 0;
-      // let newHeading = groups[x].desiredHeading;
-      // if (Math.abs(deltaA) > 90) {
-      //   offset = deltaA / 15;
-      //   if (groups[x].heading > 300) {
-      //     offset = -offset;
-      //   }
-      //   if (groups[x].heading + offset > 360) {
-      //     newHeading = groups[x].heading + offset - 360;
-      //   } else {
-      //     newHeading = groups[x].heading + offset;
-      //   }
-      // } else if (Math.abs(deltaA) > 7) {
-      //   offset = deltaA / 7;
-      //   newHeading = groups[x].heading + offset;
-      // } else {
-      //   if (
-      //     groups[x].maneuvers &&
-      //     groups[x].heading !== 90 &&
-      //     groups[x].heading !== 360 &&
-      //     groups[x].heading === groups[x].desiredHeading
-      //   ) {
-      //   //   var aspectH = getAspect(state.bluePos, groups[x]);
-        //   var mxUpdate =
-        //     groups[x].label +
-        //     " MANEUVER, " +
-        //     aspectH +
-        //     " " +
-        //     getTrackDir(groups[x].heading);
-  
-        //   var mxCommDiv = document.getElementById("maneuverComm");
-  
-        //   if (!mxCommDiv.innerHTML.includes(mxUpdate)) {
-        //     mxCommDiv.innerHTML = mxCommDiv.innerHTML + "<br/>" + mxUpdate;
-        //   }
-      //   }
-      // }
-  
-      // groups[x].heading = newHeading;
-  
+      groups[x].heading = newHeading 
+
       if (groups[x].maneuvers) {
         br = getBR(state.bluePos.x, state.bluePos.y, { x: groups[x].startX, y: groups[x].startY});
   
-        if (br.range < 70) {
+        if (br.range < 70 && !groups[x].maneuvered) {
           console.log("maneuver")
           groups[x].desiredHeading = randomNumber(45,330)
-          // do nothing
-        }
+          groups[x].maneuvered = true
+          // TODO - set maneuver comm in answer DIV (initial detect)
+        } 
 
-        //   groups[x].desiredHeading = randomNumber(45, 270);
-        // //   document.getElementById("maneuverComm").innerHTML =
-        // //     document.getElementById("maneuverComm").innerHTML +
-        // //     groups[x].label +
-        // //     " MANEUVER <br/>";
-        // }
-        // if (groups[x].desiredHeading !==90 && groups[x].desiredHeading !== 360 && br.range > 70) {
-        //   groups[x].desiredHeading = parseInt(br.bearing);
-        // }
-        // if ((Math.abs(groups[x].desiredHeading - parseInt(br.bearing)) >=45 && br.range < 40) || (Math.abs(groups[x].desiredHeading - parseInt(br.bearing)) > 45 && br.range > 70) ){
-        //   groups[x].maneuvers=  false;
-        //   groups[x].desiredHeading = props.orientation === "NS" ? 360 : 90;
-        //   groups[x].heading = props.orientation === "NS" ? 360 : 90; 
-        // }
-        // doManeuvers = true;
+        // TODO - once established on heading, 
+        // var aspectH = ;
+        // var mxUpdate = groups[x].label + " MANEUVER, " + 
+        //                getAspect(state.bluePos, groups[x]) + " " +
+        //                getTrackDir(groups[x].heading);
       }
     }
 
     groups.map((grp) => {
       if (getBR(state.bluePos.x, state.bluePos.y, {x:grp.startX, y:grp.startY}).range < 30 ){
-        console.log('range met')
         continueAnimation = false
         resetCallback(true)
       }
     })
-    // if (!doManeuvers && (groups[groups.length - 1].startX > canvas.width * 0.8 || groups[groups.length - 1].startY < canvas.height * 0.2) ) {
-    //   continueAnimation = false;
-    // }
   
     if (continueAnimation) {
-      //setCurImageData(context.getImageData(0,0,canvas.width,canvas.height))
       const slider:HTMLInputElement = document.getElementById("speedSlider") as HTMLInputElement
       if (slider && slider.value){
         sleep(500 * ((100-parseInt(slider.value))/100));
@@ -240,15 +189,12 @@ export function animateGroups(
   groups: Group[],
   animateCanvas: ImageData,
   resetCallback: (showMeasure:boolean)=>void):void {
-  console.log("doing animation....")
   for (let x = 0; x < groups.length; x++) {
     if (randomNumber(0, 10) <= 2) {
-      console.log(groups[x].label + " should maneuver")
       groups[x].maneuvers = true;
     }
     const BRAA = getBR(state.bluePos.x, state.bluePos.y, {x:groups[x].x, y:groups[x].y})
     groups[x].desiredHeading = parseInt(BRAA.bearing)
-    console.log(BRAA.bearing)
   }
   continueAnimation = true;
   doAnimation(canvas, props, state, groups, animateCanvas, resetCallback);

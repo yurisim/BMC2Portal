@@ -24,6 +24,7 @@ interface CanvasProps {
     showMeasurements: boolean,
     isHardMode: boolean,
     newPic: boolean,
+    animate: boolean,
     resetCallback: () => void
     animateCallback: () => void
 }
@@ -149,6 +150,7 @@ function Canvas(props: CanvasProps):ReactElement {
      * @param e CanvasMouseEvent with mouse position
      */
     const canvasMouseDown = function(e: CanvasMouseEvent) {
+        setWasAnimate(props.animate)
         setMousePressed(true)
         const { resetCallback } = props
         if (resetCallback) { 
@@ -157,7 +159,6 @@ function Canvas(props: CanvasProps):ReactElement {
 
         if (getContinueAnimate()){
             img.current = getImageData()
-            setWasAnimate(true)
         }
         const mousePos = getMousePos(canvasRef.current, e);
         setStart(mousePos)

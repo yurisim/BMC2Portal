@@ -46,6 +46,7 @@ export type Group = {
     isCapping?: boolean,
     braaseye?: Braaseye,
     maneuvers?: boolean,
+    maneuvered?: boolean,
     trackDir?: string
 }
 

@@ -89,12 +89,10 @@ export default class PictureCanvas extends React.PureComponent<PicCanvasProps, P
             const { animate, showMeasurements, resetCallback } = this.props 
             const { canvas, animateCanvas, answer } = this.state
             if (animate){
-                console.log("initiating animation...")
                 if (canvas && animateCanvas){
                   animateGroups(canvas, this.props, this.state, answer.groups, animateCanvas, resetCallback);
                 }
             } else {
-                console.log("pausing canvas")
                 pauseFight(showMeasurements)
             }
         }
@@ -193,7 +191,7 @@ export default class PictureCanvas extends React.PureComponent<PicCanvasProps, P
     render(): ReactElement{
         const { height, width, braaFirst, 
             picType, showMeasurements, isHardMode, 
-            newPic,resetCallback,animateCallback  } = this.props
+            newPic,resetCallback,animateCallback, animate  } = this.props
         const { bullseye } = this.state
         return (<Canvas 
             draw={this.draw} 
@@ -206,6 +204,7 @@ export default class PictureCanvas extends React.PureComponent<PicCanvasProps, P
             isHardMode={isHardMode}
             newPic={newPic}
             resetCallback={resetCallback}
+            animate={animate}
             animateCallback={animateCallback}
         />)
     }
