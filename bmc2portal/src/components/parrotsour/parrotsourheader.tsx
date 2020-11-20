@@ -4,7 +4,7 @@ import IssueReport from './issuereport'
 import {Dialog} from '@material-ui/core'
 
 interface PSHeaderProps{
-    comp:ReactElement
+    comp?:ReactElement
 }
 
 interface PSHeaderState{

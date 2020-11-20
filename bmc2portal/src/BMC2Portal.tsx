@@ -74,6 +74,18 @@ const BMC2Portal = ():ReactElement => {
     return <FilePane {...props} title="AWACS Orbits" src={awacsOrbit} />
   }
 
+  function getPS() : JSX.Element {
+    return <ParrotSour type="chooser" />
+  }
+
+  function getPSP(): JSX.Element {
+    return <ParrotSour type="procedural"/>
+  }
+
+  function getPSI(): JSX.Element {
+    return <ParrotSour type="intercept"/>
+  }
+
   return (
     <div className="app">
     <Suspense fallback={<div>Loading...</div>} >
@@ -88,7 +100,9 @@ const BMC2Portal = ():ReactElement => {
         <Route path="/msncrew/airspacepage.html" component={Airspace} />
         <Route path="/msncrew/unitlist.html" component={UnitList} />
         <Route path="/msncrew/unitpage.html" component={Unit} />
-        <Route path="/msncrew/parrotsour.html" component={ParrotSour} />
+        <Route path="/msncrew/parrotsour.html" render={getPS} />
+        <Route path="/msncrew/parrotsourintercept.html" render={getPSI} />
+        <Route path="/msncrew/parrotsourprocedural.html" render={getPSP} />
         <Route path="/resources.html" component={ResourceList} />
         
         <Route path="/loas" component={FilePane} />
