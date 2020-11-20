@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css';
 
-import ParrotSour from "../../bmc2portal/src/components/parrotsour/parrotsour"
+import {ParrotSour} from "BMC2Portal"
 
 function App() {
   return (
