@@ -12,8 +12,7 @@ import baseMap from './resources/ktik_map.jpg'
 import awacsOrbit from './resources/AWACSOrbitMap.pdf'
 import triadOrbit from './resources/IronTriadOrbitMap.pdf'
 
-import {ParrotSour} from 'parrotsour-components'
-
+const ParrotSour = lazy(()=>import('./components/missioncrew/parrotsourselector'))
 const SideBar = lazy(()=>import('./components/navigation/sidebar'))
 
 const AirspaceList = lazy(()=>import("./components/missioncrew/airspacelist"))
