@@ -1,0 +1,25 @@
+
+.lessonsTable {
+    border-collapse: separate;
+    border-spacing: 2em;
+}
+
+.lessonDate{
+    text-align:left;
+}
+
+.lessonContrib{
+    float: left;
+}
+.lessonValidator{
+    float:right;
+}
+
+.lessonContent{
+    text-align:left;
+    padding-left:10%;
+}
+.lessonsTable td {
+    border-radius: 1em;
+    /* background-color: #50545c; */
+}
