@@ -8,7 +8,9 @@ import "./css/styles.css";
 import "./css/body.css";
 import "./css/fonts.css";
 
-import ParrotSour from './parrotsour'
+import ParrotSour from './pscomponents/parrotsour'
+
+import ChangeLog from './changelog'
 
 const browserHistory = createBrowserHistory();
 
@@ -57,6 +59,7 @@ const Home = ():ReactElement => {
       <Router history={browserHistory}>
         <Suspense fallback={<div>Loading...</div>} >
         <Route exact path="/" component={getPSI} />
+        <Route exact path="/changelog.html" component={ChangeLog} />
         <Route path="/msncrew/parrotsour.html" render={getPS} />
         <Route path="/msncrew/parrotsourintercept.html" render={getPSI} />
         <Route path="/msncrew/parrotsourprocedural.html" render={getPSP} />
