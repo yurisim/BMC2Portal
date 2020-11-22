@@ -14,7 +14,7 @@
     "@types/react-dom": "^17.0.0",
     "fibers": "3.1.0",
     "node-sass": "^4.0.0",
-    "parrotsour-components": "^0.1.3",
+    "parrotsour-components": "^0.1.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-dropdown-select": "^4.6.1",

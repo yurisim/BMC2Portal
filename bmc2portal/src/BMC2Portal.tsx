@@ -76,7 +76,7 @@ const BMC2Portal = ():ReactElement => {
   }
 
   function getPS() : JSX.Element {
-    return <ParrotSour type="chooser" />
+    return <ParrotSour type="chooser" interceptLink="/msncrew/parrotsourintercept.html" proceduralLink="/msncrew/parrotsourprocedural.html"/>
   }
 
   function getPSP(): JSX.Element {
