@@ -81,7 +81,6 @@ class mBackend implements Backend {
 
     // Mock SELECT * FROM UNITS WHERE NAME=unitname
     async getUnitInfo(unitName:string):Promise<UnitInfo>{
-        // TODO - remove this and process data from server instead
         return new Promise(()=>{return this.unitMock(unitName)});
     }
 

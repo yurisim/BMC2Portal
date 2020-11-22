@@ -180,6 +180,8 @@ function Canvas(props: CanvasProps):ReactElement {
      * @param e CanvasMouseEvent containing mouse position
      */
     const canvasMouseMove = (e: CanvasMouseEvent) =>{
+
+        // TODO - Mouse move during draw freezes img.current
         const mousePos = getMousePos(canvasRef.current, e)
         if (ctx.current && img.current) 
             ctx.current.putImageData(img.current, 0, 0);

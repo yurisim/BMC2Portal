@@ -12,11 +12,7 @@ type PSProps = {
 
 /**
  * The main entry class for a ParrotSour component
- * 
- * TODO - this will be wrapped with the "Procedural" and "Intercept" options
- * when procedural is done/converted to React & Typescript
  */
-//export default class ParrotSour extends React.Component {
 const ParrotSour = (props: PSProps):ReactElement => {
     if (props.type==="chooser"){
         return(
