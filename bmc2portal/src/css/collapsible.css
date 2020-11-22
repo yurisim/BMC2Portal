@@ -97,7 +97,7 @@ ul li .box {
   -webkit-transition: border 0.25s linear;
 }
 
-ul li .check {
+ul li .check,ul li .check-no-hover {
   display: block;
   position: absolute;
   border: 3px solid #aaaaaa;
