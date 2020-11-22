@@ -1,6 +1,6 @@
 import React, { lazy, ReactElement } from 'react'
 
-import { PsQT } from './quicktips/psQT'
+import { PsQT } from '../quicktips/psQT'
 
 const ParrotSourHeader = lazy(()=>import('./parrotsourheader'))
 

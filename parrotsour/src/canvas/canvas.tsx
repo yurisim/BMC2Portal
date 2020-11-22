@@ -51,7 +51,8 @@ function Canvas(props: CanvasProps):ReactElement {
     }
 
     // These values are used by useEffect to trigger a 'draw'
-    const { draw, height, width, braaFirst, bullseye, picType, showMeasurements, isHardMode, newPic, ...rest } =  props
+    const { draw, height, width, braaFirst, bullseye, picType, 
+        showMeasurements, isHardMode, newPic, animateCallback, resetCallback, animate, ...rest } =  props
 
     // useEffect is a React hook called when any of the trigger props changes
     useEffect(()=>{

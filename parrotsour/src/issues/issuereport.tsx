@@ -3,9 +3,8 @@ import React, { ReactElement } from 'react'
 import {Button, Dialog, DialogActions, DialogContent, TextField} from '@material-ui/core'
 import IssueSelector from 'issues/issueselector'
 
-import './css/collapsible.css'
-import snackbar from './utils/alert'
-import SelectInput from '@material-ui/core/Select/SelectInput'
+import '../css/collapsible.css'
+import snackbar from '../utils/alert'
 
 type IRState = {
     showIssueForm: boolean,

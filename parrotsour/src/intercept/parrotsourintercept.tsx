@@ -10,8 +10,8 @@ import { InterceptQT } from '../quicktips/interceptQT'
 
 const PicTypeSelector = lazy(()=>import('./pictypeselector'))
 const StandardSelector = lazy(()=>import('./standardselector'))
-const ParrotSourHeader = lazy(()=>import('../parrotsourheader'))
-const ParrotSourControls = lazy(()=>import("../parrotsourcontrols"))
+const ParrotSourHeader = lazy(()=>import('../pscomponents/parrotsourheader'))
+const ParrotSourControls = lazy(()=>import("../pscomponents/parrotsourcontrols"))
 
 const PictureCanvas = lazy(()=>import('../canvas/picturecanvas'))
 const VersionInfo = lazy(()=>import('../versioninfo'))

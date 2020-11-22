@@ -1,6 +1,6 @@
 import React, { CSSProperties, ReactElement } from 'react'
 
-import IssueReport from './issuereport'
+import IssueReport from '../issues/issuereport'
 import {Dialog} from '@material-ui/core'
 
 interface PSHeaderProps{

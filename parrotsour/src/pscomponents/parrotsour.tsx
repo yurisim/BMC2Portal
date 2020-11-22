@@ -1,9 +1,8 @@
-import { useThemeProps } from '@material-ui/core'
 import React, { lazy, ReactElement, Suspense } from 'react'
 import {ParrotSourChooser} from './parrotsourchooser'
 
-const ParrotSourIntercept = lazy(()=>import("./intercept/parrotsourintercept"))
-const ParrotSourProcedural = lazy(()=>import("./procedural/parrotsourprocedural"))
+const ParrotSourIntercept = lazy(()=>import("../intercept/parrotsourintercept"))
+const ParrotSourProcedural = lazy(()=>import("../procedural/parrotsourprocedural"))
 
 type PSProps = {
     type: string,
