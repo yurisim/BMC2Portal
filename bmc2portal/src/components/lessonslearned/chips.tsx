@@ -112,7 +112,7 @@ export default class Chips extends React.PureComponent<ChipProps, ChipState> {
         }
     }
 
-    setInputElem(el: HTMLInputElement): void{ 
+    setInputElem = (el: HTMLInputElement): void=>{ 
         this.inputElem = el
     }
 
