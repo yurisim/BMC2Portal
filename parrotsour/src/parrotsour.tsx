@@ -1,3 +1,4 @@
+import { useThemeProps } from '@material-ui/core'
 import React, { lazy, ReactElement, Suspense } from 'react'
 import {ParrotSourChooser} from './parrotsourchooser'
 
@@ -6,6 +7,8 @@ const ParrotSourProcedural = lazy(()=>import("./procedural/parrotsourprocedural"
 
 type PSProps = {
     type: string,
+    interceptLink?: string,
+    proceduralLink?: string
 }
 
 /**
@@ -19,7 +22,10 @@ const ParrotSour = (props: PSProps):ReactElement => {
     if (props.type==="chooser"){
         return(
             <Suspense fallback={<div>Loading...</div>} >
-                <ParrotSourChooser/>
+                <ParrotSourChooser 
+                    interceptLink={props.interceptLink}
+                    proceduralLink={props.proceduralLink}
+                />
             </Suspense>
         )
     } else if (props.type==="intercept")

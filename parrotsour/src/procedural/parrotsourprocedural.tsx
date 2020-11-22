@@ -124,13 +124,18 @@ export default class ParrotSourProcedural extends React.PureComponent<Record<str
         this.setState({canvasConfig:newConfig})
     }
 
+    getAnswer = ():string => {
+        // TODO - return some helpful information about commands?
+        return ""
+    }
+
     render():ReactElement {
         const { canvasConfig, braaFirst } = this.state
         const { showMeasurements, isHardMode, animate, newPic, speedSliderValue } = this.state
         return (
             <div>
                 <Suspense fallback={<div>Loading...</div>} >
-                    <ParrotSourHeader comp={<InterceptQT/>} />
+                    <ParrotSourHeader comp={<InterceptQT/>} getAnswer={this.getAnswer} />
                 </Suspense>
 
                 <hr />

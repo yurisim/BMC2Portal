@@ -240,7 +240,7 @@ function Canvas(props: CanvasProps):ReactElement {
 
     return (
     <div style={{display:"block",textAlign:"center"}}>
-        <canvas {...moveProps} style={style} ref={canvasRef} {...rest} />
+        <canvas id="pscanvas" {...moveProps} style={style} ref={canvasRef} {...rest} />
     </div>
     )
 }

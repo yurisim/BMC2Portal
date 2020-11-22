@@ -59,6 +59,9 @@ ul li {
   border-bottom: 1px solid #333;
 }
 
+.textfull {
+  margin:"5px"; width:"95%";height:"25%"; min-height:"25%"
+}
 ul li input[type="radio"] {
   position: absolute;
   visibility: hidden;
@@ -97,7 +100,7 @@ ul li .box {
   -webkit-transition: border 0.25s linear;
 }
 
-ul li .check {
+ul li .check,ul li .check-no-hover {
   display: block;
   position: absolute;
   border: 3px solid #aaaaaa;
@@ -113,7 +116,7 @@ ul li:hover .check {
   border: 3px solid #ffffff;
 }
 
-ul li .check::before {
+ul li .check::before,ul li .check-no-hover::before {
   display: block;
   position: relative;
   content: "";
@@ -127,7 +130,7 @@ ul li .check::before {
   -webkit-transition: background 0.25s linear;
 }
 
-input[type="radio"]:checked ~ .check {
+input[type="radio"]:checked ~ .check, input[type="radio"]:checked ~ .check-no-hover {
   border: 3px solid #0dff92;
 }
 
@@ -136,7 +139,7 @@ input[type="checkbox"]:checked ~ .box {
   background-color: #0dff92;
 }
 
-input[type="radio"]:checked ~ .check::before {
+input[type="radio"]:checked ~ .check::before,input[type="radio"]:checked ~ .check-no-hover::before {
   background: #0dff92;
 }
 

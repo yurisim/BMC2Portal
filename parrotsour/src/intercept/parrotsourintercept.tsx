@@ -169,6 +169,10 @@ export default class ParrotSourIntercept extends React.PureComponent<Record<stri
             this.setState({picType:e.target.value})
     }
 
+    getAnswer = ():string => {
+        return this.state.answer
+    }
+
     render():ReactElement {
         const { showAnswer, answer, picType } = this.state
         const { canvasConfig, braaFirst, format } = this.state
@@ -176,7 +180,9 @@ export default class ParrotSourIntercept extends React.PureComponent<Record<stri
         return (
             <div>
                 <Suspense fallback={<div>Loading...</div>} >
-                    <ParrotSourHeader comp={<InterceptQT/>} />
+                    <ParrotSourHeader 
+                        comp={<InterceptQT/>}
+                        getAnswer={this.getAnswer} />
                 </Suspense>
 
                 <hr />

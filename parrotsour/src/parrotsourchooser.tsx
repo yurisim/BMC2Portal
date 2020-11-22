@@ -4,27 +4,36 @@ import { PsQT } from './quicktips/psQT'
 
 const ParrotSourHeader = lazy(()=>import('./parrotsourheader'))
 
-export const ParrotSourChooser = ():ReactElement => {
+type PSCProps = {
+    interceptLink?: string,
+    proceduralLink?: string
+}
+
+export const ParrotSourChooser = (props:PSCProps):ReactElement => {
 
     const buttonStyle = {
         width:"25%",
         margin:"5px"
     }
 
-    function navigate (link:string): ()=>void {
+    function navigate (link?:string): ()=>void {
         return ()=>{
-            window.location.href = link
+            window.location.href = (link) ? link : "#"
         }
     }   
 
+    function emptyFunc():string {
+        return ""
+    }
+
     return (
         <div>
-            <ParrotSourHeader comp={<PsQT/>}/>
+            <ParrotSourHeader comp={<PsQT/>} getAnswer={emptyFunc}/>
             <br/>
             <hr/>
             <div style={{textAlign:"center"}}>
-                <button style={buttonStyle} type="button" onClick={navigate("/msncrew/parrotsourintercept.html")}> Intercept </button>
-                <button style={buttonStyle} type="button"> Procedural </button>
+                <button style={buttonStyle} type="button" onClick={navigate(props.interceptLink)}> Intercept </button>
+                <button style={buttonStyle} type="button" onClick={navigate(props.proceduralLink)}> Procedural </button>
             </div>
         </div>
     )

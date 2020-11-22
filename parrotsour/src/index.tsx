@@ -13,6 +13,9 @@ import ParrotSourProcedural from './procedural/parrotsourprocedural'
 import { AlsaHelp } from './quicktips/alsahelp'
 import { InterceptQT } from './quicktips/interceptQT'
 import { PsQT } from './quicktips/psQT'
+import ReactDOM from 'react-dom'
+import React, { Suspense } from 'react'
+import Home from 'Home'
 
 export {
     Canvas,
@@ -29,3 +32,12 @@ export {
     ParrotSourHeader,
     ParrotSourChooser,
 }
+
+ReactDOM.render(
+    <React.StrictMode>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Home />
+      </Suspense>
+    </React.StrictMode>,
+    document.getElementById("root")
+);
