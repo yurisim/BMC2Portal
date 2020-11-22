@@ -5,12 +5,14 @@ import IssueSelector from 'issues/issueselector'
 
 import './css/collapsible.css'
 import snackbar from './utils/alert'
+import SelectInput from '@material-ui/core/Select/SelectInput'
 
 type IRState = {
     showIssueForm: boolean,
     selection:string,
     email?: string,
-    text?: string
+    text?: string,
+    submitEnabled:boolean
 }
 
 type IRProps = {
@@ -24,6 +26,7 @@ export default class IssueReport extends React.PureComponent<IRProps, IRState> {
         this.state={
             showIssueForm: false,
             selection:"picprob",
+            submitEnabled: true
         }
     }
 
@@ -59,6 +62,7 @@ export default class IssueReport extends React.PureComponent<IRProps, IRState> {
         const goodForm = e.currentTarget.form.reportValidity()
         e.preventDefault();
 
+        this.setState({submitEnabled:false})
         if (goodForm) {        
             const canvas:HTMLCanvasElement= document.getElementById("pscanvas") as HTMLCanvasElement
             let id: ImageData|undefined
@@ -72,17 +76,27 @@ export default class IssueReport extends React.PureComponent<IRProps, IRState> {
             let realEmail = (email) ? email : "unknown"
             if (email && email.indexOf("@") === -1) realEmail += "@gmail.com"; 
  
+            const realText = (text) ? text : "unknown"
             const answer = this.props.getAnswer()
-            console.log(realEmail, answer, text, id)
 
-            //const res = await backend.postLessonLearned(title, author, content)
-            // if (res === "OK"){
-            snackbar.alert("Submitted!", 5000, "green")
-            //     this.handleClose()
-            // } else{
-            //     snackbar.alert("Error submitting...", 5000, "red")
-            // }
+            const formData = new FormData()
+            formData.append("email", realEmail)
+            formData.append("comments", realText + " \n\n" + answer)
+            formData.append("image", canvas.toDataURL('image/png'))
+            const response = await fetch(process.env.PUBLIC_URL+'/database/emailissue.php', {
+                method: "POST",
+                body: formData
+            });
+            
+            if (response.ok){
+                snackbar.alert("Submitted!", 5000, "green")
+                this.setState({showIssueForm:false})
+            } else {
+                snackbar.alert("Issue report failed.\nTry again later.", 5000, "red")
+            }
         }
+        
+        this.setState({submitEnabled:true})
     }
 
     handleClose = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>):void => {
@@ -128,7 +142,7 @@ export default class IssueReport extends React.PureComponent<IRProps, IRState> {
                     onChange={this.handleTextChanged}/>
                 <button type="button" hidden onClick={this.handleSubmit} />
                 <DialogActions>
-                    <Button onClick={this.handleSubmit}>
+                    <Button onClick={this.handleSubmit} disabled={!this.state.submitEnabled}>
                         Submit
                     </Button>
                     <Button onClick={this.handleClose}>
