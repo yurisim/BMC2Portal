@@ -36,7 +36,9 @@ interface CanvasProps {
 function Canvas(props: CanvasProps):ReactElement {
     // These Refs are used to store References to the current elements
     const canvasRef: React.RefObject<HTMLCanvasElement>|null = useRef<HTMLCanvasElement>(null)
+    const mouseCanvasRef: React.RefObject<HTMLCanvasElement>|null = useRef<HTMLCanvasElement>(null)
     const ctx: React.MutableRefObject<CanvasRenderingContext2D|null|undefined>= useRef(null)
+    const mouseCvCtx: React.MutableRefObject<CanvasRenderingContext2D|null|undefined> = useRef(null)
     const img: React.MutableRefObject<ImageData|null|undefined> = useRef(null)
 
     // These state variables are used to track mouse position
@@ -57,14 +59,21 @@ function Canvas(props: CanvasProps):ReactElement {
     // useEffect is a React hook called when any of the trigger props changes
     useEffect(()=>{
         const canvas: HTMLCanvasElement|null = canvasRef.current
+        const mouseCanvas: HTMLCanvasElement|null = mouseCanvasRef.current
 
-        if (canvas !== null){
+        if (canvas !== null && mouseCanvas !==null){
             // Set up the canvas and establish references
             ctx.current = canvas.getContext("2d")
+            mouseCvCtx.current = mouseCanvas.getContext("2d")
             canvas.height = height;
             canvas.width = width;
             canvas.style.width = width + "px";
             canvas.style.height = height + "px";
+            
+            mouseCanvas.height = height;
+            mouseCanvas.width = width;
+            mouseCanvas.style.width = width + "px";
+            mouseCanvas.style.height = height + "px";
 
             let frameCount = 0
             // let animationFrameId
@@ -78,11 +87,11 @@ function Canvas(props: CanvasProps):ReactElement {
 
             // Post render, store the current ImageData as a snapshot
             render().then(()=>{
-                img.current = getImageData()
+                // do nothing
             })
 
             return () =>{
-                //window.cancelAnimationFrame(animationFrameId)
+                // do nothing
             }
         }
     }, [draw, height, width, braaFirst, picType, showMeasurements, newPic, isHardMode])
@@ -114,8 +123,8 @@ function Canvas(props: CanvasProps):ReactElement {
      * @param isDown true to draw BRAAseye, false to draw just bullseye hover
      */
     function drawMouse(start: Bullseye, end: Bullseye, isDown: boolean) {
-        if (isDown && ctx.current) {
-          drawLine(ctx.current, start.x, start.y, end.x, end.y);
+        if (isDown && mouseCvCtx.current) {
+          drawLine(mouseCvCtx.current, start.x, start.y, end.x, end.y);
         }
 
         const startPoint = { x: start.x, y: start.y };
@@ -123,26 +132,19 @@ function Canvas(props: CanvasProps):ReactElement {
         if (end.y<20) end.y=20
         const bull: BRAA = getBR(end.x, end.y, bullseye)
 
-        if (canvasRef && canvasRef.current && ctx.current){
+        if (mouseCanvasRef && mouseCanvasRef.current && mouseCvCtx.current){
             if (props.braaFirst) {
                 if (isDown){
-                    drawBR(canvasRef.current, ctx.current, end.x-50, end.y-11, BRAA, "blue", true)
+                    drawBR(mouseCanvasRef.current, mouseCvCtx.current, end.x-50, end.y-11, BRAA, "blue", true)
                 }
-                drawBR(canvasRef.current, ctx.current, end.x-50, end.y, bull, "black", true)
+                drawBR(mouseCanvasRef.current, mouseCvCtx.current, end.x-50, end.y, bull, "black", true)
             } else {
                 if (isDown){
-                    drawBR(canvasRef.current, ctx.current, end.x-50, end.y, BRAA, "blue", true)
+                    drawBR(mouseCanvasRef.current, mouseCvCtx.current, end.x-50, end.y, BRAA, "blue", true)
                 }
-                drawBR(canvasRef.current, ctx.current, end.x-50, end.y-11, bull, "black", true)
+                drawBR(mouseCanvasRef.current, mouseCvCtx.current, end.x-50, end.y-11, bull, "black", true)
             }
         }
-    }
-
-    /**
-     * Called when mouse enters canvas. Stores image data before mouse draws
-     */
-    const onMouseEnter = function() {
-        img.current = getImageData()
     }
 
     /**
@@ -158,9 +160,6 @@ function Canvas(props: CanvasProps):ReactElement {
             resetCallback()
         }
 
-        if (getContinueAnimate()){
-            img.current = getImageData()
-        }
         const mousePos = getMousePos(canvasRef.current, e);
         setStart(mousePos)
     };
@@ -170,8 +169,8 @@ function Canvas(props: CanvasProps):ReactElement {
      * Restore the imagedata (w/o line draws).
      */
     const onMouseLeave = ()=>{
-        if (ctx.current && img.current) 
-            ctx.current.putImageData(img.current, 0, 0);
+        if(mouseCvCtx.current && mouseCanvasRef.current)
+            mouseCvCtx.current.clearRect(0,0, mouseCanvasRef.current.width, mouseCanvasRef.current.height)
     }
 
     /**
@@ -180,11 +179,11 @@ function Canvas(props: CanvasProps):ReactElement {
      * @param e CanvasMouseEvent containing mouse position
      */
     const canvasMouseMove = (e: CanvasMouseEvent) =>{
-
-        // TODO - Mouse move during draw freezes img.current
         const mousePos = getMousePos(canvasRef.current, e)
-        if (ctx.current && img.current) 
-            ctx.current.putImageData(img.current, 0, 0);
+        if (mouseCvCtx.current && mouseCanvasRef.current) 
+        {
+            mouseCvCtx.current.clearRect(0,0, mouseCanvasRef.current.width, mouseCanvasRef.current.height)
+        }
         drawMouse(mouseStart, mousePos, mousePressed)
     }
 
@@ -194,8 +193,6 @@ function Canvas(props: CanvasProps):ReactElement {
      */
     const canvasMouseUp = () =>{
         setMousePressed(false)
-        if (ctx.current && img.current)
-            ctx.current.putImageData(img.current, 0, 0)
         const { animateCallback } = props
         if (wasAnimate){
             animateCallback()
@@ -237,13 +234,15 @@ function Canvas(props: CanvasProps):ReactElement {
         onTouchStart:canvasTouchStart,
         onTouchMove:canvasTouchMove,
         onTouchEnd:canvasMouseUp,
-        onMouseOver:onMouseEnter,
         onMouseLeave:onMouseLeave
     }
 
     return (
     <div style={{display:"block",textAlign:"center"}}>
-        <canvas id="pscanvas" {...moveProps} style={style} ref={canvasRef} {...rest} />
+        <div style={{position:"relative", height:"600px"}}>
+            <canvas id="pscanvas" {...moveProps} style={{...style, position:"absolute", left:"0px"}} ref={canvasRef} {...rest} />
+            <canvas id="mousecanvas" {...moveProps} style={{...style, position:"absolute", left:"0px",backgroundColor:"transparent"}} ref={mouseCanvasRef} {...rest} />
+        </div>
     </div>
     )
 }
