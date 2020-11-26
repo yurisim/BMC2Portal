@@ -170,6 +170,7 @@ export default class ParrotSourIntercept extends React.PureComponent<Record<stri
     }
 
     getAnswer = ():string => {
+        // eslint-disable-next-line
         return this.state.answer
     }
 

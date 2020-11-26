@@ -60,8 +60,12 @@ ul li {
 }
 
 .textfull {
-  margin:"5px"; width:"95%";height:"25%"; min-height:"25%"
+  margin:"5px"; 
+  width:"95%";
+  height:"25%"; 
+  min-height:"25%"
 }
+
 ul li input[type="radio"] {
   position: absolute;
   visibility: hidden;
@@ -82,6 +86,7 @@ ul li label {
   z-index: 1;
   cursor: pointer;
   -webkit-transition: all 0.25s linear;
+  transition: all 0.25s linear;
 }
 
 ul li:hover label {

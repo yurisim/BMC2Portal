@@ -61,12 +61,15 @@
     "eject": "react-scripts eject",
     "clean": "rimraf dist",
     "compile": "npm run clean && cross-env NODE_ENV=production babel src --extensions \".ts,.js,.tsx,.jsx\" --out-dir dist --copy-files",
-    "pub": "npm run compile && npm publish"
+    "pub": "npm run compile && npm publish",
+    
+    "clint": "eslint src/**/*.{ts,tsx}",
+    "clint-fixdr": "eslint src/**/*.{ts,tsx} --fix-dry-run",
+    "clint-fix": "eslint src/**/*.{ts,tsx} --fix"
   },
   "eslintConfig": {
     "extends": [
-      "react-app",
-      "react-app/jest"
+      "react-app"
     ]
   },
   "browserslist": {

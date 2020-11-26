@@ -43,7 +43,7 @@ export default class IssueReport extends React.PureComponent<IRProps, IRState> {
         this.setState({showIssueForm:false})
     }
 
-    handleIssueSelChanged = (val:string): ()=>void => {
+    onIssueSelChanged = (val:string): ()=>void => {
         return ()=>{ this.setState({selection:val})}
     }
 
@@ -62,26 +62,22 @@ export default class IssueReport extends React.PureComponent<IRProps, IRState> {
         e.preventDefault();
 
         this.setState({submitEnabled:false})
-        if (goodForm) {        
+        if (goodForm) {   
+            const {getAnswer} = this.props   
+            const {selection} = this.state  
             const canvas:HTMLCanvasElement= document.getElementById("pscanvas") as HTMLCanvasElement
-            let id: ImageData|undefined
-            id = undefined
-            if (canvas !== null){
-                const context = canvas.getContext("2d")
-                if (context !== null){
-                    id = context.getImageData(0,0, canvas.width, canvas.height)
-                }
-            }
+
             let realEmail = (email) ? email : "unknown"
             if (email && email.indexOf("@") === -1) realEmail += "@gmail.com"; 
  
             const realText = (text) ? text : "unknown"
-            const answer = this.props.getAnswer()
+            const answer = getAnswer()
 
             const formData = new FormData()
             formData.append("email", realEmail)
             formData.append("comments", realText + " \n\n" + answer)
-            formData.append("image", canvas.toDataURL('image/png'))
+            if (selection==="picprob")
+                formData.append("image", canvas.toDataURL('image/png'))
             const response = await fetch(process.env.PUBLIC_URL+'/database/emailissue.php', {
                 method: "POST",
                 body: formData
@@ -104,7 +100,7 @@ export default class IssueReport extends React.PureComponent<IRProps, IRState> {
     }
 
     render(): ReactElement {
-        const {showIssueForm} = this.state
+        const {showIssueForm, submitEnabled} = this.state
         return (
         <div style={{width:"25%"}}>
             <button type="button" style={{marginLeft:"5%", top:"5px"}} onClick={this.handleToggleIssueForm}> Report Issue </button>     
@@ -118,10 +114,11 @@ export default class IssueReport extends React.PureComponent<IRProps, IRState> {
                 
                 <form onSubmit={this.handleSubmit}>
                 <DialogContent>
-                    <IssueSelector selectionChanged={this.handleIssueSelChanged}/>
+                    <IssueSelector selectionChanged={this.onIssueSelChanged}/>
                 </DialogContent>
-                <TextField 
-                    className="textfull"
+                <TextField
+                    classes={{root:"textfull"}}
+                    // eslint-disable-next-line
                     style={{margin:"5px", width:"95%"}}
                     required
                     id='email'
@@ -131,7 +128,8 @@ export default class IssueReport extends React.PureComponent<IRProps, IRState> {
                     onChange={this.handleEmailChange}/>
                 <TextField 
                     classes={{root:"textfull"}}
-                    style={{margin:"5px", width:"95%", height:"25%", minHeight:"25%"}}
+                    // eslint-disable-next-line
+                    style={{margin:"5px", width:"95%"}}
                     required
                     id="issue"
                     label="Issue Description"
@@ -141,7 +139,7 @@ export default class IssueReport extends React.PureComponent<IRProps, IRState> {
                     onChange={this.handleTextChanged}/>
                 <button type="button" hidden onClick={this.handleSubmit} />
                 <DialogActions>
-                    <Button onClick={this.handleSubmit} disabled={!this.state.submitEnabled}>
+                    <Button onClick={this.handleSubmit} disabled={!submitEnabled}>
                         Submit
                     </Button>
                     <Button onClick={this.handleClose}>

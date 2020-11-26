@@ -14,16 +14,17 @@ type PSProps = {
  * The main entry class for a ParrotSour component
  */
 const ParrotSour = (props: PSProps):ReactElement => {
-    if (props.type==="chooser"){
+    const {type, interceptLink, proceduralLink} = props
+    if (type==="chooser"){
         return(
             <Suspense fallback={<div>Loading...</div>} >
                 <ParrotSourChooser 
-                    interceptLink={props.interceptLink}
-                    proceduralLink={props.proceduralLink}
+                    interceptLink={interceptLink}
+                    proceduralLink={proceduralLink}
                 />
             </Suspense>
         )
-    } else if (props.type==="intercept")
+    } else if (type==="intercept")
         return(
             <Suspense fallback={<div>Loading...</div>} >
                 <ParrotSourIntercept/>

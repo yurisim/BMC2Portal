@@ -3,7 +3,6 @@ import React, {useRef, useState, useEffect, ReactElement, TouchEvent } from 'rea
 import { getBR } from '../utils/mathutilities'
 import { BRAA, Bullseye } from '../utils/interfaces'
 import { drawLine, drawBR } from './draw/drawutils'
-import { getContinueAnimate } from './draw/intercept/animate'
 
 export interface CanvasDrawFunction {
     (context: CanvasRenderingContext2D|null|undefined, frameCount: number, canvas: HTMLCanvasElement):Promise<void>
@@ -39,22 +38,15 @@ function Canvas(props: CanvasProps):ReactElement {
     const mouseCanvasRef: React.RefObject<HTMLCanvasElement>|null = useRef<HTMLCanvasElement>(null)
     const ctx: React.MutableRefObject<CanvasRenderingContext2D|null|undefined>= useRef(null)
     const mouseCvCtx: React.MutableRefObject<CanvasRenderingContext2D|null|undefined> = useRef(null)
-    const img: React.MutableRefObject<ImageData|null|undefined> = useRef(null)
-
+    
     // These state variables are used to track mouse position
     const [mouseStart, setStart] = useState({x:0,y:0})
     const [mousePressed, setMousePressed] = useState(false)
     const [wasAnimate, setWasAnimate] = useState(false)
-   
-    // Get the ImageData from the canvas context
-    const getImageData = () =>{
-        if (ctx.current && canvasRef && canvasRef.current)
-            return ctx.current.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height)
-    }
 
     // These values are used by useEffect to trigger a 'draw'
     const { draw, height, width, braaFirst, bullseye, picType, 
-        showMeasurements, isHardMode, newPic, animateCallback, resetCallback, animate, ...rest } =  props
+        showMeasurements, isHardMode, newPic,  ...rest } =  props
 
     // useEffect is a React hook called when any of the trigger props changes
     useEffect(()=>{

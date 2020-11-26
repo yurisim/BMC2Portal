@@ -1,6 +1,6 @@
 import React, { Suspense, lazy, ReactElement } from "react";
 
-import { Router, Route, RouteComponentProps, StaticContext } from "react-router";
+import { Router, Route } from "react-router";
 import { createBrowserHistory } from "history";
 
 import "./css/snackbar.css";
@@ -8,9 +8,8 @@ import "./css/styles.css";
 import "./css/body.css";
 import "./css/fonts.css";
 
-import ParrotSour from './pscomponents/parrotsour'
-
-import ChangeLog from './changelog'
+const ParrotSour = lazy(()=>import("./pscomponents/parrotsour"))
+const ChangeLog = lazy(()=>import('./changelog'))
 
 const browserHistory = createBrowserHistory();
 

@@ -26,15 +26,23 @@ export const ParrotSourChooser = (props:PSCProps):ReactElement => {
         return ""
     }
 
+    const { interceptLink, proceduralLink } = props
     return (
         <div>
             <ParrotSourHeader comp={<PsQT/>} getAnswer={emptyFunc}/>
             <br/>
             <hr/>
             <div style={{textAlign:"center"}}>
-                <button style={buttonStyle} type="button" onClick={navigate(props.interceptLink)}> Intercept </button>
-                <button style={buttonStyle} type="button" onClick={navigate(props.proceduralLink)}> Procedural </button>
+                <button style={buttonStyle} type="button" onClick={navigate(interceptLink)}> Intercept </button>
+                <button style={buttonStyle} type="button" onClick={navigate(proceduralLink)}> Procedural </button>
             </div>
         </div>
     )
 }
+
+ParrotSourChooser.defaultProps = {
+    interceptLink: "",
+    proceduralLink: ""
+}
+
+export default ParrotSourChooser
