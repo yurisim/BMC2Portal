@@ -24,6 +24,7 @@
       mkdir("images");
     }
     $success = file_put_contents("images/issue".$nowtime.".png", $data); 
+    $success = file_put_contents("images/issue".$nowtime.".txt", $comments); 
     
     $my_file = "issue".$nowtime.".png";
     $my_path = "images/";
@@ -47,14 +48,16 @@ function mail_attachment($filename, $path, $mailto, $from_mail, $from_name, $rep
   $header = "From: ".$from_name." <".$from_mail.">".$eol;
   $header .= "Reply-To: ".$replyto.$eol;
   $header .= "MIME-Version: 1.0".$eol;
-  $header .= "Content-type: multipart/alternative; boundary=\"----=_NextPart_" . $uid . "\"";
+  $header .= "Content-type: multipart/alternative; boundary=----=_NextPart_" . $uid;
+
+  $message = "Hello in plain text";
 
   $message = "This is multipart message using MIME\n";
 
   $message .= "------=_NextPart_" . $uid . "\n";
   $message .= "Content-Type: text/plain; charset=UTF-8\n";
   $message .= "Content-Transfer-Encoding: 7bit". "\n\n";
-  $message .= "".$msg . "\n text\n\n";
+  $message .= $msg . "\n\n";
   $message .="------=_NextPart_" . $uid . "\n";
 
   $message .= "Content-Type: application/octet-stream; name=\"".$filename."\"".$eol; // use different content types here
@@ -69,6 +72,7 @@ function mail_attachment($filename, $path, $mailto, $from_mail, $from_name, $rep
     $errorMessage = error_get_last()['message'];
     http_response_code(500);
     echo $errorMessage;
+    echo var_dump($errorMessage);
     echo "mail send ... ERROR!";
  }
 }

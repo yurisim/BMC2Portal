@@ -9,7 +9,7 @@ export const AlsaHelp = ():ReactElement => {
     return (
         <DialogContent>
             <DialogContentText>
-                Read the pub <a target='_blank' href='ALSA-ACC.pdf'> here! </a>
+                Download the pub <a target='_window' href='https://www.alsa.mil/MTTPs/ACC/'> here! </a>
             </DialogContentText>
             <DialogContentText>
                 <b>ALSA ACC</b><br /> ACC is a new comm format from the ALSA joint publications. The intent behind the standard is to
@@ -41,7 +41,7 @@ export const AlsaHelp = ():ReactElement => {
             </DialogContentText>
             <DialogContentText>
                 <b>Aspect </b> is used in threat calls. Ex:<br/>
-                <i>VIPER01, THREAT BRAA 270/16, 22k, HOT HOSILE</i><br/><br/>
+                <i>VIPER01, THREAT GROUP BRAA 270/16, 22k, HOT HOSILE</i><br/><br/>
             </DialogContentText>
         </DialogContent>
     )

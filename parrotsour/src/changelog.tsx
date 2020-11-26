@@ -6,19 +6,20 @@ function ChangeLog():JSX.Element {
             --------------------------------------- <br/>
             Known Bugs <br/>
             <li> Opening/closing pictures don&quot;t always include correct comm</li>
-            <li> If maneuvers, infinite maneuvers during sim for N/S orientation</li>
             --------------------------------------- <br/>
             Scheduled Features: <br/>
             <li> Verify anchoring P&quot;s in WALL, CHAMP TRAIL gps, CAP </li>
             <li> Verify typescript conversion went well (i.e. no bugs in animation or answers)</li>
             <li> Finish opening/closing comm (particularly for range pics) </li>
             <li> CAP for more picture types </li>
+            <li> Procedural simulation </li>
             --------------------------------------- <br/>
             --------------------------------------- <br/> 
             Version 3.0.5 - 21 Nov 2020 <br/>
             --------------------------------------- <br/>
             Features
             <li>Bullseye follows mouse on canvas</li>
+            <li>Threat now includes "THREAT GROUP" and correct ALSA formatting </li>
             <li>Codebase migrated to React and Typescript </li>
             <li>Components to be easily included in other sites or mobile app </li>
             <li>Massive fixes to animation logic and arrow drawing </li>
