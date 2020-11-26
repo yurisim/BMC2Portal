@@ -729,7 +729,7 @@ export const drawLeadEdge:DrawFunction = (
   state: PicCanvasState,
   start?: Bullseye|undefined ): DrawAnswer => {
 
-  let boundaries: Bounds = {
+  const boundaries: Bounds = {
     tall: { lowX: 0.2, hiX: 0.8, lowY: 0.3, hiY: 0.5 },
     wide: { lowX: 0.5, hiX: 0.6, lowY: 0.42, hiY: 0.5 }
   }
@@ -741,7 +741,7 @@ export const drawLeadEdge:DrawFunction = (
   let finalAnswer: DrawAnswer = {
     pic:"", groups:[]
   }
-  let answer1 = state.reDraw(canvas, context, true, start1)
+  const answer1 = state.reDraw(canvas, context, true, start1)
    
   const boundaries2: Bounds = {
     tall: { lowX: 0.2, hiX: 0.8, lowY: 0.8, hiY: 0.9 },
@@ -755,8 +755,8 @@ export const drawLeadEdge:DrawFunction = (
   const answer2 = state.reDraw(canvas, context, true, start2)
   
   if (!state.bluePos) { return { pic: "", groups: []} }
-  let groups1 = answer1.groups;
-  let groups2 = answer2.groups;
+  const groups1 = answer1.groups;
+  const groups2 = answer2.groups;
 
   const followFunc = (props.orientation === "NS") ? Math.min : Math.max
   const leadFunc = (props.orientation === "NS") ? Math.max : Math.min
