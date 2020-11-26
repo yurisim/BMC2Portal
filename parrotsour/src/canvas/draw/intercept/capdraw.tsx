@@ -1,4 +1,4 @@
-import { getAltStack, getTrackDir, randomHeading, randomNumber } from "../../../utils/mathutilities";
+import { getAltStack, getBR, getTrackDir, randomHeading, randomNumber } from "../../../utils/mathutilities";
 import { AltStack, Braaseye, Bullseye, DrawAnswer, DrawFunction, Group } from "../../../utils/interfaces";
 import { PicCanvasProps, PicCanvasState } from "../../picturecanvas";
 import { drawAltitudes, drawArrow, drawBraaseye, drawGroupCap, drawMeasurement } from "../drawutils";
@@ -45,14 +45,11 @@ export const drawCap:DrawFunction = (
 
     let distanceX = 0;
     let distanceY = 0;
-    let distance = 0;
 
     if (props.orientation==="NS"){
         distanceX = randomNumber(2.5 * incr, 10 * incr);
-        distance = distanceX;
     } else {
         distanceY = randomNumber(2.5 * incr, 10 * incr);
-        distance = distanceY;
     }
     
     const heading1: number = randomHeading(props.format, state.bluePos.heading);
@@ -69,26 +66,31 @@ export const drawCap:DrawFunction = (
     let strackDir: string = getTrackDir(heading2);
 
     let ng: Group, sg: Group
+    let nOffset = 0
+    let sOffset = 0
     if (ngCap){
         ntrackDir = "CAP";
+        nOffset = 12
         ng = drawGroupCap (canvas, props.orientation, nNumContacts, startX, startY);
     } else {
         ng = drawArrow(canvas, props.orientation, nNumContacts, startX, startY, heading1 + offsetDeg1);
     }
     if (sgCap){
         strackDir = "CAP";
+        sOffset = 12
         sg = drawGroupCap (canvas, props.orientation, sNumContacts, startX + distanceX, startY + distanceY);
     } else {
         sg = drawArrow(canvas, props.orientation, sNumContacts, startX + distanceX, startY + distanceY, heading2 + offsetDeg2);
     }
     
+    let realWidth:number
     if (props.orientation==="NS"){
-        drawMeasurement(canvas, context, ng.x +2, ng.y, sg.x+2, ng.y, distance, props.showMeasurements);
+        realWidth = getBR(ng.x-nOffset, ng.y, {x: sg.x-sOffset, y:ng.y}).range
+        drawMeasurement(canvas, context, ng.x - nOffset, ng.y, sg.x - sOffset, ng.y, realWidth, props.showMeasurements);
     } else {
-        drawMeasurement(canvas, context, ng.x, ng.y + 2, ng.x, sg.y + 2, distance, props.showMeasurements);
+        realWidth = getBR(ng.x, ng.y+nOffset, {x:ng.x, y:sg.y+sOffset}).range
+        drawMeasurement(canvas, context, ng.x, ng.y + nOffset, ng.x, sg.y + sOffset, realWidth, props.showMeasurements);
     }
-    
-    const width:number = Math.floor(distance / 4);
     
     let offsetX = 0;
     if (props.orientation==="NS"){
@@ -108,12 +110,9 @@ export const drawCap:DrawFunction = (
     let answer = "";
    
     // anchor cap if width > 0 for alsa
-    const includeBull = width >= 10 && props.format !== "ipe";
+    const includeBull = realWidth >= 10 && props.format !== "ipe";
    
-    answer =
-        "TWO GROUPS AZIMUTH " +
-        width +
-        ", ";
+    answer = "TWO GROUPS AZIMUTH " + realWidth + ", ";
 
     let nLbl = "NORTH";
     let sLbl = "SOUTH";
