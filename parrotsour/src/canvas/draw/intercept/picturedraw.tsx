@@ -545,8 +545,6 @@ export const drawChampagne:DrawFunction =  (
   let slg:Group
   let offsetX = 0;
   let offsetX2 = 0;
-  const width = Math.floor(champWidth / 4)
-  const depth = Math.floor(champDepth / 4)
   
   let sLbl = "SOUTH";
   let nLbl = "NORTH";
@@ -561,12 +559,17 @@ export const drawChampagne:DrawFunction =  (
     offsetX = -70;
   }
   
+  let realDepth, realWidth
   if (props.orientation === "EW"){
-    drawMeasurement(canvas, context, nlg.x, slg.y, nlg.x, nlg.y, width, props.showMeasurements);
-    drawMeasurement(canvas, context, tg.x, tg.y, nlg.x, tg.y, depth, props.showMeasurements);
+    realWidth = getBR(nlg.x, slg.y, {x:nlg.x, y:nlg.y}).range
+    realDepth = getBR(tg.x, tg.y, {x:nlg.x, y:tg.y}).range
+    drawMeasurement(canvas, context, nlg.x, slg.y, nlg.x, nlg.y, realWidth, props.showMeasurements);
+    drawMeasurement(canvas, context, tg.x, tg.y, nlg.x, tg.y, realDepth, props.showMeasurements);
   } else {
-    drawMeasurement(canvas, context, nlg.x, nlg.y, slg.x, nlg.y, width, props.showMeasurements);
-    drawMeasurement(canvas, context, tg.x, tg.y, tg.x, nlg.y, depth, props.showMeasurements);  
+    realWidth = getBR(nlg.x, nlg.y, {x:slg.x, y:nlg.y}).range
+    realDepth = getBR(tg.x, tg.y, {x:tg.x, y:nlg.y}).range
+    drawMeasurement(canvas, context, nlg.x, nlg.y, slg.x, nlg.y, realWidth, props.showMeasurements);
+    drawMeasurement(canvas, context, tg.x, tg.y, tg.x, nlg.y, realDepth, props.showMeasurements);  
   }
 
   drawAltitudes(canvas, context, tg.x +20 + offsetX, tg.y - 11, tg.z);
@@ -581,18 +584,18 @@ export const drawChampagne:DrawFunction =  (
   const nlgAlts:AltStack = getAltStack(nlg.z, props.format);
   const slgAlts:AltStack = getAltStack(slg.z, props.format);
 
-  let answer = "THREE GROUP CHAMPAGNE " +width +" WIDE, " +depth +" DEEP, ";
+  let answer = "THREE GROUP CHAMPAGNE " +realWidth +" WIDE, " +realDepth +" DEEP, ";
  
   // determine if weighted
-  if (getBR(nlg.x, nlg.y, {x:nlg.x, y:tg.y}).range < width/3){
+  if (getBR(nlg.x, nlg.y, {x:nlg.x, y:tg.y}).range < realWidth/3){
     answer += " WEIGHTED " + nLbl + ", ";
-  } else if (getBR(slg.x, slg.y, {x:slg.x, y:tg.y}).range < width/3){
+  } else if (getBR(slg.x, slg.y, {x:slg.x, y:tg.y}).range < realWidth/3){
     answer += " WEIGHTED " + sLbl + ", ";
   }
   
   answer += picTrackDir(props.format, [nlg, slg, tg])
 
-  const includeBull = (width >= 10 && props.format !=="ipe");
+  const includeBull = (realWidth >= 10 && props.format !=="ipe");
 
   // TODO -- anchoring priorities for LE of champagne
   const anchorN = isAnchorNorth(nlgBraaseye, slgBraaseye, nlg, slg)
@@ -634,9 +637,6 @@ export const drawVic:DrawFunction =  (
   const vicWidth: number = randomNumber(3.5 * incr, 10 * incr);
   const vicDepth: number = randomNumber(3.5 * incr, 10 * incr);
 
-  const width = Math.floor(vicWidth / 4)
-  const depth = Math.floor(vicDepth / 4)
-
   let heading:number = randomHeading(props.format, state.bluePos.heading);
   const lg:Group = drawArrow(canvas, props.orientation, randomNumber(1, 4), startX, startY, heading + randomNumber(-10, 10));
 
@@ -662,12 +662,17 @@ export const drawVic:DrawFunction =  (
     ntg = drawArrow(canvas, props.orientation, randomNumber(1, 4), startX - vicDepth, startY - vicWidth / 2, heading + randomNumber(-10, 10));
   }
 
+  let realDepth, realWidth
   if (props.orientation === "NS"){
-    drawMeasurement(canvas, context, lg.x, lg.y, lg.x, stg.y, depth, props.showMeasurements);
-    drawMeasurement(canvas, context, stg.x, stg.y, ntg.x, stg.y, width, props.showMeasurements);
+    realDepth = getBR(lg.x,lg.y, {x:lg.x, y:stg.y}).range
+    realWidth = getBR(stg.x, stg.y, {x: ntg.x, y:stg.y}).range
+    drawMeasurement(canvas, context, lg.x, lg.y, lg.x, stg.y, realDepth, props.showMeasurements);
+    drawMeasurement(canvas, context, stg.x, stg.y, ntg.x, stg.y, realWidth, props.showMeasurements);
   } else {
-    drawMeasurement(canvas, context, lg.x, lg.y, stg.x, lg.y, depth, props.showMeasurements)
-    drawMeasurement(canvas, context, stg.x, stg.y, stg.x, ntg.y, width, props.showMeasurements);
+    realDepth = getBR(lg.x,lg.y, {x:stg.x, y:lg.y}).range
+    realWidth = getBR(stg.x, stg.y, {x:stg.x, y:ntg.y}).range
+    drawMeasurement(canvas, context, lg.x, lg.y, stg.x, lg.y, realDepth, props.showMeasurements)
+    drawMeasurement(canvas, context, stg.x, stg.y, stg.x, ntg.y, realWidth, props.showMeasurements);
   }
 
   drawAltitudes(canvas, context, lg.x + 20, lg.y - 11, lg.z);
@@ -682,12 +687,12 @@ export const drawVic:DrawFunction =  (
   const stgAlts:AltStack = getAltStack(stg.z, props.format);
   const ntgAlts:AltStack = getAltStack(ntg.z, props.format);
 
-  let answer = "THREE GROUP VIC " + depth + " DEEP, " + width + " WIDE, ";
+  let answer = "THREE GROUP VIC " + realDepth + " DEEP, " + realWidth + " WIDE, ";
 
-  if (getBR(lg.x, lg.y, {x:lg.x, y:ntg.y}).range < width/3){
+  if (getBR(lg.x, lg.y, {x:lg.x, y:ntg.y}).range < realWidth/3){
     answer += " WEIGHTED " + nLbl +", ";
   }
-  else if (getBR(lg.x, lg.y, {x:lg.x, y:stg.y}).range < width/3){
+  else if (getBR(lg.x, lg.y, {x:lg.x, y:stg.y}).range < realWidth/3){
     answer += " WEIGHTED " + sLbl +", ";
   }
 
@@ -724,8 +729,8 @@ export const drawLeadEdge:DrawFunction = (
   state: PicCanvasState,
   start?: Bullseye|undefined ): DrawAnswer => {
 
-  const boundaries: Bounds = {
-    tall: { lowX: 0.2, hiX: 0.8, lowY: 0.5, hiY: 0.6 },
+  let boundaries: Bounds = {
+    tall: { lowX: 0.2, hiX: 0.8, lowY: 0.3, hiY: 0.5 },
     wide: { lowX: 0.5, hiX: 0.6, lowY: 0.42, hiY: 0.5 }
   }
 
@@ -739,7 +744,7 @@ export const drawLeadEdge:DrawFunction = (
   let answer1 = state.reDraw(canvas, context, true, start1)
    
   const boundaries2: Bounds = {
-    tall: { lowX: 0.2, hiX: 0.8, lowY: 0.7, hiY: 0.9 },
+    tall: { lowX: 0.2, hiX: 0.8, lowY: 0.8, hiY: 0.9 },
     wide: { lowX: 0.15, hiX: 0.25, lowY: 0.25, hiY: 0.29 }
   }
 
@@ -753,27 +758,30 @@ export const drawLeadEdge:DrawFunction = (
   let groups1 = answer1.groups;
   let groups2 = answer2.groups;
 
-  if (props.orientation==="NS"){
-    const tmp = groups1;
-    groups1 = groups2;
-    groups2 = tmp;
-    answer1= answer2;
-  }
-  const closestFollow = Math.max(...groups2.map(function(o:Group) { return props.orientation==="NS" ? o.y : o.x;})); 
-  const closestLead = Math.min(...groups1.map(function(o:Group) { return props.orientation==="NS" ? o.y : o.x;}));
+  const followFunc = (props.orientation === "NS") ? Math.min : Math.max
+  const leadFunc = (props.orientation === "NS") ? Math.max : Math.min
+  const closestFollow = followFunc(...groups2.map(function(o:Group) { return props.orientation==="NS" ? o.y : o.x;})); 
+  const closestLead = leadFunc(...groups1.map(function(o:Group) { return props.orientation==="NS" ? o.y : o.x;}));
 
   let rngBack;
   
   if (props.orientation==="EW") {
-    rngBack = getBR(groups1[0].startX, closestFollow, { x: groups1[0].startX, y: closestLead });
+    rngBack = getBR(closestFollow, groups1[0].startY, { x: closestLead, y: groups1[0].startY });
   } else {
-    rngBack = getBR(closestFollow, groups1[0].startY, {
-      x: closestLead,
-      y: groups1[0].startY
+    rngBack = getBR(groups1[0].startX, closestLead, {
+      x: groups1[0].startX,
+      y: closestFollow
     });
   }
 
-  if (closestLead - closestFollow <= 20 || rngBack.range >= 40){
+  let overlap = false
+  if (props.orientation === "EW"){
+    overlap = closestFollow > closestLead
+  } else {
+    overlap = closestLead > closestFollow
+  }
+
+  if (overlap || rngBack.range <=5 || rngBack.range >= 40){
     context.clearRect(0, 0, canvas.width, canvas.height);
     drawBullseye(canvas, context, state.bullseye);
     drawArrow(canvas, props.orientation, 4, state.bluePos.startX, state.bluePos.startY, (props.orientation==="NS" ? 180 : 270), "blue");
