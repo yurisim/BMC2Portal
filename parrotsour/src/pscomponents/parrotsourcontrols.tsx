@@ -101,6 +101,8 @@ export default class ParrotSourControls extends React.PureComponent<PSCProps, PS
                     </div>
                 </div>
 
+                <br/>
+                
                 <div style={{display:"inline-flex", marginBottom:"10px"}}> 
                     <div>
                         <label style={{float:"left", paddingRight:"10px"}}> 

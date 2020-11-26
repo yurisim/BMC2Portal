@@ -46,7 +46,8 @@ function Canvas(props: CanvasProps):ReactElement {
 
     // These values are used by useEffect to trigger a 'draw'
     const { draw, height, width, braaFirst, bullseye, picType, 
-        showMeasurements, isHardMode, newPic,  ...rest } =  props
+        showMeasurements, isHardMode, newPic, 
+        resetCallback, animateCallback, animate, ...rest } =  props
 
     // useEffect is a React hook called when any of the trigger props changes
     useEffect(()=>{
@@ -145,9 +146,8 @@ function Canvas(props: CanvasProps):ReactElement {
      * @param e CanvasMouseEvent with mouse position
      */
     const canvasMouseDown = function(e: CanvasMouseEvent) {
-        setWasAnimate(props.animate)
+        setWasAnimate(animate)
         setMousePressed(true)
-        const { resetCallback } = props
         if (resetCallback) { 
             resetCallback()
         }
@@ -185,7 +185,6 @@ function Canvas(props: CanvasProps):ReactElement {
      */
     const canvasMouseUp = () =>{
         setMousePressed(false)
-        const { animateCallback } = props
         if (wasAnimate){
             animateCallback()
         }
