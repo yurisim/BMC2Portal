@@ -68,13 +68,6 @@ export default class ParrotSourProcedural extends React.PureComponent<Record<str
     }
 
     /**
-     * Called when the BRAAFirst option is changed
-     */
-    braaChanged = ():void =>{
-        this.setState(prevState=>({braaFirst: !prevState.braaFirst}))
-    }
-
-    /**
      * Called when the "Show Measurements" check box changes values
      */
     onToggleMeasurements = ():void => {
@@ -144,7 +137,7 @@ export default class ParrotSourProcedural extends React.PureComponent<Record<str
                     <ParrotSourControls 
                         handleSliderChange={this.onSliderChange}
                         modifyCanvas={this.modifyCanvas}
-                        braaChanged={this.braaChanged}
+                        braaChanged={this.onToggleMeasurements}
                         startAnimate={this.startAnimate}
                         pauseAnimate={this.pauseAnimate}
                     />
