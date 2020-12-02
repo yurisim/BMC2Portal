@@ -1,21 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# locks
-# package-lock.json
-# yarn.lock
-
-# Cesium
-/public/Cesium/*
-/public/CesiumUnminified/*
-/public/Documentation/*
-/public/Documentation
-/public/CesiumUnminified
-/public/Cesium
-
 # dependencies
 /node_modules
-/.pnp
-.pnp.js
 
 # testing
 /coverage
